@@ -8,7 +8,7 @@ date: 2026-05-31
 The End-Fed Half-Wave (EFHW) antenna is an appealing choice for my situation in terms of deployment and for multi-band operation with one wire. The impedance transformer is the critical component of this system. It transforms the high feedpoint impedance of roughly 2500 ohms to the 50 ohms expected by the radio. The goal of this project is to document a 56:1 transformer and wire system that covers the 75 meter band (3.8 MHz, General license phone band) through 10 meters with flat SWR and acceptable efficiency for operations under 100W, without requiring a tuner.  Wideband operation introduces some engineering trade-offs and conflicts that had to be resolved.  Ultimately such antennas commerically exist and are quite popular, so I took this as evidence that the engineering trade-offs and conflicts are resolvable, and eventually I was able to achieve a functional DIY antenna to meet my goals..
 
 
-> DIY 75-10m Antenna System, Final nanoVNA Measurements
+> DIY 75-10m Antenna System, Final nanoVNA Measurements - Looks Good!
 <img src="{{ '/assets/images/wideband_unun/final_nanovna_antenna.jpg' | relative_url }}" alt="DIY 75-10m Antenna System, Final nanoVNA Measurements
 " width="600">
 
@@ -91,7 +91,7 @@ A 2-turn primary yields approximately 205 ohms of reactance at 3.8 MHz. This suc
 ## Unun Build and Empirical Winding Geometry
 The final unit is a 56:1 unun utilizing a 2-turn primary and a 15-turn secondary, wound with AWG 18 wire  since I am operating under 100W SSB and more typically under 50W. A 100pF 1kV C0G/NP0 ceramic capacitor is placed across the primary.  I had no luck with the conventional W1JR winding style for my broadband unun.  Testing with a 2500 ohm non-inductive dummy load, I observed that SWR climbed significantly on the higher bands.
 
-> Conventional W1JR winding for a Wideband 75-10m 56:1 Unun
+> Conventional W1JR winding for a Wideband 75-10m 56:1 Unun - Poor High Frequency Performance.
 <img src="{{ '/assets/images/wideband_unun/conventional_w1jr_wind_56_unun.jpg' | relative_url }}" alt="Conventional W1JR winding for a Wideband 75-10m 56:1 Unun" width="600">
 
 From pictures online showing commercially available ununs for similar 75m-10m antenna systems, I saw what appeared to be a different winding style. This, combined with a lack of success on higher bands for broadband ununs with typical W1JR and maximally spaced winding styles, led me to trying to figure out and replicate this unconventional winding style.  I also went with a 2 turn primary because in the pictures of commercial ununs, that is what I saw in commerical unun pictures online, and I did test the same design with a 3 turn primary and it didn't perform as well on the higher bands.
@@ -105,12 +105,12 @@ After sweeping numerous winding configurations with a NanoVNA to mitigate the hi
 
 The total winding space only occupies about half the circumference of the stacked cores. 
 
-> Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun
+> Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun - Good Broadband Performance!
 <img src="{{ '/assets/images/wideband_unun/exotic_wind_56_unun.jpg' | relative_url }}" alt="Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun" width="600">
 
 To further convince myself that it was the winding spacing that was helping reduce the SWR of the higher bands, I tried a control experiment. I wound a similar style on a roll of electrical tape that was approximately the size of an FT240 core. In this experiment, I am removing the effect of the core itself and the material mix, and any transformation or matching effect must be entirely due to the winding geometry.
 
-> Control Experiment - Exotic Wind on an Inert Core (electrical tape roll) Showing SWR Decrease at Higher Frequencies
+> Control Experiment - Exotic Wind on an Inert Core Showing SWR Decrease at Higher Frequencies
 <img src="{{ '/assets/images/wideband_unun/tape_unun.jpg' | relative_url }}" alt="Control Experiment - Exotic Wind on an Inert Core (electrical tape roll) Showing SWR Decrease at Higher Frequencies" width="600">
 
 **Operating Mechanism Hypothesis:** The close-spaced initial winds reduce leakage inductance, which severely impacts high-frequency performance. At higher frequencies, the magnetic permeability of Mix 43 drops, and the device likely transitions from a purely magnetic transformer into something else.  I'm currently thinking it is behaving like a non-uniform Transmission Line Transformer (TLT). Or if I am misapplying or misunderstanding the idea of a TLT, perhaps it is just some other form of capacitive and inductive coupling. The specific tight-to-spaced winding geometry appears to facilitate this transition, keeping the self-resonant frequency of the transformer high enough to operate cleanly on 10m.
@@ -122,7 +122,7 @@ The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint 
 <img src="{{ '/assets/images/wideband_unun/feed_point.jpg)' | relative_url }}" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
 
 
-> Deployment Map showing Dog-leg Required for Pragmatic Reasons
+> Deployment Map showing Dogleg Required for Pragmatic Reasons
 <img src="{{ '/assets/images/wideband_unun/7510_deployment.png' | relative_url }}" alt="Deployment Map showing Dog-leg Required for Pragmatic Reasons" width="600">
 
 > Far-End of the Antenna
