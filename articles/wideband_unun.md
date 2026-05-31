@@ -2,7 +2,7 @@
 layout: default
 title: Designing a Multiband 75m to 10m EFHW and Wide-band 56:1 Unun
 category: article
-date: 2026-04-26
+date: 2026-05-31
 ---
 
 The End-Fed Half-Wave (EFHW) antenna is an appealing choice for my situation in terms of deployment and for multi-band operation with one wire. The impedance transformer is the critical component of this system. It transforms the high feedpoint impedance of roughly 2500 ohms to the 50 ohms expected by the radio. The goal of this project is to document a 56:1 transformer and wire system that covers the 75 meter band (3.8 MHz, General license phone band) through 10 meters with flat SWR and acceptable efficiency for operations under 100W, without requiring a tuner.  Wideband operation introduces some engineering trade-offs and conflicts that had to be resolved.  Ultimately such antennas commerically exist and are quite popular, so I took this as evidence that the engineering trade-offs and conflicts are resolvable, and eventually I was able to achieve a functional DIY antenna to meet my goals..
