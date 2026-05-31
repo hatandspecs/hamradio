@@ -56,24 +56,32 @@ Stacking two identical cores doubles the Inductance Factor ($A_L$).
 * Stacked 2x FT240-43 $A_L$: 2150 nH/turn^2
 
 Using the standard inductance formula:
+
 $$L = A_L \times N^2$$
 
 We can calculate the inductance ($L$) and the resulting inductive reactance ($X_L$) using:
+
 $$X_L = 2 \times \pi \times f \times L$$
 
 ### Example Calculation: 2-Turn Primary at 3.8 MHz
 To demonstrate how the values in the table below are derived, here is the step-by-step calculation for the 2-turn primary at the bottom of the 75m band (3.8 MHz).
 
 **Step 1: Calculate Inductance ($L$)**
+
 $$L = 2150 \times 2^2$$
+
 $$L = 2150 \times 4$$
+
 $$L = 8600 \text{ nH}$$
 
 To convert nanohenries (nH) to microhenries ($\mu$H) for the next formula, divide by 1000:
+
 $$L = 8.6 \mu\text{H}$$
 
 **Step 2: Calculate Inductive Reactance ($X_L$)**
+
 $$X_L = 2 \times \pi \times 3.8 \times 8.6$$
+
 $$X_L = 205.3 \text{ ohms}$$
 
 ### Inductive Reactance Results
@@ -119,7 +127,7 @@ To further convince myself that it was the winding spacing that was helping redu
 The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint is mounted outside of a second-story window, traveling 80 to 90 feet to a 25-foot mast mounted on a playhouse. From there, it doglegs and slopes down to a post in the backyard. There is roughly 10 feet of paracord between the post and the antenna end, keeping the lowest portion 8-10 feet above ground.  A large common mode choke (12 turns of coax through an FT240-43 core) is placed immediately after the unun. A dedicated counterpoise wire is attached to the unun ground terminal. Incrementally trimming this counterpoise had a measurable effect on the system tuning, with the final length settling at 8.75 feet.
 
 > Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise
-<img src="{{ '/assets/images/wideband_unun/feed_point.jpg)' | relative_url }}" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
+<img src="{{ 'assets/images/wideband_unun/feed_point.jpg' | relative_url }}" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
 
 
 > Deployment Map showing Dogleg Required for Pragmatic Reasons
