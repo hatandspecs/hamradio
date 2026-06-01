@@ -134,7 +134,7 @@ The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint 
 > Deployment Map showing Dogleg Required for Pragmatic Reasons
 <img src="{{ '/assets/images/wideband_unun/7510_deployment.png' | relative_url }}" alt="Deployment Map showing Dog-leg Required for Pragmatic Reasons" width="600">
 
-> View from the Far-End of the Antenna
+> View from the far end of the antenna  
 <img src="{{ '/assets/images/wideband_unun/far_end.jpg' | relative_url }}" alt="Far-End of the Antenna" width="600">
 
 ## Results
