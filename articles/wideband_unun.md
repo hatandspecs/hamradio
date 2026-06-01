@@ -127,7 +127,7 @@ To further convince myself that it was the winding spacing that was helping redu
 The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint is mounted outside of a second-story window, traveling 80 to 90 feet to a 25-foot mast mounted on a playhouse. From there, it doglegs and slopes down to a post in the backyard. There is roughly 10 feet of paracord between the post and the antenna end, keeping the lowest portion 8-10 feet above ground.  A large common mode choke (12 turns of coax through an FT240-43 core) is placed immediately after the unun. A dedicated counterpoise wire is attached to the unun ground terminal. Incrementally trimming this counterpoise had a measurable effect on the system tuning, with the final length settling at 8.75 feet.
 
 > Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise
-<img src="{{ 'assets/images/wideband_unun/feed_point.jpg' | relative_url }}" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
+<img src="{{ '/assets/images/wideband_unun/feed_point.jpg' | relative_url }}" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
 
 
 > Deployment Map showing Dogleg Required for Pragmatic Reasons
@@ -137,7 +137,7 @@ The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint 
 <img src="{{ '/assets/images/wideband_unun/far_end.jpg' | relative_url }}" alt="Far-End of the Antenna" width="600">
 
 ## Results
-The on-air results have been excellent relevant to my previous antennas. The system operates from 75m to 10m wideband without a tuner with acceptable SWR. I have successfully run WSPR on all 8 bands with solid results and made phone contacts on every band except 12m. 30m does not align as neatly as the other bands but cleans up easily with a tuner. An unexpected benefit is a noticeable reduction in QRM on 20m compared to my previous antennas. My current hypothesis is that this reduction occurs because more of the radiating element is positioned further away from house noise sources. 
+The on-air results have been excellent relative to my previous antennas. The system operates from 75m to 10m wideband without a tuner with acceptable SWR. I have successfully run WSPR on all 8 bands with solid results and made phone contacts on every phone band except 12m. 30m does not align as neatly as the other bands but cleans up easily with a tuner. An unexpected benefit is a noticeable reduction in QRM on 20m compared to my previous antennas. My current hypothesis is that this reduction occurs because more of the radiating element is positioned further away from house noise sources. 
 
 73,
 KD3CCO
