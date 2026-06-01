@@ -42,11 +42,12 @@ Higher frequencies present the opposite challenge. Every additional turn increas
 
 Based on many experiments winding and testing ununs, I apply the following rules of thumb to balance these conflicts:
 
-1. **Path Length is the Enemy of High Frequencies:** Longer wire paths hurt performance on the upper bands. Big cores, thick stacks, and 3-turn primaries all contribute to excess wire length.
-2. **Low Reactance is the Enemy of Low Frequencies:** Too little inductive reactance ($X_L$) on the primary causes the transformer to look like a short circuit to the radio. Lower frequencies demand either a larger core cross-section, more primary turns, or materials with a higher inductance factor.
-3. **Core Material Dictates Bandwidth:** The ferrite mix matters significantly. Mix 43 is the most common across HF frequencies, but other mixes favor smaller, specific segments of the amateur bands and will yield different inductance values for the exact same winding geometry.
-4. **Wideband is Hard, Narrowband is Easy:** Creating an unun that effectively spans 75m to 10m is tricky. Building ununs for smaller spreads like 160m to 80m, 80m to 40m, or 20m to 10m is comparatively simple.
-5. **Wire Gauge Dictates Power, Not Tuning:** AWG 18 through 14 all work fine for HF matching. Core size and wire gauge strictly relate to power handling and duty cycle. For under 100 watts SSB, an FT240 core and AWG 18-14 wire manage heat perfectly.
+1. **Wire length (or something that correlates with length like leakage inductance) seems to hurt high frequencies:** I am observing that longer wire paths hurt performance on the upper bands. Big cores, thick stacks, and 3-turn primaries all contribute to excess wire length.
+2. **Low primary inductive reactance is bad:** Too little inductive reactance (X_L) on the primary causes the transformer to look like a short circuit to the radio and the unun doesn't work well. Lower frequencies demand either a larger core cross-section, more primary turns, or materials with a higher inductance factor.
+3. **Core materials matter:** The ferrite mix matters significantly. Mix 43 is pretty common across HF frequencies, but other mixes favor smaller, specific segments of the amateur bands and will yield different inductance values for the exact same winding geometry.
+4. **Wideband is hard, narrowband is easy:** Creating an unun that effectively spans 75m to 10m has proven tricky. Building ununs for smaller spreads like 160m to 80m, 80m to 40m, or 20m to 10m is comparatively simple.
+5. **Bigger wire for larger power:** AWG 18 through 14 all seem to work fine for HF matching. Core size and wire gauge relate to power handling and duty cycle. For under 100 watts SSB, an FT240 core and AWG 18 or 16 wire have seemed to manage heat well enough for me.
+6. **Calculate things and measure things:** A lot "common wisdom" I've seen online, when I do some calculations and measure the results, seem a bit dubious.  There are clearly "more things on heaven and earth than in my philosophy (Horatio)" when it comes to RF.
 
 ## Quantitative Analysis of the 2x FT240-43 Stack
 To balance the need for high primary inductance on 75m with the need for short wire paths on 10m, I utilized a stacked core design using two FT240-43 ferrites. 
@@ -133,8 +134,7 @@ The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint 
 > Deployment Map showing Dogleg Required for Pragmatic Reasons
 <img src="{{ '/assets/images/wideband_unun/7510_deployment.png' | relative_url }}" alt="Deployment Map showing Dog-leg Required for Pragmatic Reasons" width="600">
 
-> Far-End of the Antenna
-
+> View from the Far-End of the Antenna
 <img src="{{ '/assets/images/wideband_unun/far_end.jpg' | relative_url }}" alt="Far-End of the Antenna" width="600">
 
 ## Results
