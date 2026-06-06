@@ -171,6 +171,41 @@ For further technical details, see the [WSPR Wikipedia page](https://en.wikipedi
 
 ---
 
+### WSJT-X Configuration for WSPR
+
+These notes outline the standard configuration and calibration process for WSPR operations using WSJT-X.
+
+#### 1. Input Level Calibration (Receive)
+The green vertical bar in the lower-left corner monitors audio input.
+* **Target Range:** Aim for 30 to 50 dB.
+* **Red Zone:** If the meter shows red, reduce input gain immediately to prevent distortion.
+* **Adjustment:** Use your operating system's sound mixer or the interface device properties.
+
+#### 2. Power Settings (Metadata)
+The Power (dBm) field in the Settings menu (General tab) is for database reporting, not hardware control.
+* **10 Watts:** Set to 40 dBm.
+* **5 Watts:** Set to 37 dBm.
+* **Important:** Ensure this value is updated if you change your radio's physical transmit power.
+
+#### 3. Transmit Audio Calibration (Output)
+Use the 'Tune' function to calibrate the vertical Pwr slider (lower right) to achieve your target RF output power without overdriving the radio.
+1. **Prepare:** Set your radio to the desired RF output power (e.g., 10W).
+2. **Tune:** Click the 'Tune' button in WSJT-X to emit a continuous carrier.
+3. **Adjust:** Move the Pwr slider until your radio's power meter reads the target output.
+4. **Monitor ALC:** Verify the radio's ALC meter. If the ALC is high or pegged, reduce the Pwr slider and increase the radio's own gain control to compensate until power is steady with minimal ALC.
+5. **Finish:** Click 'Tune' again to stop.
+
+#### 4. Band Hopping
+Band hopping allows automated monitoring across multiple bands.
+* **Setup:** Navigate to Settings > Band Hopping (or the Band Hopping tab).
+* **Configuration:** Select the desired bands.
+* **Activation:** Check the 'Band Hop' box in the main window.
+* **Mechanism:** The software will cycle through selected bands during the 2-minute transmit/receive intervals.
+
+
+
+---
+
 ## Results
 
 Initial testing confirms that the WSJT-X configuration is fully operational on the Fedora workstation. The system utilizes a single USB-C connection to the Yaesu FTX-1, which handles three primary functions:
