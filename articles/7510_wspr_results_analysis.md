@@ -71,7 +71,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 This analysis computes mean, maximum, and standard deviation of path distance `k` for every band.
 
 **Purpose:**
-- Quantify how far your station is reaching on each band in the dataset.
+- Quantify how far the station is reaching on each band in the dataset.
 - Use the band-specific statistics to compare the effective propagation range across frequencies.
 
 **How to interpret:**
@@ -114,7 +114,7 @@ This analysis identifies the strongest footprint by the top receive grid prefixe
 
 **Purpose:**
 - Visualize the geographic distribution of contacts by the most active Maidenhead grid areas.
-- Understand whether your station is mainly heard domestically, regionally, or in long-distance DX regions.
+- Understand whether the station is mainly heard domestically, regionally, or in long-distance DX regions.
 
 **How to interpret:**
 - The top grid prefixes show the regions that contribute the largest number of spots.
@@ -187,7 +187,7 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 This comparison uses reciprocal paths involving KD3CCO as both transmitter and receiver.
 
 **Purpose:**
-- Compare how your transmit and receive paths perform for the same remote station and band.
+- Compare how the transmit and receive paths perform for the same remote station and band.
 - Reveal whether one direction is consistently stronger, which can indicate local noise, feedline loss, or antenna imbalance.
 
 **How to interpret:**
@@ -340,33 +340,26 @@ This analysis examines the shortest paths on the higher bands, which informs the
 ### Analysis 9: Interactive Folium Path Map
 
 
+This analysis creates a folium map showing the transmit and receive paths across bands.
 
-This analysis creates a folium map showing the KD3CCO transmit and receive paths across bands with two organized checkbox groups:
-
-- **Bands group**: Select from 8 amateur bands (80m, 40m, 30m, 20m, 17m, 15m, 12m, 10m)
-- **Direction group**: Toggle between "heard" (KD3CCO receives) and "heard_by" (KD3CCO transmits)
 
 **Purpose:**
 - Explore the geographic footprint and path geometry interactively.
 - Separate transmit and receive directions to reveal asymmetry in the visible propagation paths.
-- Visualize realistic great-circle paths on the map projection.
 
 **How to interpret:**
-- Each path line represents a WSPR spot connection and follows the true geodesic (great circle) route between TX and RX grid squares.
-- Use the organized checkboxes to filter by band and direction.
+- Each path line represents a WSPR spot connection and follows the geodesic (great circle) path between TX and RX grid squares.
+- Use the checkboxes to filter by band and direction.
 - Popup details include TX/RX callsigns, grid locators, SNR, and path distance.
-- Thinner, cleaner path lines make it easier to see overlapping propagation patterns.
 
 **Actual results for `7510m_wspr_spots.tsv`:**
-- A fully interactive HTML map is saved at `analysis_images/analysis9_spots_map.html`.
-- The map includes geodesic paths for all spot connections, grouped into 16 layers (8 bands × 2 directions).
+- A interactive HTML map is saved as `analysis_images/analysis9_spots_map.html`.
+- The map includes geodesic paths for all spot connections, grouped by band and RX (I heard) or TX (I was heard by)
 - The broadest coverage is visible on 20m and 17m, with 80m and 40m showing tighter domestic/regional clusters.
-- The `heard` vs `heard_by` layer separation highlights the exchange asymmetry and the directional footprint of KD3CCO's antenna system.
+- The `heard` vs `heard_by` separation highlights the exchange asymmetry and the directional footprint of my antenna system.
 
 **Interpretation:**
 - The map confirms the earlier statistical findings by showing the same major propagation lobes in geographic context.
-- The great-circle paths reveal true transmission geometry, showing realistic long-distance DX paths and regional skips.
-- The organized checkbox groups make it straightforward to compare band-specific footprints and TX/RX directionality.
 
 [Link to Interactive Map](../assets/images/analysis_images/analysis9_spots_map.html){:target="_blank"}
 
