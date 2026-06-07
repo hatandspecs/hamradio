@@ -2,7 +2,7 @@
 layout: default
 title: Testing my WSJT-X Configuration using WSPR mode
 category: article
-date: 2026-06-06
+date: 2026-04-27
 ---
 
 
@@ -85,3 +85,5 @@ By utilizing [WSPR Rocks](https://wspr.rocks), it is possible to generate a grap
 The map below shows the TX spot reports for the initial test session.
 
 <img src="{{ '/assets/images/wsprrocks_20260426-172319.png' | relative_url }}" alt="WSPR Rocks TX Map" width="600">
+
+In the future I intend to run WSPR for a longer period of time and see what kind of analyses I can do with the spot dataset.
