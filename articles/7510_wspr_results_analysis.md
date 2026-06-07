@@ -331,7 +331,7 @@ This analysis examines the shortest paths on the higher bands, which informs the
 
 
 > Takeoff Angle Inference  
-<img src="{{ '/assets/images/analysis_images/analysis8_takeoff_angle.png | relative_url }}" alt="Takeoff Angle Inference" width="600">
+<img src="{{ '/assets/images/analysis_images/analysis8_takeoff_angle.png' | relative_url }}" alt="Takeoff Angle Inference" width="600">
 
 ---
 
