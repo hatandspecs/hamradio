@@ -60,7 +60,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 ![Band Openings and Closures](/assets/images/analysis_images/analysis1_band_openings.png)
 
 > Band Openings and Closures  
-<img src="{{ '/assets/images/analysis_images/analysis1_band_openings.png)' | relative_url }}" alt="Band Openings and Closures" width="600">
+<img src="{{ '/assets/images/analysis_images/analysis1_band_openings.png' | relative_url }}" alt="Band Openings and Closures" width="600">
 
 ---
 
