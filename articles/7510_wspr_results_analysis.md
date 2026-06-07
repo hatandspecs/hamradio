@@ -181,8 +181,6 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 
 ### Analysis 5: TX vs RX Asymmetry (Local Noise Floor Test)
 
-
-
 This comparison uses reciprocal paths involving KD3CCO as both transmitter and receiver.
 
 **Purpose:**
@@ -214,6 +212,7 @@ This comparison uses reciprocal paths involving KD3CCO as both transmitter and r
 - The local receive side is generally weaker than the transmit side for matched KD3CCO pairs.
 - This suggests local receive noise or receiver sensitivity may be the limiting factor.
 - The strongest positive deltas occur on 20m and 40m, meaning these bands may be more affected by local RX conditions in this capture.
+- I suspected this outcome from anecdotal observations of local noise in my neighborhood.  The feedpoint-side of my antenna is mounted to the side of my house, only a few inches away from the wall and my counterpoise wire hangs down the side of the house.  There are some noise sources within the same wall within feet of the antenna.  I've also noticed much higher noise levels on my S meter in my neighborhood, regardless of antenna location, than I have in remote/wilderness areas.
 
 
 
