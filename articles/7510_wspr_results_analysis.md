@@ -18,7 +18,7 @@ The notebook is intentionally structured to explain the purpose of each analysis
 
 ## 1. Notebook-based Detailed Analysis
 
-Each analysis in the notebook is documented below using the exact notebook narrative, followed by the concrete findings from `7510m_wspr_spots.tsv`.
+Each analysis in the notebook is documented below, followed by the specific findings from `7510m_wspr_spots.tsv` dataset I generated yesterday.
 
 ### Analysis 1: Band Openings and Closures
 
@@ -56,6 +56,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 - The strongest activity is on 20m, with the highest total spot count and most sustained coverage across the capture window.
 - 12m is the weakest band in this dataset, with only 33 spots and the lowest mean SNR.
 - 80m shows a later opening window, starting around 19:30 UTC and remaining active until 21:30 UTC.
+- It would be much more interesting to do this analysis on a longer duration dataset, for example 24 or 48 hours.
 
 
 > Band Openings and Closures  
@@ -97,6 +98,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 - 20m is clearly the best DX band in this capture, with the highest mean path distance.
 - 80m is the shortest-range band, consistent with local and regional propagation.
 - The large standard deviations on 12m and 10m reflect sparse contacts and a mix of near and far paths.
+- These results are align with my anecdotal experience making contacts on this antenna.  Also, with the fact that I know my mounting height is low, in the NVIS range for 75m and less than ideal for 40m.
 
 
 > Distance Profiling by Band  
@@ -134,6 +136,7 @@ This analysis identifies the strongest footprint by the top receive grid prefixe
 - The footprint is dominated by mid-Atlantic and eastern North America squares, with significant regional clusters.
 
 **Interpretation from the dataset:**
+- This analysis is skewed to FN10 because I didn't first filter out my "hearing KD3CCO" spots. I'd rather redo this only using "KD3CCO hearing" spots.
 - The station is strongly heard in the northern mid-Atlantic US and adjacent Canadian sectors.
 - The presence of many `EN`, `FN`, and `IO` prefixes shows a mix of domestic/regional and longer continental paths.
 
