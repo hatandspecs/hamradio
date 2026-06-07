@@ -9,7 +9,7 @@ date: 2026-06-07
 
 Working with Github Copilot, I was able to quickly put together an analysis of the WSPR results on my DIY 75-10m EFHW. This analysis is in the form of a Jupyter Notebook and implemented using Python.
 
-This [repository](https://github.com/hatandspecs/wspr_7510_analysis) contains a Jupyter notebook that analyzes a 4-hour WSPR spot capture from a 75-10m End-Fed Half-Wave (EFHW) station. The dataset file is `7510m_wspr_spots.tsv`.
+This [repository](https://github.com/hatandspecs/wspr_7510_analysis) contains a Jupyter notebook that analyzes a few-hour WSPR spot capture from a 75-10m End-Fed Half-Wave (EFHW) station. The dataset file is `7510m_wspr_spots.tsv`.
 
 
 The notebook is intentionally structured to explain the purpose of each analysis, guide interpretation of the outputs, and draw conclusions from the actual dataset.
