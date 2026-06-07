@@ -393,8 +393,8 @@ The notebook reads `7510m_wspr_spots.tsv`, builds derived fields, runs nine anal
 
 ## 3. Conclusions from this dataset
 
-1. **20m is the strongest DX band** in this capture, both by spot count and average distance.
-2. **Receive-side asymmetry is clearly present**, with a mean TX/RX SNR delta of +6.3 dB, suggesting the local RX path is weaker than the TX path.
-3. **The antenna system performs best on midbands**, with normalized `k/W` values highest on 20m, 17m, and 15m.
-4. **Higher-band inner skip boundaries are far away** on 10m and 12m, consistent with a higher takeoff angle and a scarcity of very short first-hop paths on those frequencies.5. **The interactive folium map (Analysis 9)** visually confirms the propagation patterns identified in analyses 1–8, showing realistic great-circle paths and directional asymmetry in geographic context. The organized checkbox controls make it easy to filter by band and TX/RX direction to explore specific propagation scenarios.
-These conclusions are driven by the notebook’s own analytical structure and the actual `7510m_wspr_spots.tsv` output.
+1. **20m is the strongest DX band on my DIY 75-10m EFHW as deployed** in this capture, both by spot count and average distance.  The antenna height is more amiable to mid band DX.  While the EFHW is mounted adequately high for shorter band DX, the chaotic nature EFHW radiation patterns on bands farther from the fundamental is probably limiting DX on shorter bands.  If I wanted to operate regularly on these shorter bands it would be better to hang dedicated antennas for them.
+2. **Receive-side asymmetry is clearly present, probably due to local noise in my house/neighborhood**, with a mean TX/RX SNR delta of +6.3 dB, suggesting the local RX path is weaker than the TX path.
+3. **The antenna system performs best on midbands**, with normalized `k/W` values highest on 20m, 17m, and 15m.  Lucky for me, this entire 75-10m EFHW project was aimed at retaining capability on 40m/20m/15m that I could already get on my 40m EFHW and 40m OCFD, adding 17m capability, and gaining any 80m and 30m capability at all.
+4. **Higher-band inner skip boundaries are far away** on 10m and 12m. **The interactive folium map (Analysis 9)** visually confirms the propagation patterns identified in analyses 1–8.  Since these harmonic modes are farthest away from the fundamental of the antenna they likely have multiple lobes, unpredictable nulls, and strong high-angle components.  If I wanted to do better on these bands, dedicated antennas cut for these bands would probably greatly outperform trying to get them as higher order harmonics of my 75m EFHW.
+
