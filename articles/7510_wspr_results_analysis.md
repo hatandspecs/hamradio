@@ -278,14 +278,15 @@ This analysis compares `k/W` across bands for stations that heard KD3CCO on 3 or
 **Actual results for `7510m_wspr_spots.tsv`:**
 - Median `k/W` by band:
   - `20m`: 382.5 km/W
-  - `17m`: 353.6 km/W
   - `15m`: 353.8 km/W
+  - `17m`: 353.6 km/W
+  - `30m`: 329.4 km/W
   - `12m`: 199.5 km/W
   - `10m`: 156.2 km/W
-  - `30m`: 329.4 km/W
   - `40m`: 74.9 km/W
   - `80m`: 38.8 km/W
 - Mean `k/W` values confirm the same trend, with the highest normalized efficiency on 20m and the lowest on 80m.
+
 
 **Interpretation from the dataset:**
 - 20m, 17m, and 15m show the best normalized efficiency, consistent with this capture being in a strong midband opening.
