@@ -22,7 +22,7 @@ Each analysis in the notebook is documented below using the exact notebook narra
 
 ### Analysis 1: Band Openings and Closures
 
-**Notebook narrative:**
+
 
 This analysis tracks spot counts and mean SNR across time bins for each band.
 
@@ -65,7 +65,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 
 ### Analysis 2: Distance Profiling
 
-**Notebook narrative:**
+
 
 This analysis computes mean, maximum, and standard deviation of path distance `k` for every band.
 
@@ -106,7 +106,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 
 ### Analysis 3: Geographical Spread
 
-**Notebook narrative:**
+
 
 This analysis identifies the strongest footprint by the top receive grid prefixes.
 
@@ -145,7 +145,7 @@ This analysis identifies the strongest footprint by the top receive grid prefixe
 
 ### Analysis 4: SNR vs Distance Regression
 
-**Notebook narrative:**
+
 
 This analysis examines path loss trends by plotting SNR against distance for each band.
 
@@ -181,7 +181,7 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 
 ### Analysis 5: TX vs RX Asymmetry (Local Noise Floor Test)
 
-**Notebook narrative:**
+
 
 This comparison uses reciprocal paths involving KD3CCO as both transmitter and receiver.
 
@@ -224,9 +224,8 @@ This comparison uses reciprocal paths involving KD3CCO as both transmitter and r
 
 ### Analysis 6: Azimuthal Pattern Mapping
 
-**Notebook narrative:**
 
-This polar map shows spot direction and distance for KD3CCO transmissions.
+This polar map shows spot direction and distance for KD3CCO transmissions.  My EFHW antenna wire is mostly aligned within 330-340 Degrees.
 
 **Purpose:**
 - Map how signal strength and path length vary with bearing from the station.
@@ -243,6 +242,7 @@ This polar map shows spot direction and distance for KD3CCO transmissions.
 - Comparing distance and color helps separate directional propagation from antenna pattern effects.
 
 **Actual results for `7510m_wspr_spots.tsv`:**
+- Most of my spots are broadside to my antenna, which is aligned to about 330-340 degrees. This is expected.
 - The polar map emphasizes the major azimuth sectors where KD3CCO is heard most frequently.
 - Strong signal clusters correspond to the same grid regions identified in the geographic spread analysis.
 - SNR is generally higher in the dominant lobes, suggesting the antenna favors those headings.
@@ -256,7 +256,7 @@ This polar map shows spot direction and distance for KD3CCO transmissions.
 
 ### Analysis 7: Band-by-Band Efficiency Normalization
 
-**Notebook narrative:**
+
 
 This analysis compares `k/W` across bands for stations that heard KD3CCO on 3 or more bands.
 
@@ -299,7 +299,7 @@ This analysis compares `k/W` across bands for stations that heard KD3CCO on 3 or
 
 ### Analysis 8: Take-Off Angle Inference via Minimum Skip Boundaries
 
-**Notebook narrative:**
+
 
 This analysis examines the shortest paths on the higher bands, which informs the likely takeoff angle and near-skip zone.
 
@@ -337,7 +337,7 @@ This analysis examines the shortest paths on the higher bands, which informs the
 
 ### Analysis 9: Interactive Folium Path Map
 
-**Notebook narrative:**
+
 
 This analysis creates a folium map showing the KD3CCO transmit and receive paths across bands with two organized checkbox groups:
 
