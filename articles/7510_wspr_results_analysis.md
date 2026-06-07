@@ -57,7 +57,10 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 - 12m is the weakest band in this dataset, with only 33 spots and the lowest mean SNR.
 - 80m shows a later opening window, starting around 19:30 UTC and remaining active until 21:30 UTC.
 
-![Band Openings and Closures](assets/images/analysis_images/analysis1_band_openings.png)
+![Band Openings and Closures](/assets/images/analysis_images/analysis1_band_openings.png)
+
+> Band Openings and Closures  
+<img src="{{ '/assets/images/analysis_images/analysis1_band_openings.png)' | relative_url }}" alt="Band Openings and Closures" width="600">
 
 ---
 
@@ -96,7 +99,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 - 80m is the shortest-range band, consistent with local and regional propagation.
 - The large standard deviations on 12m and 10m reflect sparse contacts and a mix of near and far paths.
 
-![Distance Profiling by Band](assets/images/analysis_images/analysis2_distance_profiling.png)
+![Distance Profiling by Band](/assets/images/analysis_images/analysis2_distance_profiling.png)
 
 ---
 
@@ -133,7 +136,7 @@ This analysis identifies the strongest footprint by the top receive grid prefixe
 - The station is strongly heard in the northern mid-Atlantic US and adjacent Canadian sectors.
 - The presence of many `EN`, `FN`, and `IO` prefixes shows a mix of domestic/regional and longer continental paths.
 
-![Geographical Footprint](assets/images/analysis_images/analysis3_geographical_spread.png)
+![Geographical Footprint](/assets/images/analysis_images/analysis3_geographical_spread.png)
 
 ---
 
@@ -167,7 +170,7 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 - 15m and 17m appear less consistent, suggesting this capture included both good openings and weaker marginal paths.
 - 80m and 40m behave more predictably, consistent with shorter-range ground/low-angle propagation.
 
-![SNR vs Distance Regression](assets/images/analysis_images/analysis4_snr_distance.png)
+![SNR vs Distance Regression](/assets/images/analysis_images/analysis4_snr_distance.png)
 
 ---
 
@@ -207,7 +210,7 @@ This comparison uses reciprocal paths involving KD3CCO as both transmitter and r
 - This suggests local receive noise or receiver sensitivity may be the limiting factor.
 - The strongest positive deltas occur on 20m and 40m, meaning these bands may be more affected by local RX conditions in this capture.
 
-![TX vs RX Asymmetry](assets/images/analysis_images/analysis5_tx_rx_asymmetry.png)
+![TX vs RX Asymmetry](/assets/images/analysis_images/analysis5_tx_rx_asymmetry.png)
 
 ---
 
@@ -236,7 +239,7 @@ This polar map shows spot direction and distance for KD3CCO transmissions.
 - Strong signal clusters correspond to the same grid regions identified in the geographic spread analysis.
 - SNR is generally higher in the dominant lobes, suggesting the antenna favors those headings.
 
-![Azimuthal Pattern Mapping](assets/images/analysis_images/analysis6_azimuthal_pattern.png)
+![Azimuthal Pattern Mapping](/assets/images/analysis_images/analysis6_azimuthal_pattern.png)
 
 ---
 
@@ -276,7 +279,7 @@ This analysis compares `k/W` across bands for stations that heard KD3CCO on 3 or
 - The drop on 10m and 12m may reflect poorer matching, sparser opening, or band-specific loss in the antenna system.
 - The low `k/W` on 40m and 80m is expected for shorter-range propagation and higher relative power loss at low frequencies.
 
-![Normalized Band Efficiency](assets/images/analysis_images/analysis7_efficiency_normalization.png)
+![Normalized Band Efficiency](/assets/images/analysis_images/analysis7_efficiency_normalization.png)
 
 ---
 
@@ -311,7 +314,7 @@ This analysis examines the shortest paths on the higher bands, which informs the
 - This suggests the station is not seeing very short near-field paths on those bands, consistent with a higher takeoff angle or a more distant first-hop mode.
 - 17m and 15m have the lowest 10th percentile values, indicating comparatively better near-range propagation on those bands.
 
-![Takeoff Angle Inference](assets/images/analysis_images/analysis8_takeoff_angle.png)
+![Takeoff Angle Inference](/assets/images/analysis_images/analysis8_takeoff_angle.png)
 
 ---
 
@@ -346,7 +349,7 @@ This analysis creates a folium map showing the KD3CCO transmit and receive paths
 - The great-circle paths reveal true transmission geometry, showing realistic long-distance DX paths and regional skips.
 - The organized checkbox groups make it straightforward to compare band-specific footprints and TX/RX directionality.
 
-![Analysis 9 Interactive Map](assets/images/analysis_images/analysis9_spots_map_screenshot.png)
+![Analysis 9 Interactive Map](/assets/images/analysis_images/analysis9_spots_map_screenshot.png)
 
 
 ---
