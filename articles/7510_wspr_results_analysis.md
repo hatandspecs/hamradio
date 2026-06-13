@@ -110,7 +110,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 
 
 
-This analysis identifies the strongest footprint by the top receive grid prefixes.
+This analysis identifies the strongest footprint by the top *receive* grid prefixes.
 
 **Purpose:**
 - Visualize the geographic distribution of contacts by the most active Maidenhead grid areas.
@@ -127,18 +127,35 @@ This analysis identifies the strongest footprint by the top receive grid prefixe
 - Use this information to compare with azimuthal coverage and band-specific reach.
 
 **Actual results for `7510m_wspr_spots.tsv`:**
-- Top receive grid prefixes:
-  - `FN10`: 483 spots
-  - `JN47`: 133 spots
-  - `FM18`: 110 spots
-  - `EN82`: 107 spots
-  - `IO91`: 96 spots
-- The footprint is dominated by mid-Atlantic and eastern North America squares, with significant regional clusters.
+- Top 20 receive grid prefixes (stations hearing KD3CCO):
+
+| Rank | Grid | Count | Region |
+|------|------|-------|--------|
+| 1 | JN47 | 133 | Central Europe (Austria/Germany) |
+| 2 | FM18 | 110 | Mid-Atlantic US (Washington DC area) |
+| 3 | EN82 | 107 | Upper Midwest US |
+| 4 | IO91 | 96 | Southern England |
+| 5 | FN42 | 95 | Northeastern US |
+| 6 | DM13 | 91 | Southwestern US |
+| 7 | FN30 | 76 | Northeastern US |
+| 8 | EN52 | 70 | Central US |
+| 9 | FM05 | 65 | Mid-Atlantic US |
+| 9 | JO21 | 65 | Netherlands/Belgium |
+| 11 | EL87 | 61 | Gulf Coast US |
+| 11 | FN21 | 61 | Northeastern US |
+| 13 | JN48 | 60 | Central Europe |
+| 14 | JO33 | 59 | Northern Germany |
+| 15 | JO31 | 56 | Netherlands |
+| 16 | EM38 | 55 | South-Central US |
+| 17 | JN87 | 52 | Northern Italy/Switzerland |
+| 18 | CN88 | 51 | Pacific Northwest US |
+| 18 | FN31 | 51 | Northeastern US |
+| 20 | IL38 | 46 | North Africa/Canary Islands |
 
 **Interpretation from the dataset:**
-- This analysis is skewed to FN10 because I didn't first filter out my "hearing KD3CCO" spots. I'd rather redo this only using "KD3CCO hearing" spots.
-- The station is strongly heard in the northern mid-Atlantic US and adjacent Canadian sectors.
-- The presence of many `EN`, `FN`, and `IO` prefixes shows a mix of domestic/regional and longer continental paths.
+- The footprint is genuinely transatlantic, with strong representation in both Europe (JN47, IO91, JO21, JN48, JO33, JN87) and across North America.
+- The eastern US and central Europe dominate, consistent with 20m propagation during a late-afternoon/evening opening.
+- Coverage reaching IL38 (North Africa / Canary Islands area) indicates long-path propagation was active during the capture window.
 
 
 > Geographical Footprint  
