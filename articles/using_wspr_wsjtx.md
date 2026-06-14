@@ -35,6 +35,17 @@ The green vertical bar in the lower-left corner monitors audio input.
 * **Red Zone:** If the meter shows red, reduce input gain immediately to prevent distortion.
 * **Adjustment:** Use your operating system's sound mixer or the interface device properties.
 
+##### Audio Gain Staging for my Yaseu FTX-1
+Achieving a clean signal required somewhat careful "gain staging" across several software and hardware layers. In digital modes, overdriving the audio results in "splatter" or harmonics that interfere with other operators. The following settings were adjusted to achieve the correct ALSA levels:
+* **WSJT-X "PWR" Slider:** This acts as the primary fine-tuning control for the audio output level sent to the radio.
+* **OS Volume Mixer:** Both the input (Capture) and output (Playback) levels in Fedora’s volume control must be set to a point where the signal is strong but not clipping.
+* **Radio Menu Settings:** The "USB Gain" setting on the Yaesu FTX-1 was adjusted to calibrate the incoming audio from the computer. 50% worked well.
+
+To contribute to the global propagation map, the **"Upload Spots"** option must be enabled in the WSJT-X settings. This sends decodes to the [WSPRnet](https://www.wsprnet.org) database.
+
+
+
+
 #### 2. Power Settings (Metadata)
 The Power (dBm) field in the Settings menu (General tab) is for database reporting, not hardware control.
 * **10 Watts:** Set to 40 dBm.
@@ -55,7 +66,7 @@ Band hopping allows automated monitoring across multiple bands.
 * **Configuration:** Select the desired bands.
 * **Activation:** Check the 'Band Hop' box in the main window.
 * **Mechanism:** The software will cycle through selected bands during the 2-minute transmit/receive intervals.
-
+* **Note on Antenna Tuners:** If you are using band hopping, you will need an ATU that has tune memories which automatically switches when the VFO switches.  You should also run the ATU on the WSPR frequency of each band you intend to band hop on so these are in your tuner memory.
 
 
 ---
@@ -67,13 +78,6 @@ Initial testing confirms that the WSJT-X configuration is fully operational on t
 2.  **Audio Input (RX):** Audio from the radio is routed to the computer for decoding.
 3.  **Audio Output (TX):** Modulated digital tones are sent from the computer to the radio for transmission.
 
-### Audio Gain Staging
-Achieving a clean signal required careful "gain staging" across several software and hardware layers. In digital modes, overdriving the audio results in "splatter" or harmonics that interfere with other operators. The following settings were adjusted to achieve the correct ALSA levels:
-* **WSJT-X "PWR" Slider:** This acts as the primary fine-tuning control for the audio output level sent to the radio.
-* **OS Volume Mixer:** Both the input (Capture) and output (Playback) levels in Fedora’s volume control must be set to a point where the signal is strong but not clipping.
-* **Radio Menu Settings:** The "USB Gain" setting on the Yaesu FTX-1 was adjusted to calibrate the incoming audio from the computer.
-
-To contribute to the global propagation map, the **"Upload Spots"** option must be enabled in the WSJT-X settings. This sends decodes to the [WSPRnet](https://www.wsprnet.org) database.
 
 ### Station Documentation
 The following screenshot illustrates WSJT-X running in WSPR mode, successfully decoding multiple stations across the passband.

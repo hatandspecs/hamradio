@@ -2,6 +2,7 @@
 layout: default
 title: Calculating and Measuring the Inductance of a Coil
 category: article
+published: false
 date: 2026-04-28
 ---
 

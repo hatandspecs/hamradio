@@ -54,7 +54,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 
 **Interpretation from the dataset:**
 - The strongest activity is on 20m, with the highest total spot count and most sustained coverage across the capture window.
-- 12m is the weakest band in this dataset, with only 33 spots and the lowest mean SNR.
+- 12m is the least active band in this dataset, with only 33 spots and the lowest mean SNR.
 - 80m shows a later opening window, starting around 19:30 UTC and remaining active until 21:30 UTC.
 - It would be much more interesting to do this analysis on a longer duration dataset, for example 24 or 48 hours.
 
