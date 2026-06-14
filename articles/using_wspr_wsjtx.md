@@ -30,37 +30,39 @@ For further technical details, see the [WSPR Wikipedia page](https://en.wikipedi
 These notes outline the standard configuration and calibration process for WSPR operations using WSJT-X.
 
 #### 1. Input Level Calibration (Receive)
-The green vertical bar in the lower-left corner monitors audio input.
+The green vertical bar in the lower-left corner of WSJT-X monitors audio input level.
 * **Target Range:** Aim for 30 to 50 dB.
 * **Red Zone:** If the meter shows red, reduce input gain immediately to prevent distortion.
-* **Adjustment:** Use your operating system's sound mixer or the interface device properties.
+* **Adjustment:** Use your operating system’s sound mixer or the interface device properties to control the capture (input) level.
 
-##### Audio Gain Staging for my Yaseu FTX-1
-Achieving a clean signal required somewhat careful "gain staging" across several software and hardware layers. In digital modes, overdriving the audio results in "splatter" or harmonics that interfere with other operators. The following settings were adjusted to achieve the correct ALSA levels:
-* **WSJT-X "PWR" Slider:** This acts as the primary fine-tuning control for the audio output level sent to the radio.
-* **OS Volume Mixer:** Both the input (Capture) and output (Playback) levels in Fedora’s volume control must be set to a point where the signal is strong but not clipping.
-* **Radio Menu Settings:** The "USB Gain" setting on the Yaesu FTX-1 was adjusted to calibrate the incoming audio from the computer. 50% worked well.
-
-To contribute to the global propagation map, the **"Upload Spots"** option must be enabled in the WSJT-X settings. This sends decodes to the [WSPRnet](https://www.wsprnet.org) database.
-
-
-
+##### My Yaesu FTX-1 Setup
+On the FTX-1, the **Radio Menu "USB Gain" setting** controls the level of audio sent from the radio to the computer. Setting it to **50%** brought the WSJT-X input meter into the target range. I also adjusted the **OS Capture level** in Fedora’s volume control to fine-tune the level without clipping.
 
 #### 2. Power Settings (Metadata)
 The Power (dBm) field in the Settings menu (General tab) is for database reporting, not hardware control.
 * **10 Watts:** Set to 40 dBm.
 * **5 Watts:** Set to 37 dBm.
-* **Important:** Ensure this value is updated if you change your radio's physical transmit power.
+* **Important:** Ensure this value is updated if you change your radio’s physical transmit power.
 
 #### 3. Transmit Audio Calibration (Output)
-Use the 'Tune' function to calibrate the vertical Pwr slider (lower right) to achieve your target RF output power without overdriving the radio.
-1. **Prepare:** Set your radio to the desired RF output power (e.g., 10W).
-2. **Tune:** Click the 'Tune' button in WSJT-X to emit a continuous carrier.
-3. **Adjust:** Move the Pwr slider until your radio's power meter reads the target output.
-4. **Monitor ALC:** Verify the radio's ALC meter. If the ALC is high or pegged, reduce the Pwr slider and increase the radio's own gain control to compensate until power is steady with minimal ALC.
-5. **Finish:** Click 'Tune' again to stop.
+In digital modes, overdriving the audio output causes "splatter"—harmonics that bleed into adjacent frequencies and interfere with other operators. The goal is to set the audio level high enough for adequate RF power without clipping at any stage in the chain.
 
-#### 4. Band Hopping
+Use the ‘Tune’ function to calibrate the **Pwr slider** (lower right) to achieve your target RF output power without overdriving the radio.
+1. **Prepare:** Set your radio to the desired RF output power (e.g., 10W).
+2. **Tune:** Click the ‘Tune’ button in WSJT-X to emit a continuous carrier.
+3. **Adjust:** Move the Pwr slider until your radio’s power meter reads the target output.
+4. **Monitor ALC:** Verify the radio’s ALC meter. If the ALC is high or pegged, reduce the Pwr slider and increase the radio’s own gain control to compensate until power is steady with minimal ALC.
+5. **Finish:** Click ‘Tune’ again to stop.
+
+##### My Yaesu FTX-1 Setup
+Two software layers affect the transmit audio level sent to the radio:
+* **WSJT-X "PWR" Slider:** Acts as the primary fine-tuning control for the audio output level sent to the radio.
+* **OS Playback Level:** The output (Playback) level in Fedora’s volume control must be set high enough for a strong signal, but not so high as to clip.
+
+#### 4. Upload Spots
+To contribute to the global propagation map, the **"Upload Spots"** option must be enabled in the WSJT-X settings. This sends decodes to the [WSPRnet](https://www.wsprnet.org) database.
+
+#### 5. Band Hopping
 Band hopping allows automated monitoring across multiple bands.
 * **Setup:** Navigate to Settings > Band Hopping (or the Band Hopping tab).
 * **Configuration:** Select the desired bands.
@@ -91,3 +93,7 @@ The map below shows the TX spot reports for the initial test session.
 <img src="{{ '/assets/images/wsprrocks_20260426-172319.png' | relative_url }}" alt="WSPR Rocks TX Map" width="600">
 
 In the future I intend to run WSPR for a longer period of time and see what kind of analyses I can do with the spot dataset.
+
+# The future is now: A detailed WSPR analysis of my 75-10m EFHW
+Please see the following article:
+[WSPR Results Analysis on DIY 75-10m EFHW](7510_wspr_results_analysis.md)
