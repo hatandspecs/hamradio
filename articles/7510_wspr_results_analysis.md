@@ -14,6 +14,8 @@ This [repository](https://github.com/hatandspecs/wspr_7510_analysis) contains a 
 
 The notebook is intentionally structured to explain the purpose of each analysis, guide interpretation of the outputs, and draw conclusions from the actual dataset.
 
+**Note:** I have functionality to load a spots dataset in .tsv format downloaded from WSPR.rocks, and some functionality to automatically query the WSPR.rocks API to download data for a particular callsign between user-specified datetime bounds.  The .tsv file method works, but I haven't quite made the API download mechanism work yet, so if you try this on your own, just use the .tsv method.
+
 ---
 
 ## 1. Notebook-based Detailed Analysis
