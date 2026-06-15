@@ -152,4 +152,4 @@ Radio Settings that worked for my FTX-1:
 
 # Testing my WSJT-X Configuration using WSPR mode
 Please see the following article:
-[How to use WSPR with WSJT-X](../using_wspr_wsjtx/)
+[How to use WSPR with WSJT-X](../using-wspr-wsjtx/)
