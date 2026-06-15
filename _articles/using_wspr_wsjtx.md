@@ -96,4 +96,4 @@ In the future I intend to run WSPR for a longer period of time and see what kind
 
 # The future is now: A detailed WSPR analysis of my 75-10m EFHW
 Please see the following article:
-[WSPR Results Analysis on DIY 75-10m EFHW](7510_wspr_results_analysis.md)
+[WSPR Results Analysis on DIY 75-10m EFHW](../7510_wspr_results_analysis/)
