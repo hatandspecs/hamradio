@@ -8,7 +8,7 @@ date: 2026-02-28
 
 With the weather finally warming up, I decided it was time to take the plunge into Parks on the Air. Following a recommendation from **K3CWP**, I headed to **Jo Hays Vista**. It is a fantastic spot for a first activation because it offers easy access while being located within **Rothrock State Forest**, qualifying it as POTA park **US-5474**. I claimed a park bench with a stunning view of the valley and got to work.
 
-<img src="1.jpeg" alt="diy rigid v dipole" width="600">
+<img src="{{ '/assets/images/first_pota/1.jpeg' | relative_url }}" alt="diy rigid v dipole" width="600">
 
 ---
 
@@ -22,7 +22,7 @@ While hunting for a clear frequency, I ended up doing some "PR" for the hobby. S
 
 Since 20 meters was crowded, I swapped over to a different antenna I built specifically for versatility. This is a **rigid V dipole** constructed from two **18 foot telescoping whips** and basic hardware mounted on a camera tripod.
 
-<img src="3.jpeg" alt="radio on bench" width="600">
+<img src="{{ '/assets/images/first_pota/3.jpeg' | relative_url }}" alt="radio on bench" width="600">
 
 The build is incredibly straightforward:
 * **Whips:** Roughly $20 each.
@@ -37,11 +37,11 @@ During the activation, **KD3CCP** joined me. Having a second op there was a huge
 
 Running **QRP at just 6 watts**, I managed to pull **10 QSOs** out of the air over the course of 45 minutes.
 
-<img src="0.jpeg" alt="pota contacts" width="600">
+<img src="{{ '/assets/images/first_pota/0.jpeg' | relative_url }}" alt="pota contacts" width="600">
 
 The highlight of the day was bagging my first-ever **Alaska** contact! I also had a unique "Summit-to-Park" contact with an operator activating a peak in Idaho (**SOTA W7I/CI-131**), though the digital map initially pinned him elsewhere.
 
-<img src="4.jpeg" alt="pota contacts" width="600">
+<img src="{{ '/assets/images/first_pota/4.jpeg' | relative_url }}" alt="pota contacts" width="600">
 
 ---
 
@@ -49,7 +49,7 @@ The highlight of the day was bagging my first-ever **Alaska** contact! I also ha
 
 One of the biggest takeaways from this "maiden voyage" was how manageable the gear actually is. Except for the tripod and pole, everything I need fits into a single **small camera bag** with adjustable velcro partitions. 
 
-<img src="5.jpeg" alt="camera bag" width="600">
+<img src="{{ '/assets/images/first_pota/5.jpeg' | relative_url }}" alt="camera bag" width="600">
 
 The experience actually reminded me a lot of **fly fishing**—there is a similar rhythm to the setup, the "cast" for a contact, and the gear management. Now that I know how easy it is to handle this kit in the field, I’m planning to hike a bit further from the parking lot for my next activation. 
 

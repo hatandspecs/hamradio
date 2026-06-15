@@ -21,13 +21,13 @@ The EFHW transformer in question promises useable SWR on amateur bands from 75m 
 I made a DIY replica of the device with some known FT240-43 toroids that I had. It is wound the same way as the commercial Unun. I added a 120pF capacitor. My DIY Unun is wound with AWG 18 wire, whereas the commercial unit is wound with approximately AWG 16 wire.  Here are some pictures of my DIY replica, to illustrate the winding style.  In a later section I will measure it and compare it to the commerical Unun.
 
 > DIY Unun, View 1
-<img src="diy_view1.jpg" alt="DIY Unun, View 1" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/diy_view1.jpg' | relative_url }}" alt="DIY Unun, View 1" width="600">
 
 > DIY Unun, View 2
-<img src="diy_view2.jpg" alt="sDIY Unun, View 2" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/diy_view2.jpg' | relative_url }}" alt="sDIY Unun, View 2" width="600">
 
 > DIY Unun, View 3
-<img src="diy_view3.jpg" alt="DIY Unun, View 3" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/diy_view3.jpg' | relative_url }}" alt="DIY Unun, View 3" width="600">
 
 ---
 
@@ -47,7 +47,7 @@ The following table details the SWR and complex impedance measured at the primar
 These loaded measurements provide the baseline for our performance analysis. While the SWR remains largely usable, being under 2.1:1 for most of the range, the shifting real and imaginary components suggest that the transformation mechanism is evolving as frequency increases.
 
 > Commerical Unun, 2500 Ohms Loaded
-<img src="commercial_loaded.jpg" alt="Commerical Unun, 2500 Ohms Loaded" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/commercial_loaded.jpg' | relative_url }}" alt="Commerical Unun, 2500 Ohms Loaded" width="600">
 
 ---
 
@@ -68,7 +68,7 @@ $$X_L = \frac{1}{|B_{net} - B_C|}$$
 | **28.435** | 8.03 + 10.1j | -0.06065 S | 0.02144 S | **12.2 $\Omega$** |
 
 > Commerical Unun, Unloaded
-<img src="commercial_unloaded.jpg" alt="Commerical Unun, Unloaded" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/commercial_unloaded.jpg' | relative_url }}" alt="Commerical Unun, Unloaded" width="600">
 
 ### Detailed Calculation Steps and Example
 To calculate the primary inductive reactance when a capacitor is in parallel, we have to move from the world of **Impedance ($Z$)** to the world of **Admittance ($Y$)**. 
@@ -207,7 +207,7 @@ The following data represents the loaded performance of the DIY replica:
 
 
 > DIY Unun, 2500 Ohms Loaded
-<img src="diy_loaded.jpg" alt="DIY Unun, 2500 Ohms Loaded" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/diy_loaded.jpg' | relative_url }}" alt="DIY Unun, 2500 Ohms Loaded" width="600">
 
 
 ---
@@ -224,7 +224,7 @@ The primary inductive reactance was isolated by measuring the unit without a loa
 
 
 > DIY Unun, unloaded
-<img src="diy_unloaded.jpg" alt="DIY Unun, unloaded" width="600">
+<img src="{{ '/assets/images/analyzing_an_unknown_unun/diy_unloaded.jpg' | relative_url }}" alt="DIY Unun, unloaded" width="600">
 
 ---
 

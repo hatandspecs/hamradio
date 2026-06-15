@@ -12,10 +12,10 @@ date: 2026-06-06
 This is an analysis and pontification on a very popular EFHW antenna design that works on 8 bands from 75m to 10m.  I built a DIY version of one of these and have been fascinated with how the complicating elements such as the wideband 56:1 unun with unconventional wind, the inductive compensation coil and the midpoint capacitor are actually working.  Initially I just built the design as specified online and based on pictures of other builds and then tuned it according to instructions/rules of thumb.  Now I'm trying to figure out "why".
 
 > Hand-drawn Schematic of the 75-10m Antenna Design
-<img src="hand_drawn_schematic.jpg" alt="Hand-drawn Schematic of the 75-10m Antenna Design" width="600">
+<img src="{{ '/assets/images/wideband_unun/hand_drawn_schematic.jpg' | relative_url }}" alt="Hand-drawn Schematic of the 75-10m Antenna Design" width="600">
 
 > Close up of the Adjustable PVC Compensation Coil
-<img src="compensation_coil.jpg" alt="Close up of the Adjustable PVC Compensation Coil" width="600">
+<img src="{{ '/assets/images/wideband_unun/compensation_coil.jpg' | relative_url }}" alt="Close up of the Adjustable PVC Compensation Coil" width="600">
 
 
 ---

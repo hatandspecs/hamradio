@@ -11,7 +11,7 @@ I am a new Ham Radio operator, as of December 2025. I am in the process of tinke
 
 # Technical Articles
 
-{% assign sorted_articles = site.articles | sort: "date" | reverse %}
+{% assign sorted_articles = site.articles | where: "category", "article" | sort: "date" | reverse %}
 
 {% for page in sorted_articles %}
 * {% if page.date %}**{{ page.date | date: "%b %d, %Y" }}**: {% endif %}[{{ page.title }}]({{ page.url | relative_url }})

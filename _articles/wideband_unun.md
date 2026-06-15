@@ -9,11 +9,11 @@ The End-Fed Half-Wave (EFHW) antenna is an appealing choice for my situation in 
 
 
 > DIY 75-10m Antenna System, Final nanoVNA Measurements - Looks Good!
-<img src="final_nanovna_antenna.jpg" alt="DIY 75-10m Antenna System, Final nanoVNA Measurements
+<img src="{{ '/assets/images/wideband_unun/final_nanovna_antenna.jpg' | relative_url }}" alt="DIY 75-10m Antenna System, Final nanoVNA Measurements
 " width="600">
 
 > Deployment of the 75-10m Antenna System in my Yard
-<img src="7510_deployment_yard.jpg" alt="Deployment of the 75-10m Antenna System in my Yard" width="600">
+<img src="{{ '/assets/images/wideband_unun/7510_deployment_yard.jpg' | relative_url }}" alt="Deployment of the 75-10m Antenna System in my Yard" width="600">
 
 
 
@@ -24,10 +24,10 @@ This analysis focuses on an antenna design utilizing a single wire consisting of
 * **Compensation Coil:** This loading coil consists of 8 turns on a 1 inch OD PVC form, placed approximately 6.5 feet from the feedpoint. The PVC form has hook geometries cut into it to allow for rapid adjustment without full disassembly. This coil effectively pulls the resonance frequencies of the upper bands downward.
 
 > Hand-drawn Schematic of the 75-10m Antenna Design
-<img src="hand_drawn_schematic.jpg" alt="Hand-drawn Schematic of the 75-10m Antenna Design" width="600">
+<img src="{{ '/assets/images/wideband_unun/hand_drawn_schematic.jpg' | relative_url }}" alt="Hand-drawn Schematic of the 75-10m Antenna Design" width="600">
 
 > Close up of the Adjustable PVC Compensation Coil
-<img src="compensation_coil.jpg" alt="Close up of the Adjustable PVC Compensation Coil" width="600">
+<img src="{{ '/assets/images/wideband_unun/compensation_coil.jpg' | relative_url }}" alt="Close up of the Adjustable PVC Compensation Coil" width="600">
 
 **Hypothesis regarding the RC Network:** While empirical testing showed the desired frequency shift, the operating mechanism is likely entirely capacitive. At 3.8 MHz, a 300pF capacitor presents a capacitive reactance of roughly 139 ohms. Because RF current follows the path of least impedance, it completely bypasses the 150M ohm resistor. The capacitor acts as a series reactance that electrically shortens the antenna at lower frequencies. The resistor is there to provide a static bleed for any static electricity that accumulates on the antenna wire.
 
@@ -101,7 +101,7 @@ A 2-turn primary yields approximately 205 ohms of reactance at 3.8 MHz. This suc
 The final unit is a 56:1 unun utilizing a 2-turn primary and a 15-turn secondary, wound with AWG 18 wire  since I am operating under 100W SSB and more typically under 50W. A 100pF 1kV C0G/NP0 ceramic capacitor is placed across the primary.  I had no luck with the conventional W1JR winding style for my broadband unun.  Testing with a 2500 ohm non-inductive dummy load, I observed that SWR climbed significantly on the higher bands.
 
 > Conventional W1JR winding for a Wideband 75-10m 56:1 Unun - Poor High Frequency Performance.
-<img src="conventional_w1jr_wind_56_unun.jpg" alt="Conventional W1JR winding for a Wideband 75-10m 56:1 Unun" width="600">
+<img src="{{ '/assets/images/wideband_unun/conventional_w1jr_wind_56_unun.jpg' | relative_url }}" alt="Conventional W1JR winding for a Wideband 75-10m 56:1 Unun" width="600">
 
 From pictures online showing commercially available ununs for similar 75m-10m antenna systems, I saw what appeared to be a different winding style. This, combined with a lack of success on higher bands for broadband ununs with typical W1JR and maximally spaced winding styles, led me to trying to figure out and replicate this unconventional winding style.  I also went with a 2 turn primary because in the pictures of commercial ununs, that is what I saw in commerical unun pictures online, and I did test the same design with a 3 turn primary and it didn't perform as well on the higher bands.
 
@@ -115,12 +115,12 @@ After sweeping numerous winding configurations with a NanoVNA to mitigate the hi
 The total winding space only occupies about half the circumference of the stacked cores. 
 
 > Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun - Good Broadband Performance!
-<img src="exotic_wind_56_unun.jpg" alt="Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun" width="600">
+<img src="{{ '/assets/images/wideband_unun/exotic_wind_56_unun.jpg' | relative_url }}" alt="Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun" width="600">
 
 To further convince myself that it was the winding spacing that was helping reduce the SWR of the higher bands, I tried a control experiment. I wound a similar style on a roll of electrical tape that was approximately the size of an FT240 core. In this experiment, I am removing the effect of the core itself and the material mix, and any transformation or matching effect must be entirely due to the winding geometry.
 
 > Control Experiment - Exotic Wind on an Inert Core Showing SWR Decrease at Higher Frequencies
-<img src="tape_unun.jpg" alt="Control Experiment - Exotic Wind on an Inert Core (electrical tape roll) Showing SWR Decrease at Higher Frequencies" width="600">
+<img src="{{ '/assets/images/wideband_unun/tape_unun.jpg' | relative_url }}" alt="Control Experiment - Exotic Wind on an Inert Core (electrical tape roll) Showing SWR Decrease at Higher Frequencies" width="600">
 
 **Operating Mechanism Hypothesis:** The close-spaced initial winds reduce leakage inductance, which severely impacts high-frequency performance. At higher frequencies, the magnetic permeability of Mix 43 drops, and the device likely transitions from a purely magnetic transformer into something else.  I'm currently thinking it is behaving like a non-uniform Transmission Line Transformer (TLT). Or if I am misapplying or misunderstanding the idea of a TLT, perhaps it is just some other form of capacitive and inductive coupling. The specific tight-to-spaced winding geometry appears to facilitate this transition, keeping the self-resonant frequency of the transformer high enough to operate cleanly on 10m.
 
@@ -128,14 +128,14 @@ To further convince myself that it was the winding spacing that was helping redu
 The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint is mounted outside of a second-story window, traveling 80 to 90 feet to a 25-foot mast mounted on a playhouse. From there, it doglegs and slopes down to a post in the backyard. There is roughly 10 feet of paracord between the post and the antenna end, keeping the lowest portion 8-10 feet above ground.  A large common mode choke (12 turns of coax through an FT240-43 core) is placed immediately after the unun. A dedicated counterpoise wire is attached to the unun ground terminal. Incrementally trimming this counterpoise had a measurable effect on the system tuning, with the final length settling at 8.75 feet.
 
 > Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise
-<img src="feed_point.jpg" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
+<img src="{{ '/assets/images/wideband_unun/feed_point.jpg' | relative_url }}" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" width="600">
 
 
 > Deployment Map showing Dogleg Required for Pragmatic Reasons
-<img src="7510_deployment.png" alt="Deployment Map showing Dog-leg Required for Pragmatic Reasons" width="600">
+<img src="{{ '/assets/images/wideband_unun/7510_deployment.png' | relative_url }}" alt="Deployment Map showing Dog-leg Required for Pragmatic Reasons" width="600">
 
 > View from the far end of the antenna  
-<img src="far_end.jpg" alt="Far-End of the Antenna" width="600">
+<img src="{{ '/assets/images/wideband_unun/far_end.jpg' | relative_url }}" alt="Far-End of the Antenna" width="600">
 
 ## Results
 The on-air results have been excellent relative to my previous antennas. The system operates from 75m to 10m wideband without a tuner with acceptable SWR. I have successfully run WSPR on all 8 bands with solid results and made phone contacts on every phone band except 12m. 30m does not align as neatly as the other bands but cleans up easily with a tuner. An unexpected benefit is a noticeable reduction in QRM on 20m compared to my previous antennas. My current hypothesis is that this reduction occurs because more of the radiating element is positioned further away from house noise sources. 

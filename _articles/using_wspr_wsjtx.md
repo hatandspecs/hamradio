@@ -84,13 +84,13 @@ Initial testing confirms that the WSJT-X configuration is fully operational on t
 ### Station Documentation
 The following screenshot illustrates WSJT-X running in WSPR mode, successfully decoding multiple stations across the passband.
 
-<img src="wspr-wsjtx-2026-04-26 16-51.png" alt="WSJT-X Running WSPR" width="600">
+<img src="{{ '/assets/images/using_wspr_wsjtx/wspr-wsjtx-2026-04-26 16-51.png' | relative_url }}" alt="WSJT-X Running WSPR" width="600">
 
 By utilizing [WSPR Rocks](https://wspr.rocks), it is possible to generate a graphical representation of station performance. Filtering by "TX Call" using callsign **KD3CCO** displays a map of every station that successfully decoded my beacon. This provides an objective measure of my transmitter's reach and current propagation. Conversely, filtering by "RX Call" displays the locations of the beacons my station was able to hear and decode.
 
 The map below shows the TX spot reports for the initial test session.
 
-<img src="wsprrocks_20260426-172319.png" alt="WSPR Rocks TX Map" width="600">
+<img src="{{ '/assets/images/using_wspr_wsjtx/wsprrocks_20260426-172319.png' | relative_url }}" alt="WSPR Rocks TX Map" width="600">
 
 In the future I intend to run WSPR for a longer period of time and see what kind of analyses I can do with the spot dataset.
 
