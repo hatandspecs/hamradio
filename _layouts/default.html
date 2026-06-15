@@ -82,13 +82,19 @@
 
   {% if page.category == "article" %}
   <script>
-    fetch('https://kd3cco.goatcounter.com/counter/' + encodeURIComponent(location.pathname) + '.json')
-      .then(r => r.json())
-      .then(data => {
-        var el = document.getElementById('gc-view-count');
-        if (el) el.textContent = data.count_unique + ' views';
-      })
-      .catch(function() {});
+    var t = setInterval(function() {
+      if (window.goatcounter && window.goatcounter.get_data) {
+        clearInterval(t);
+        var path = window.goatcounter.get_data()['p'];
+        fetch('https://kd3cco.goatcounter.com/counter/' + encodeURIComponent(path) + '.json')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var el = document.getElementById('gc-view-count');
+            if (el) el.textContent = data.count + ' views';
+          })
+          .catch(function() {});
+      }
+    }, 100);
   </script>
   {% endif %}
 </body>
