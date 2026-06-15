@@ -4,7 +4,7 @@ theme: jekyll-theme-architect # A clean, technical theme
 
 # CRITICAL for project sites:
 baseurl: "/hamradio" 
-url: "https://your-username.github.io"
+url: "https://hatandspecs.github.io"
 
 markdown: kramdown
 kramdown:
