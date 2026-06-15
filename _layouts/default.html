@@ -82,7 +82,7 @@
 
   {% if page.category == "article" %}
   <script>
-    fetch('https://kd3cco.goatcounter.com/counter/' + location.pathname + '.json')
+    fetch('https://kd3cco.goatcounter.com/counter/' + location.pathname.replace(/^\//, '') + '.json')
       .then(r => r.json())
       .then(data => {
         var el = document.getElementById('gc-view-count');
