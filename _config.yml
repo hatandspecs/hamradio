@@ -3,7 +3,7 @@ description: Documentation and Research
 theme: jekyll-theme-architect # A clean, technical theme
 
 # CRITICAL for project sites:
-baseurl: "/natale_github_page" 
+baseurl: "/hamradio" 
 url: "https://your-username.github.io"
 
 markdown: kramdown
