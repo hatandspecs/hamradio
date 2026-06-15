@@ -10,7 +10,7 @@ This week, I spent some time experimenting with a **Tuned Transmission Line Trap
 
 The T2LT is a fantastic design for portable ops because the antenna and the feedline are essentially the same piece of cable, making it incredibly stealthy and easy to deploy.
 
-<img src="{{ '/assets/images/diy_t2lt/4.jpeg' | relative_url }}" alt="stowed 20m t2lt antenna" width="600">
+<img src="4.jpeg" alt="stowed 20m t2lt antenna" width="600">
 
 
 ---
@@ -26,12 +26,12 @@ Here is the breakdown of the measurements and materials used for this specific b
 
 The placement of the trap is critical: it is positioned exactly **16 feet 1 inch** from the point where the top wire attaches. This creates the high impedance necessary to "stop" the antenna and keep the rest of the feedline "cold" (RF-free).
 
-<img src="{{ '/assets/images/diy_t2lt/2.jpeg' | relative_url }}" alt="test choke" width="600">
+<img src="2.jpeg" alt="test choke" width="600">
 
 
 During bench testing, this choke measured at least **-35dB of suppression** across the 20m band, which is exactly what you want to see for effective common-mode rejection.
 
-<img src="{{ '/assets/images/diy_t2lt/3.jpeg' | relative_url }}" alt="choke measurement" width="600">
+<img src="3.jpeg" alt="choke measurement" width="600">
 
 ---
 
@@ -43,7 +43,7 @@ However, I quickly realized my mistake: **when coax is used as an antenna radiat
 
 My first attempt was four feet too short, and the **nanoVNA** immediately showed the resonance was way too high. I had to unwrap the choke and move it to the **16' 1"** mark. Once I corrected for the proper velocity factor, I was right in the ballpark and only needed a tiny bit of trimming on the top wire to hit my target frequency.
 
-<img src="{{ '/assets/images/diy_t2lt/1.jpeg' | relative_url }}" alt="great swr and bandwidth on the completed t2lt" width="600">
+<img src="1.jpeg" alt="great swr and bandwidth on the completed t2lt" width="600">
 
 
 ---
@@ -54,7 +54,7 @@ Deployment was incredibly fast—it took only about five minutes to get the tele
 
 Testing took place on a particularly gusty Friday night. I was using a **34 foot carbon fiber "POTA" pole**, and while the manufacturer claims they are freestanding without support, I felt like I was placing a $150 wager against the valley winds. 
 
-<img src="{{ '/assets/images/diy_t2lt/0.jpeg' | relative_url }}" alt="deployed t2lt" width="600">
+<img src="0.jpeg" alt="deployed t2lt" width="600">
 
 
 Even as the pole reached the limits of its elastic modulus, it held up beautifully. The antenna performed well; I heard plenty of activity on 20m, and **KD3CCP** even caught me calling CQ on his SDR across town.

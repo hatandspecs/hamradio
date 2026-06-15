@@ -62,7 +62,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 
 
 > Band Openings and Closures  
-<img src="{{ '/assets/images/analysis_images/analysis1_band_openings.png' | relative_url }}" alt="Band Openings and Closures" width="600">
+<img src="analysis1_band_openings.png" alt="Band Openings and Closures" width="600">
 
 ---
 
@@ -104,7 +104,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 
 
 > Distance Profiling by Band  
-<img src="{{ '/assets/images/analysis_images/analysis2_distance_profiling.png' | relative_url }}" alt="Distance Profiling by Band" width="600">
+<img src="analysis2_distance_profiling.png" alt="Distance Profiling by Band" width="600">
 
 ---
 
@@ -161,7 +161,7 @@ This analysis identifies the strongest footprint by the top *receive* grid prefi
 
 
 > Geographical Footprint  
-<img src="{{ '/assets/images/analysis_images/analysis3_geographical_spread.png' | relative_url }}" alt="Geographical Footprint" width="600">
+<img src="analysis3_geographical_spread.png" alt="Geographical Footprint" width="600">
 
 ---
 
@@ -197,7 +197,7 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 
 
 > SNR vs Distance Regression  
-<img src="{{ '/assets/images/analysis_images/analysis4_snr_distance.png' | relative_url }}" alt="SNR vs Distance Regression" width="600">
+<img src="analysis4_snr_distance.png" alt="SNR vs Distance Regression" width="600">
 
 ---
 
@@ -239,7 +239,7 @@ This comparison uses reciprocal paths involving KD3CCO as both transmitter and r
 
 
 > TX vs RX Asymmetry  
-<img src="{{ '/assets/images/analysis_images/analysis5_tx_rx_asymmetry.png' | relative_url }}" alt="TX vs RX Asymmetry" width="600">
+<img src="analysis5_tx_rx_asymmetry.png" alt="TX vs RX Asymmetry" width="600">
 
 ---
 
@@ -271,7 +271,7 @@ This polar map shows spot direction and distance for KD3CCO transmissions.  My E
 
 
 > Azimuthal Pattern Mapping  
-<img src="{{ '/assets/images/analysis_images/analysis6_azimuthal_pattern.png' | relative_url }}" alt="Azimuthal Pattern Mapping" width="600">
+<img src="analysis6_azimuthal_pattern.png" alt="Azimuthal Pattern Mapping" width="600">
 
 ---
 
@@ -315,7 +315,7 @@ This analysis compares `k/W` across bands for stations that heard KD3CCO on 3 or
 
 
 > Normalized Band Efficiency  
-<img src="{{ '/assets/images/analysis_images/analysis7_efficiency_normalization.png' | relative_url }}" alt="Normalized Band Efficiency" width="600">
+<img src="analysis7_efficiency_normalization.png" alt="Normalized Band Efficiency" width="600">
 
 ---
 
@@ -353,7 +353,7 @@ This analysis examines the shortest paths on the higher bands, which informs the
 
 
 > Takeoff Angle Inference  
-<img src="{{ '/assets/images/analysis_images/analysis8_takeoff_angle.png' | relative_url }}" alt="Takeoff Angle Inference" width="600">
+<img src="analysis8_takeoff_angle.png" alt="Takeoff Angle Inference" width="600">
 
 ---
 
@@ -381,10 +381,10 @@ This analysis creates a folium map showing the transmit and receive paths across
 **Interpretation:**
 - The map confirms the earlier statistical findings by showing the same major propagation lobes in geographic context.
 
-[Link to Interactive Map](../assets/images/analysis_images/analysis9_spots_map.html){:target="_blank"}
+[Link to Interactive Map](analysis9_spots_map.html){:target="_blank"}
 
 > Screenshot of Interactive Map  
-<img src="{{ '/assets/images/analysis_images/analysis9_spots_map_screenshot.png' | relative_url }}" alt="Distance Profiling by Band" width="600">
+<img src="analysis9_spots_map_screenshot.png" alt="Distance Profiling by Band" width="600">
 
 
 ---

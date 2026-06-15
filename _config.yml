@@ -9,3 +9,8 @@ url: "https://your-username.github.io"
 markdown: kramdown
 kramdown:
   math_engine: mathjax
+
+collections:
+  articles:
+    output: true
+    permalink: /articles/:name/
