@@ -77,12 +77,12 @@
     mediumZoom('img');
   </script>
 
-  <script data-goatcounter="https://kd3cco.goatcounter.com/count"
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
 
   {% if page.category == "article" %}
   <script>
-    fetch('https://kd3cco.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
       .then(r => r.json())
       .then(data => {
         var el = document.getElementById('gc-view-count');
