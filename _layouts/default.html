@@ -34,6 +34,9 @@
     {% if page.date %}
       <p style="color: #666; font-style: italic;">
         Published on: {{ page.date | date: "%B %d, %Y" }}
+        {% if page.category == "article" %}
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        {% endif %}
       </p>
     {% endif %}
   </header>
@@ -41,6 +44,28 @@
   <main>
     {{ content }}
   </main>
+
+  {% if page.category == "article" %}
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/natale_github_page"
+      data-repo-id="R_kgDOSNG1GQ"
+      data-category="General"
+      data-category-id="DIC_kwDOSNG1Gc4C_K1K"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  {% endif %}
 
   <footer>
     <hr>
@@ -51,5 +76,20 @@
   <script>
     mediumZoom('img');
   </script>
+
+  <script data-goatcounter="https://kd3cco.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  {% if page.category == "article" %}
+  <script>
+    fetch('https://kd3cco.goatcounter.com/counter/' + encodeURIComponent(location.pathname) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count_unique + ' views';
+      })
+      .catch(function() {});
+  </script>
+  {% endif %}
 </body>
 </html>
