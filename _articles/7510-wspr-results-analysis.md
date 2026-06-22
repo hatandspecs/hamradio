@@ -357,7 +357,79 @@ This analysis examines the shortest paths on the higher bands, which informs the
 
 ---
 
-### Analysis 9: Interactive Folium Path Map
+### Analysis 9: SSB QSO Feasibility and Minimum Power Mapping
+
+
+
+This analysis estimates whether each WSPR spot's path could plausibly support a voice (SSB) contact, and the minimum radio output power that would be required.
+
+WSPR SNR is reported relative to a ~2500 Hz reference bandwidth, which is close to a typical SSB receive bandwidth. That means a spot's reported SNR scales directly with TX power: running the same station harder by `X` dB raises the SNR by the same `X` dB. Feedline loss and antenna gain are properties of the station, not the path, so as long as the same antenna and feedline are used for the WSPR transmission and the hypothetical SSB attempt, they cancel out of this power ratio and aren't modeled as separate inputs.
+
+**Purpose:**
+- Identify which spots in the dataset already represent a workable SSB path, and which would need more power than the radio can provide.
+- Quantify the minimum TX power required, spot by spot, to clear a configurable SSB SNR margin (default 3 dB).
+
+**How to interpret:**
+- `required_tx_power_w` is the radio output power needed to raise that spot's SNR to the configured minimum.
+- Spots with `can_make_ssb_qso == True` are achievable within the configured maximum radio power (default 100 W); the rest would need more power than is available.
+- 30m has no phone/SSB allocation under the amateur band plan (it's CW/data only), so it's excluded from this analysis entirely.
+- The per-band maps below color each path's great-circle line by the required power (jet colormap); paths that can't meet the SSB threshold within the configured maximum power are shown in gray and drawn beneath the others so the most favorable (lowest-power) paths stand out on top.
+
+**Possible conclusions:**
+- A high fraction of gray paths on a band suggests SSB is impractical there at the current power level.
+- Clusters of low-power (favorable) paths point to directions/bands where an SSB QSO is comfortably within reach.
+- Bands where most spots already clear the threshold at low power are good candidates to actually attempt an SSB contact.
+
+**Actual results for `7510m_wspr_spots.tsv`** (3 dB minimum margin, 100 W maximum radio power):
+- 30m is excluded (no phone allocation). Of the remaining seven bands, 1647 of 4462 spots (36.9%) could plausibly support an SSB QSO within 100 W.
+- Per-band breakdown:
+
+| Band | Spots | Pass within 100 W | Pass rate | Median required power |
+|------|-------|--------------------|-----------|------------------------|
+| 80m | 264 | 132 | 50.0% | 112.8 W |
+| 40m | 806 | 444 | 55.1% | 79.4 W |
+| 20m | 2173 | 818 | 37.6% | 251.2 W |
+| 17m | 593 | 146 | 24.6% | 631.0 W |
+| 15m | 506 | 82 | 16.2% | 1584.9 W |
+| 12m | 33 | 6 | 18.2% | 1584.9 W |
+| 10m | 87 | 19 | 21.8% | 1584.9 W |
+
+**Interpretation from the dataset:**
+- 40m and 80m have the best SSB odds in this capture — these spots are mostly short/regional paths, so even modest power clears the 3 dB margin.
+- The higher bands (15m, 12m, 10m) need far more power on a typical spot, since this capture's contacts there are predominantly long-haul DX paths with much lower starting SNR.
+- 20m sits in between: it has the largest number of plausible SSB contacts in absolute terms (818), even though its pass rate is lower than 40m/80m, simply because it has by far the most total spots in this capture.
+
+> 80m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_80m_screenshot.png' | relative_url }}" alt="80m SSB QSO Feasibility Map" width="600">  
+[Open interactive 80m map]({{ '/assets/analysis9_ssb_qso_80m.html' | relative_url }}){:target="_blank"}
+
+> 40m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_40m_screenshot.png' | relative_url }}" alt="40m SSB QSO Feasibility Map" width="600">  
+[Open interactive 40m map]({{ '/assets/analysis9_ssb_qso_40m.html' | relative_url }}){:target="_blank"}
+
+> 20m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_20m_screenshot.png' | relative_url }}" alt="20m SSB QSO Feasibility Map" width="600">  
+[Open interactive 20m map]({{ '/assets/analysis9_ssb_qso_20m.html' | relative_url }}){:target="_blank"}
+
+> 17m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_17m_screenshot.png' | relative_url }}" alt="17m SSB QSO Feasibility Map" width="600">  
+[Open interactive 17m map]({{ '/assets/analysis9_ssb_qso_17m.html' | relative_url }}){:target="_blank"}
+
+> 15m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_15m_screenshot.png' | relative_url }}" alt="15m SSB QSO Feasibility Map" width="600">  
+[Open interactive 15m map]({{ '/assets/analysis9_ssb_qso_15m.html' | relative_url }}){:target="_blank"}
+
+> 12m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_12m_screenshot.png' | relative_url }}" alt="12m SSB QSO Feasibility Map" width="600">  
+[Open interactive 12m map]({{ '/assets/analysis9_ssb_qso_12m.html' | relative_url }}){:target="_blank"}
+
+> 10m — SSB QSO Feasibility Map  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_10m_screenshot.png' | relative_url }}" alt="10m SSB QSO Feasibility Map" width="600">  
+[Open interactive 10m map]({{ '/assets/analysis9_ssb_qso_10m.html' | relative_url }}){:target="_blank"}
+
+---
+
+### Analysis 10: Interactive Folium Path Map
 
 
 This analysis creates a folium map showing the transmit and receive paths across bands.
@@ -373,7 +445,7 @@ This analysis creates a folium map showing the transmit and receive paths across
 - Popup details include TX/RX callsigns, grid locators, SNR, and path distance.
 
 **Actual results for `7510m_wspr_spots.tsv`:**
-- A interactive HTML map is saved as `analysis_images/analysis9_spots_map.html`.
+- A interactive HTML map is saved as `analysis_images/analysis10_spots_map.html`.
 - The map includes geodesic paths for all spot connections, grouped by band and RX (I heard) or TX (I was heard by)
 - The broadest coverage is visible on 20m and 17m, with 80m and 40m showing tighter domestic/regional clusters.
 - The `heard` vs `heard_by` separation highlights the exchange asymmetry and the directional footprint of my antenna system.
@@ -381,10 +453,10 @@ This analysis creates a folium map showing the transmit and receive paths across
 **Interpretation:**
 - The map confirms the earlier statistical findings by showing the same major propagation lobes in geographic context.
 
-[Link to Interactive Map]({{ '/assets/analysis9_spots_map.html' | relative_url }}){:target="_blank"}
+[Link to Interactive Map]({{ '/assets/analysis10_spots_map.html' | relative_url }}){:target="_blank"}
 
 > Screenshot of Interactive Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_spots_map_screenshot.png' | relative_url }}" alt="Distance Profiling by Band" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis10_spots_map_screenshot.png' | relative_url }}" alt="Screenshot of Interactive Map" width="600">
 
 
 ---
@@ -399,8 +471,11 @@ Dependencies:
 - `matplotlib`
 - `seaborn`
 - `folium`
+- `geopy`
 
-The notebook reads `7510m_wspr_spots.tsv`, builds derived fields, runs nine analyses, and displays the results while saving the key images and interactive map to `analysis_images/`. Analysis 9 uses the helper module `wspr_folium_map.py` to generate an interactive map with organized checkbox groups for band and direction filtering.
+The notebook reads `7510m_wspr_spots.tsv`, builds derived fields, runs ten analyses, and displays the results while saving the key images and interactive maps to `analysis_images/`. Analysis 9 (SSB QSO feasibility) and Analysis 10 (interactive path map) both use the helper module `wspr_folium_map.py` to generate their maps, with organized checkbox groups for band/direction filtering and a jet colormap legend for required power.
+
+Analyses 1, 2, 4, and 8 adapt automatically to however many bands are present in a dataset — they still produce useful output with just one band, only with fewer traces. Analysis 7 specifically requires stations heard on 3 or more distinct bands, so it's skipped on captures with fewer than 3 bands present.
 
 ---
 
@@ -409,5 +484,6 @@ The notebook reads `7510m_wspr_spots.tsv`, builds derived fields, runs nine anal
 1. **20m is the strongest DX band on my DIY 75-10m EFHW as deployed** in this capture, both by spot count and average distance.  The antenna height is more amiable to mid band DX.  While the EFHW is mounted adequately high for shorter band DX, the chaotic nature EFHW radiation patterns on bands farther from the fundamental is probably limiting DX on shorter bands.  If I wanted to operate regularly on these shorter bands it would be better to hang dedicated antennas for them.
 2. **Receive-side asymmetry is clearly present, probably due to local noise in my house/neighborhood**, with a mean TX/RX SNR delta of +6.3 dB, suggesting the local RX path is weaker than the TX path.
 3. **The antenna system performs best on midbands**, with normalized `k/W` values highest on 20m, 17m, and 15m.  Lucky for me, this entire 75-10m EFHW project was aimed at retaining capability on 40m/20m/15m that I could already get on my 40m EFHW and 40m OCFD, adding 17m capability, and gaining any 80m and 30m capability at all.
-4. **Higher-band inner skip boundaries are far away** on 10m and 12m. **The interactive folium map (Analysis 9)** visually confirms the propagation patterns identified in analyses 1–8.  Since these harmonic modes are farthest away from the fundamental of the antenna they likely have multiple lobes, unpredictable nulls, and strong high-angle components.  If I wanted to do better on these bands, dedicated antennas cut for these bands would probably greatly outperform trying to get them as higher order harmonics of my 75m EFHW.
+4. **Higher-band inner skip boundaries are far away** on 10m and 12m. **The interactive folium map (Analysis 10)** visually confirms the propagation patterns identified in analyses 1–8.  Since these harmonic modes are farthest away from the fundamental of the antenna they likely have multiple lobes, unpredictable nulls, and strong high-angle components.  If I wanted to do better on these bands, dedicated antennas cut for these bands would probably greatly outperform trying to get them as higher order harmonics of my 75m EFHW.
+5. **SSB is realistically within reach on 40m and 80m at 100 W**, where over half of this capture's spots clear a 3 dB margin; the higher bands need far more power per spot since this capture's contacts there are predominantly long-haul DX rather than short, high-SNR paths.
 
