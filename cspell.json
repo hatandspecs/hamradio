@@ -2,9 +2,11 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "unun", "toroid", "EFHW", "KD3CCO", "ferrite", "FT240", "FT140", 
-    "Amidon", "nanovna", "Bifilar", "Reactance", "permeability", 
-    "Inductive", "parasitics", "counterpoise", "SWR", "natale", "KD3CCO", "Multiband", "feedpoint"
+    "unun", "toroid", "EFHW", "KD3CCO", "ferrite", "FT240", "FT140",
+    "Amidon", "nanovna", "Bifilar", "Reactance", "permeability",
+    "Inductive", "parasitics", "counterpoise", "SWR", "natale", "KD3CCO", "Multiband", "feedpoint",
+    "hexbeam", "paracord", "tensioner", "tensioners", "unguyed", "untensioned", "Arca",
+    "NVIS", "takeoff"
   ],
   "ignorePaths": [
     "node_modules/**",
