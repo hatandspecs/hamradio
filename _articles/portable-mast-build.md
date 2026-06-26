@@ -14,7 +14,7 @@ This article covers the build of a hand-steerable, 9.14 m (30 ft) carbon fiber m
 
 ## The Pole
 
-The mast itself is this [9.14 m (30 ft) telescoping carbon fiber pole](https://a.co/d/065h0aCn), which ran me about \$120. It's marketed as a window-washing/duster utility pole, but it's plenty rigid for ham radio use, and once guyed it's rock solid. It easily supports my DIY rigid V dipole, which is manually tunable anywhere from 20m down to 6m just by extending or collapsing the telescoping whips.
+The mast itself is this [9.14 m (30 ft) telescoping carbon fiber pole](https://a.co/d/065h0aCn), which ran me about \\$120. It's marketed as a window-washing/duster utility pole, but it's plenty rigid for ham radio use, and once guyed it's rock solid. It easily supports my DIY rigid V dipole, which is manually tunable anywhere from 20m down to 6m just by extending or collapsing the telescoping whips.
 
 ## The Guy Rings
 
@@ -173,4 +173,4 @@ The whole assembly collapses down small and is easy to store and transport.
 
 I also mounted a broom-handle-to-camera-tripod thread adapter on the pole, along with an Arca-Swiss style clamp, since I like to mount my antennas on Arca-Swiss plates so they're quick to swap between poles and tripods.
 
-Total cost came out to about \$120 for the pole and another \$50-75 in hardware, paracord, and four tent stakes. I haven't found a non-DIY equivalent that comes close to that price.
+Total cost came out to about \\$120 for the pole and another \\$50-75 in hardware, paracord, and four tent stakes. I haven't found a non-DIY equivalent that comes close to that price.
