@@ -113,10 +113,10 @@ My friend KD3CCP also put together a set of DIY center-loaded whips that thread 
 > Close-up of one of the DIY center-loading coils partway up the whip  
 <img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_003600931.jpg' | relative_url }}" alt="Close-up of one of the DIY center-loading coils partway up the whip">
 
-> Looking straight up at the hub — the loading coils visibly droop the whips under their own weight  
-<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004749393.jpg' | relative_url }}" alt="Looking straight up at the hub, the loading coils visibly droop the whips under their own weight">
+> The loading coils visibly droop the whips under their own weight  
+<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004749393.jpg' | relative_url }}" alt="The loading coils visibly droop the whips under their own weight">
 
-Even with that extra weight up top, the mast and guying handle it without issue:
+Even with that extra weight up top, the mast and guying handle it without issue. The 40m center loaded rigid V ends up drooping to more of a horizontal dipole, but that's not bad and it tuned up well:
 
 > DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast  
 <img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004738841.jpg' | relative_url }}" alt="DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast">
