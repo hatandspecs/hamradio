@@ -108,7 +108,7 @@ With the mast up, the rigid V hub mounts right on top and the whole thing rotate
 > The mast guyed in the field, with the rigid V dipole deployed for a 20m session  
 <img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_233411494.jpg' | relative_url }}" alt="The mast guyed in the field, with the rigid V dipole deployed for a 20m session">
 
-My friend KD3CCP also put together a set of DIY center-loaded whips (article on these TBD) that thread onto the same hub for 40m. The loading coils add some weight out on the whips, which you can see pulling a visible droop into the elements at the hub:
+My friend KD3CCP also put together a set of DIY center-loaded whips that thread onto the same hub for 40m. The loading coils add some weight out on the whips, which you can see pulling a visible droop into the elements at the hub. I ran a [WSPR test session on this exact setup](/hamradio/articles/40m-center-loaded-dipole-wspr-results-analysis/), if you want to see how it actually performed:
 
 > Close-up of one of the DIY center-loading coils partway up the whip  
 <img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_003600931.jpg' | relative_url }}" alt="Close-up of one of the DIY center-loading coils partway up the whip">

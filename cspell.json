@@ -6,7 +6,7 @@
     "Amidon", "nanovna", "Bifilar", "Reactance", "permeability",
     "Inductive", "parasitics", "counterpoise", "SWR", "natale", "KD3CCO", "Multiband", "feedpoint",
     "hexbeam", "paracord", "tensioner", "tensioners", "unguyed", "untensioned", "Arca",
-    "NVIS", "takeoff"
+    "NVIS", "takeoff", "KD3CCP"
   ],
   "ignorePaths": [
     "node_modules/**",
