@@ -8,13 +8,13 @@ date: 2026-06-26
 This article covers the build of a hand-steerable, 9.14 m (30 ft) carbon fiber mast designed to support my [DIY rigid V dipole](/hamradio/articles/rigid-v-dipole/). It's built around an inexpensive telescoping carbon fiber window-washing/duster utility pole from Amazon, dressed up with a pair of DIY plywood guy rings that let the whole thing be guyed solidly and still rotated by hand. Once it's up and guyed, the pole comes down in seconds to re-tune or re-band the dipole, and a friend of mine came up with a set of DIY center-loaded whips for the same hub that work wonderfully across the 40m band.
 
 > DIY 20m rigid V dipole on top of the DIY hand-steerable mast  
-<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_234031295.jpg' | relative_url }}" alt="DIY 20m rigid V dipole on top of the DIY hand-steerable mast" width="600">
+<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_234031295.jpg' | relative_url }}" alt="DIY 20m rigid V dipole on top of the DIY hand-steerable mast">
 
 ---
 
 ## The Pole
 
-The mast itself is this [9.14 m (30 ft) telescoping carbon fiber pole](https://a.co/d/065h0aCn), which ran me about $120. It's marketed as a window-washing/duster utility pole, but it's plenty rigid for ham radio use, and once guyed it's rock solid. It easily supports my DIY rigid V dipole, which is manually tunable anywhere from 20m down to 6m just by extending or collapsing the telescoping whips.
+The mast itself is this [9.14 m (30 ft) telescoping carbon fiber pole](https://a.co/d/065h0aCn), which ran me about \$120. It's marketed as a window-washing/duster utility pole, but it's plenty rigid for ham radio use, and once guyed it's rock solid. It easily supports my DIY rigid V dipole, which is manually tunable anywhere from 20m down to 6m just by extending or collapsing the telescoping whips.
 
 ## The Guy Rings
 
@@ -27,28 +27,28 @@ I had three requirements for the guy rings:
 To make the rings, I used two nested hole saws to cut discs out of 1.3 cm (1/2 in) plywood — one to cut the outer diameter, and a smaller one to cut the center bore.
 
 > Cutting a guy ring blank from 1.3 cm (1/2 in) plywood with nested hole saws  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_001302173.jpg' | relative_url }}" alt="Cutting a guy ring blank from 1.3 cm (1/2 in) plywood with nested hole saws" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_001302173.jpg' | relative_url }}" alt="Cutting a guy ring blank from 1.3 cm (1/2 in) plywood with nested hole saws">
 
 Each ring is laminated from a stack of these discs to get enough thickness. Once stacked, I used a thin pull saw to cut each stack in half. I ended up sizing the rings up a bit from what's shown here, since the bolts I eventually ran through them interfered with the locking clamps on the telescoping pole.
 
 > Cutting the laminated ring stacks in half with a pull saw  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_003149221.jpg' | relative_url }}" alt="Cutting the laminated ring stacks in half with a pull saw" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_003149221.jpg' | relative_url }}" alt="Cutting the laminated ring stacks in half with a pull saw">
 
 The two halves of each ring are cut so the split lines land 90 degrees apart, crossing in the center of the ring. With the halves taped back together, I drilled a single 6 mm (1/4 in) hole through the middle of each quadrant — four holes per ring. These are where the eye bolts go, and they serve double duty: holding the two halves of the ring together, and giving me a place to tie off the guy lines.
 
 > The two finished ring blanks, taped together and ready for the eye bolt holes to be drilled  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_004438390.jpg' | relative_url }}" alt="The two finished ring blanks, taped together and ready for the eye bolt holes to be drilled" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_004438390.jpg' | relative_url }}" alt="The two finished ring blanks, taped together and ready for the eye bolt holes to be drilled">
 
 With the eye bolts installed, each ring splits cleanly into two halves that clamp around the pole and bolt back together:
 
 > Top/eye side of the assembled guy ring  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_155017599.jpg' | relative_url }}" alt="Top/eye side of the assembled guy ring" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_155017599.jpg' | relative_url }}" alt="Top/eye side of the assembled guy ring">
 
 > Bottom/wing nut side of the assembled guy ring  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_155013965.jpg' | relative_url }}" alt="Bottom/wing nut side of the assembled guy ring" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_155013965.jpg' | relative_url }}" alt="Bottom/wing nut side of the assembled guy ring">
 
 > Guy ring mounted on the pole, with clearance from the telescoping section's locking collar  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_155541420.jpg' | relative_url }}" alt="Guy ring mounted on the pole, with clearance from the telescoping section's locking collar" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_155541420.jpg' | relative_url }}" alt="Guy ring mounted on the pole, with clearance from the telescoping section's locking collar">
 
 ## The Guy Lines: Working Out the Geometry
 
@@ -84,7 +84,7 @@ For the lines themselves, I used fluorescent yellow, reflective paracord — eas
 To anchor the base of the pole, I made a ground sleeve and stake by U-bolting a length of 5.1 cm (2 in) PVC pipe to a piece of angle iron, then grinding a point onto the angle iron so it drives into the ground easily. It doesn't need to go very deep — just enough to hold the base steady. I'll probably trim the angle iron shorter at some point since there's more length than I actually need.
 
 > The ground sleeve/stake assembly: 5.1 cm (2 in) PVC pipe U-bolted to a pointed length of angle iron  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_161453049.jpg' | relative_url }}" alt="The ground sleeve/stake assembly: 5.1 cm (2 in) PVC pipe U-bolted to a pointed length of angle iron" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_161453049.jpg' | relative_url }}" alt="The ground sleeve/stake assembly: 5.1 cm (2 in) PVC pipe U-bolted to a pointed length of angle iron">
 
 ## Deploying the Mast
 
@@ -94,32 +94,32 @@ To anchor the base of the pole, I made a ground sleeve and stake by U-bolting a 
 4. Loop each pair of lines (one long, one short, per direction) through its guy stake, but leave them untensioned for now.
 
 > The mast guyed but still down, with lines run to all four stakes  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_225425138.jpg' | relative_url }}" alt="The mast guyed but still down, with lines run to all four stakes" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_225425138.jpg' | relative_url }}" alt="The mast guyed but still down, with lines run to all four stakes">
 
 5. Push the pole up to height, then tension and lock off each guy line. I use Loop Alien-style line tensioners for this.
 
 > The mast guyed and standing, ready to receive an antenna  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_230648051.jpg' | relative_url }}" alt="The mast guyed and standing, ready to receive an antenna" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_230648051.jpg' | relative_url }}" alt="The mast guyed and standing, ready to receive an antenna">
 
 ## Topping It Off: 20m and 40m
 
 With the mast up, the rigid V hub mounts right on top and the whole thing rotates by hand for steering. On 20m, the [DIY rigid V dipole](/hamradio/articles/rigid-v-dipole/) tunes easily and the mast doesn't even notice the load:
 
 > The mast guyed in the field, with the rigid V dipole deployed for a 20m session  
-<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_233411494.jpg' | relative_url }}" alt="The mast guyed in the field, with the rigid V dipole deployed for a 20m session" width="600">
+<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_233411494.jpg' | relative_url }}" alt="The mast guyed in the field, with the rigid V dipole deployed for a 20m session">
 
 My friend KD3CCP also put together a set of DIY center-loaded whips (article on these TBD) that thread onto the same hub for 40m. The loading coils add some weight out on the whips, which you can see pulling a visible droop into the elements at the hub:
 
 > Close-up of one of the DIY center-loading coils partway up the whip  
-<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_003600931.jpg' | relative_url }}" alt="Close-up of one of the DIY center-loading coils partway up the whip" width="600">
+<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_003600931.jpg' | relative_url }}" alt="Close-up of one of the DIY center-loading coils partway up the whip">
 
 > Looking straight up at the hub — the loading coils visibly droop the whips under their own weight  
-<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004749393.jpg' | relative_url }}" alt="Looking straight up at the hub, the loading coils visibly droop the whips under their own weight" width="600">
+<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004749393.jpg' | relative_url }}" alt="Looking straight up at the hub, the loading coils visibly droop the whips under their own weight">
 
 Even with that extra weight up top, the mast and guying handle it without any drama:
 
 > DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast  
-<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004738841.jpg' | relative_url }}" alt="DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast" width="600">
+<img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004738841.jpg' | relative_url }}" alt="DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast">
 
 ---
 
@@ -169,8 +169,8 @@ Once guyed, the pole is very rigid and easily supports both of these DIY dipoles
 The whole assembly collapses down small and is easy to store and transport.
 
 > The collapsed mast with both guy rings still attached, leaning in a corner  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_204211189.jpg' | relative_url }}" alt="The collapsed mast with both guy rings still attached, leaning in a corner" width="600">
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260621_204211189.jpg' | relative_url }}" alt="The collapsed mast with both guy rings still attached, leaning in a corner">
 
 I also mounted a broom-handle-to-camera-tripod thread adapter on the pole, along with an Arca-Swiss style clamp, since I like to mount my antennas on Arca-Swiss plates so they're quick to swap between poles and tripods.
 
-Total cost came out to about $120 for the pole and another $50-75 in hardware, paracord, and four tent stakes. I haven't found a non-DIY equivalent that comes close to that price.
+Total cost came out to about \$120 for the pole and another \$50-75 in hardware, paracord, and four tent stakes. I haven't found a non-DIY equivalent that comes close to that price.

@@ -21,7 +21,7 @@ To operate on 40m with physically shortened elements, I introduced inductive loa
 * **Loading:** Dual non-adjustable base-loading coils **~20 turns** installed at the hub.  I will measure these at some point to see what the actual inductance is.
 * **Matching:** A hastily constructed adjustable Beta match (shunt inductor) was added to transform the low radiation resistance up to **50Ω**.
 
-<img src="{{ '/assets/images/coil_loading_rigid_v_dipole/setup_wtih_beta_match.jpg' | relative_url }}" alt="setup with beta match" width="600">
+<img src="{{ '/assets/images/coil_loading_rigid_v_dipole/setup_wtih_beta_match.jpg' | relative_url }}" alt="setup with beta match">
 
 
 ---
@@ -37,7 +37,7 @@ I tuned the system for the center of the 40m phone segment. While I was able to 
 | SWR < 2.0 Bandwidth | **39 kHz** (7.217 to 7.256 MHz) |
 | Percentage Bandwidth | **0.54%** |
 
-<img src="{{ '/assets/images/coil_loading_rigid_v_dipole/bandwidth_measurement.jpg' | relative_url }}" alt="setup with beta match" width="600">
+<img src="{{ '/assets/images/coil_loading_rigid_v_dipole/bandwidth_measurement.jpg' | relative_url }}" alt="setup with beta match">
 
 ### **Key Observation**
 While the Beta match effectively brought the SWR down to **1.03:1** at resonance, the curve is incredibly steep. Moving even **20 kHz** away from $f_c$ causes the SWR to climb rapidly. This effectively limits me to a very small slice of the band without further physical adjustment of the antenna.

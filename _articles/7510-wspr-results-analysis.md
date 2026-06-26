@@ -62,7 +62,7 @@ This analysis tracks spot counts and mean SNR across time bins for each band.
 
 
 > Band Openings and Closures  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis1_band_openings.png' | relative_url }}" alt="Band Openings and Closures" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis1_band_openings.png' | relative_url }}" alt="Band Openings and Closures">
 
 ---
 
@@ -104,7 +104,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 
 
 > Distance Profiling by Band  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis2_distance_profiling.png' | relative_url }}" alt="Distance Profiling by Band" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis2_distance_profiling.png' | relative_url }}" alt="Distance Profiling by Band">
 
 ---
 
@@ -161,7 +161,7 @@ This analysis identifies the strongest footprint by the top *receive* grid prefi
 
 
 > Geographical Footprint  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis3_geographical_spread.png' | relative_url }}" alt="Geographical Footprint" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis3_geographical_spread.png' | relative_url }}" alt="Geographical Footprint">
 
 ---
 
@@ -197,7 +197,7 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 
 
 > SNR vs Distance Regression  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis4_snr_distance.png' | relative_url }}" alt="SNR vs Distance Regression" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis4_snr_distance.png' | relative_url }}" alt="SNR vs Distance Regression">
 
 ---
 
@@ -239,7 +239,7 @@ This comparison uses reciprocal paths involving KD3CCO as both transmitter and r
 
 
 > TX vs RX Asymmetry  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis5_tx_rx_asymmetry.png' | relative_url }}" alt="TX vs RX Asymmetry" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis5_tx_rx_asymmetry.png' | relative_url }}" alt="TX vs RX Asymmetry">
 
 ---
 
@@ -271,7 +271,7 @@ This polar map shows spot direction and distance for KD3CCO transmissions.  My E
 
 
 > Azimuthal Pattern Mapping  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis6_azimuthal_pattern.png' | relative_url }}" alt="Azimuthal Pattern Mapping" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis6_azimuthal_pattern.png' | relative_url }}" alt="Azimuthal Pattern Mapping">
 
 ---
 
@@ -315,7 +315,7 @@ This analysis compares `k/W` across bands for stations that heard KD3CCO on 3 or
 
 
 > Normalized Band Efficiency  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis7_efficiency_normalization.png' | relative_url }}" alt="Normalized Band Efficiency" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis7_efficiency_normalization.png' | relative_url }}" alt="Normalized Band Efficiency">
 
 ---
 
@@ -353,7 +353,7 @@ This analysis examines the shortest paths on the higher bands, which informs the
 
 
 > Takeoff Angle Inference  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis8_takeoff_angle.png' | relative_url }}" alt="Takeoff Angle Inference" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis8_takeoff_angle.png' | relative_url }}" alt="Takeoff Angle Inference">
 
 ---
 
@@ -400,31 +400,31 @@ WSPR SNR is reported relative to a ~2500 Hz reference bandwidth, which is close 
 - 20m sits in between: it has the largest number of plausible SSB contacts in absolute terms (818), even though its pass rate is lower than 40m/80m, simply because it has by far the most total spots in this capture.
 
 > 80m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_80m_screenshot.png' | relative_url }}" alt="80m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_80m_screenshot.png' | relative_url }}" alt="80m SSB QSO Feasibility Map">  
 [Open interactive 80m map]({{ '/assets/analysis9_ssb_qso_80m.html' | relative_url }}){:target="_blank"}
 
 > 40m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_40m_screenshot.png' | relative_url }}" alt="40m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_40m_screenshot.png' | relative_url }}" alt="40m SSB QSO Feasibility Map">  
 [Open interactive 40m map]({{ '/assets/analysis9_ssb_qso_40m.html' | relative_url }}){:target="_blank"}
 
 > 20m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_20m_screenshot.png' | relative_url }}" alt="20m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_20m_screenshot.png' | relative_url }}" alt="20m SSB QSO Feasibility Map">  
 [Open interactive 20m map]({{ '/assets/analysis9_ssb_qso_20m.html' | relative_url }}){:target="_blank"}
 
 > 17m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_17m_screenshot.png' | relative_url }}" alt="17m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_17m_screenshot.png' | relative_url }}" alt="17m SSB QSO Feasibility Map">  
 [Open interactive 17m map]({{ '/assets/analysis9_ssb_qso_17m.html' | relative_url }}){:target="_blank"}
 
 > 15m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_15m_screenshot.png' | relative_url }}" alt="15m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_15m_screenshot.png' | relative_url }}" alt="15m SSB QSO Feasibility Map">  
 [Open interactive 15m map]({{ '/assets/analysis9_ssb_qso_15m.html' | relative_url }}){:target="_blank"}
 
 > 12m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_12m_screenshot.png' | relative_url }}" alt="12m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_12m_screenshot.png' | relative_url }}" alt="12m SSB QSO Feasibility Map">  
 [Open interactive 12m map]({{ '/assets/analysis9_ssb_qso_12m.html' | relative_url }}){:target="_blank"}
 
 > 10m — SSB QSO Feasibility Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_10m_screenshot.png' | relative_url }}" alt="10m SSB QSO Feasibility Map" width="600">  
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis9_ssb_qso_10m_screenshot.png' | relative_url }}" alt="10m SSB QSO Feasibility Map">  
 [Open interactive 10m map]({{ '/assets/analysis9_ssb_qso_10m.html' | relative_url }}){:target="_blank"}
 
 ---
@@ -456,7 +456,7 @@ This analysis creates a folium map showing the transmit and receive paths across
 [Link to Interactive Map]({{ '/assets/analysis10_spots_map.html' | relative_url }}){:target="_blank"}
 
 > Screenshot of Interactive Map  
-<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis10_spots_map_screenshot.png' | relative_url }}" alt="Screenshot of Interactive Map" width="600">
+<img src="{{ '/assets/images/7510_wspr_results_analysis/analysis10_spots_map_screenshot.png' | relative_url }}" alt="Screenshot of Interactive Map">
 
 
 ---

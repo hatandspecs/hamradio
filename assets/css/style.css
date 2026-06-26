@@ -70,6 +70,12 @@ hr {
   margin: 3rem 0;
 }
 
+/* --- Images --- */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* --- Links --- */
 a {
   color: #0066cc;
