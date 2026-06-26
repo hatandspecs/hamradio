@@ -7,11 +7,11 @@ date: 2026-06-26
 ---
 
 
-Working with Github Copilot, I previously put together a Jupyter notebook to analyze WSPR results from my DIY 75-10m EFHW. That same notebook turns out to be perfectly reusable for any WSPR capture, so I pointed it at a different dataset this time: a 30-minute WSPR session captured while field-testing my friend KD3CCP's DIY 40m center-loaded rigid V dipole, deployed on top of my [DIY hand-steerable portable mast](/hamradio/articles/portable-mast-build/).
+Working with Github Copilot, I previously put together a Jupyter notebook to analyze WSPR results from my DIY 75-10m EFHW. That same notebook is reusable for any WSPR capture, so I pointed it at a different dataset this time: a 30-minute WSPR session captured while field-testing my friend KD3CCP's DIY 40m center-loaded rigid V dipole, deployed on top of my [DIY hand-steerable portable mast](/hamradio/articles/portable-mast-build/).
 
 This [repository](https://github.com/hatandspecs/wspr_7510_analysis) contains the Jupyter notebook. The dataset file for this run is `40m_loaded_dipole_30ft_mast_spots.tsv`, captured under my own callsign, KD3CCO, since the WSPR transmissions during the mast test were run from my station.
 
-The notebook is intentionally structured to explain the purpose of each analysis, guide interpretation of the outputs, and draw conclusions from the actual dataset. It also adapts automatically to however many bands are present — since this capture is 40m-only, a couple of the multi-band analyses gracefully skip themselves, exactly as designed.
+The notebook is intentionally structured to explain the purpose of each analysis, guide interpretation of the outputs, and draw conclusions from the actual dataset. It also adapts automatically to however many bands are present — since this capture is 40m-only, a couple of the multi-band analyses skip themselves as designed.
 
 Here's what the antenna under test looks like deployed, for reference:
 
@@ -87,7 +87,7 @@ This analysis computes mean, maximum, and standard deviation of path distance `k
 **Interpretation from the dataset:**
 - That mean is, oddly enough, almost identical to my home EFHW's own 40m mean distance from the 75-10m dataset (≈1764 km over 806 spots, captured across a full 3-hour evening) — a different antenna, location, and a 6x shorter capture window landing on nearly the same average.
 - The standard deviation (2408 km) is larger than the mean itself (1803 km), which flags a strongly bimodal distribution: most contacts are short and regional, with a handful of outsized DX paths pulling both the mean and the max way up.
-- A max of 18,429 km is close to the practical maximum distance achievable on Earth — essentially an antipodal-scale path. That's exactly the signature you'd expect from a low, near-vertical-incidence-skywave-leaning antenna: a strong regional lobe most of the time, occasionally punctuated by an exceptional long-haul opening.
+- A max of 18,429 km is close to the practical maximum distance achievable on Earth — essentially an antipodal-scale path. That matches what you'd expect from a low, near-vertical-incidence-skywave-leaning antenna: a strong regional lobe most of the time, with an occasional long-haul opening.
 
 
 > Distance Profiling by Band  
@@ -140,7 +140,7 @@ This analysis identifies the strongest footprint by the top *receive* grid prefi
 | 20 | IL38 | 8 | Canary Islands / Western Sahara coast |
 
 **Interpretation from the dataset:**
-- This footprint is almost entirely a continental-scale regional one, blanketing the eastern half of North America with reach out to Colorado and Utah — exactly what a near-vertical-incidence-skywave-heavy 40m antenna should produce over a half-hour evening test.
+- This footprint is almost entirely a continental-scale regional one, covering the eastern half of North America with reach out to Colorado and Utah — exactly what a near-vertical-incidence-skywave-heavy 40m antenna should produce over a half-hour evening test.
 - Only two grids in the top 20 are intercontinental: `JN87` (Western Hungary) and `IL38` (Canary Islands/Western Sahara coast), both consistent with the moderate-DX cluster visible in the SNR/distance scatter around 7,000–8,000 km.
 - Notably absent from this top-20 list is the single most extreme contact in the dataset (Western Australia, 18,429 km) — it was strong and repeated, but with too few individual spots to crack the top 20 grid-count ranking. That underscores why Analysis 2's max/mean comparison is the better tool for catching this kind of outlier path.
 
@@ -174,9 +174,9 @@ This analysis examines path loss trends by plotting SNR against distance for eac
 - A small set of points beyond 18,000 km — all `VK6PVL` in Western Australia, 18,429 km — sit well past everything else on the plot. This path was decoded 5 separate times across the half-hour test (21:34, 21:38, 21:48, 21:52, and 21:56 UTC), so it was a real, sustained opening, not a single fluke decode.
 
 **Interpretation from the dataset:**
-- The overall downward trend is clear despite the short capture, and the regression line is dragged down hard by that one extreme Australia path.
-- The repeated VK6PVL decodes are the headline result of this whole dataset: a 5 W, electrically very low, temporarily-deployed 40m dipole sustained a long-path opening to the far side of the planet for at least 22 minutes.
-- The Argentina and European paths form a believable "second tier" of moderate DX, while the bulk of the spots confirm the antenna is, as expected, primarily a strong regional performer at this height.
+- The overall downward trend is clear despite the short capture, and the regression line is pulled down by that one Australia outlier.
+- The repeated VK6PVL decodes are the most notable result in this dataset: a 5 W, electrically very low, temporarily-deployed 40m dipole sustained a long-path opening to Australia for at least 22 minutes.
+- The Argentina and European paths are a secondary group of moderate DX, while the bulk of the spots confirm the antenna is, as expected, primarily a strong regional performer at this height.
 
 
 > SNR vs Distance Regression  
@@ -352,15 +352,15 @@ Dependencies:
 
 The notebook reads the TSV, builds derived fields, runs ten analyses, and displays the results while saving the key images and interactive maps. Analysis 9 (SSB QSO feasibility) and Analysis 10 (interactive path map) both use the helper module `wspr_folium_map.py` to generate their maps.
 
-Analyses 1, 2, 4, and 8 adapt automatically to however many bands are present in a dataset. Analysis 7 specifically requires stations heard on 3 or more distinct bands, and Analysis 8 only looks at bands above 20m — both are skipped automatically on this single-band, 40m-only capture, exactly as they were designed to.
+Analyses 1, 2, 4, and 8 adapt automatically to however many bands are present in a dataset. Analysis 7 specifically requires stations heard on 3 or more distinct bands, and Analysis 8 only looks at bands above 20m — both skip themselves as designed on this single-band, 40m-only capture.
 
 ---
 
 ## 3. Conclusions from this dataset
 
-1. **The standout result is a sustained, repeated opening to Western Australia (18,429 km) on a 5 W, electrically very low, temporarily-deployed 40m dipole.** `VK6PVL` was decoded 5 separate times across the 30-minute test, so this wasn't a fluke — it was a real long-path opening that this antenna and this short test session happened to catch.
+1. **The most notable result is a sustained, repeated opening to Western Australia (18,429 km) on a 5 W, electrically very low, temporarily-deployed 40m dipole.** `VK6PVL` was decoded 5 separate times across the 30-minute test, so this wasn't a fluke — it was a real long-path opening that this antenna and this short test session happened to catch.
 2. **The bulk of the capture is dominated by short, regional, high-SNR contacts**, with a mean distance (1,803 km) that's nearly identical to my home EFHW's own 40m mean from a completely different antenna, location, and a 3-hour-longer capture window. This lines up with the [Mast Height vs. Wavelength analysis](/hamradio/articles/portable-mast-build/#mast-height-vs-wavelength-nvis-or-dx) predicting this antenna sits around 0.22λ up on 40m, solidly in NVIS-favoring territory.
 3. **TX/RX asymmetry was close to neutral here** (+1.1 dB mean, nearly an even split of positive/negative pairs), in contrast to the home EFHW's persistent +6.3 dB TX-favoring skew — plausibly because this test happened in an open field away from household electrical noise, though the sample size (11 pairs) is small.
 4. **SSB is realistically achievable for most of this capture's paths** — 62.3% clear a 3 dB margin within 100 W, at a median requirement of just ~40 W — a better showing than the home EFHW's 40m figure, likely because this capture skews even more regional.
 5. **The azimuthal pattern matches basic dipole theory.** With the V oriented roughly north-south, 81.9% of spots fell in the broadside east/west sectors versus only 18.1% off the ends — including the Australia DX path, which arrived through the west lobe rather than some odd off-axis direction.
-6. **This was a short, single-band, proof-of-concept capture**, not a multi-hour propagation study. It's enough to confirm the antenna and mast both work, catch one genuinely exciting DX opening, and see a believable dipole lobe pattern, but a longer capture — and ideally a repeat with the V rotated 90° — would be needed to properly characterize this antenna's day-to-day behavior and confirm the lobe pattern isn't just coincidental to this one night's propagation.
+6. **This was a short, single-band, proof-of-concept capture**, not a multi-hour propagation study. It's enough to confirm the antenna and mast both work, catch one notable DX opening, and see a believable dipole lobe pattern, but a longer capture — and ideally a repeat with the V rotated 90° — would be needed to properly characterize this antenna's day-to-day behavior and confirm the lobe pattern isn't just coincidental to this one night's propagation.

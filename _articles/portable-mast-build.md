@@ -5,7 +5,7 @@ category: article
 date: 2026-06-26
 ---
 
-This article covers the build of a hand-steerable, 9.14 m (30 ft) carbon fiber mast designed to support my [DIY rigid V dipole](/hamradio/articles/rigid-v-dipole/). It's built around an inexpensive telescoping carbon fiber window-washing/duster utility pole from Amazon, dressed up with a pair of DIY plywood guy rings that let the whole thing be guyed solidly and still rotated by hand. Once it's up and guyed, the pole comes down in seconds to re-tune or re-band the dipole, and a friend of mine came up with a set of DIY center-loaded whips for the same hub that work wonderfully across the 40m band.
+This article covers the build of a hand-steerable, 9.14 m (30 ft) carbon fiber mast designed to support my [DIY rigid V dipole](/hamradio/articles/rigid-v-dipole/). It's built around an inexpensive telescoping carbon fiber window-washing/duster utility pole from Amazon, fitted with a pair of DIY plywood guy rings that let the whole thing be guyed solidly and still rotated by hand. Once it's up and guyed, the pole comes down in seconds to re-tune or re-band the dipole, and a friend of mine came up with a set of DIY center-loaded whips for the same hub that work well across the 40m band.
 
 > DIY 20m rigid V dipole on top of the DIY hand-steerable mast  
 <img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_234031295.jpg' | relative_url }}" alt="DIY 20m rigid V dipole on top of the DIY hand-steerable mast">
@@ -29,12 +29,12 @@ To make the rings, I used two nested hole saws to cut discs out of 1.3 cm (1/2 i
 > Cutting a guy ring blank from 1.3 cm (1/2 in) plywood with nested hole saws  
 <img src="{{ '/assets/images/portable_mast_build/PXL_20260619_001302173.jpg' | relative_url }}" alt="Cutting a guy ring blank from 1.3 cm (1/2 in) plywood with nested hole saws">
 
-Each ring is laminated from a stack of these discs to get enough thickness. Once stacked, I used a thin pull saw to cut each stack in half. I ended up sizing the rings up a bit from what's shown here, since the bolts I eventually ran through them interfered with the locking clamps on the telescoping pole.
+Each ring is built from two of these discs. I cut each disc in half separately with a thin pull saw, then stacked the two discs so their split lines cross at 90 degrees to each other. I ended up sizing the rings up a bit from what's shown here, since the bolts I eventually ran through them interfered with the locking clamps on the telescoping pole.
 
-> Cutting the laminated ring stacks in half with a pull saw  
-<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_003149221.jpg' | relative_url }}" alt="Cutting the laminated ring stacks in half with a pull saw">
+> Cutting a disc in half with a pull saw  
+<img src="{{ '/assets/images/portable_mast_build/PXL_20260619_003149221.jpg' | relative_url }}" alt="Cutting a disc in half with a pull saw">
 
-The two halves of each ring are cut so the split lines land 90 degrees apart, crossing in the center of the ring. With the halves taped back together, I drilled a single 6 mm (1/4 in) hole through the middle of each quadrant — four holes per ring. These are where the eye bolts go, and they serve double duty: holding the two halves of the ring together, and giving me a place to tie off the guy lines.
+With the two discs stacked and taped together, split lines crossing in the center, I drilled a single 6 mm (1/4 in) hole through the middle of each quadrant — four holes per ring. These are where the eye bolts go, and they serve double duty: holding the two discs together, and giving me a place to tie off the guy lines.
 
 > The two finished ring blanks, taped together and ready for the eye bolt holes to be drilled  
 <img src="{{ '/assets/images/portable_mast_build/PXL_20260619_004438390.jpg' | relative_url }}" alt="The two finished ring blanks, taped together and ready for the eye bolt holes to be drilled">
@@ -116,7 +116,7 @@ My friend KD3CCP also put together a set of DIY center-loaded whips that thread 
 > Looking straight up at the hub — the loading coils visibly droop the whips under their own weight  
 <img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004749393.jpg' | relative_url }}" alt="Looking straight up at the hub, the loading coils visibly droop the whips under their own weight">
 
-Even with that extra weight up top, the mast and guying handle it without any drama:
+Even with that extra weight up top, the mast and guying handle it without issue:
 
 > DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast  
 <img src="{{ '/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004738841.jpg' | relative_url }}" alt="DIY 40m center-loaded rigid V dipole on top of the DIY hand-steerable mast">
@@ -146,7 +146,7 @@ Here's where the apex of this mast (9.14 m / 30 ft) lands on each band the rigid
 | 10m | 28.4 MHz | 10.6 m (34.6 ft) | 5.3 m (17.3 ft) | 251 cm (8 ft 3 in) | **0.87λ** | Low-angle DX |
 | 6m | 50.1 MHz | 6.0 m (19.6 ft) | 3.0 m (9.8 ft) | 142 cm (4 ft 8 in) | **1.53λ** | Multi-lobe; VHF propagation modes dominate anyway |
 
-The 20m figure lines up nicely with real-world experience — the [rigid V dipole](/hamradio/articles/rigid-v-dipole/) write-up extended each whip to about 5 m (16 ft 5 in) and only needed a few inches of trim to find the sweet spot. The 40m and 30m figures, on the other hand, call for 997 cm (32 ft 9 in) and 704 cm (23 ft 1 in) of element respectively — well beyond what a 549 cm (18 ft) telescoping whip can reach on its own. That's exactly why 40m needs the center-loading coils rather than just cranking the whip out further; 30m would need the same treatment.
+The 20m figure lines up with real-world experience — the [rigid V dipole](/hamradio/articles/rigid-v-dipole/) write-up extended each whip to about 5 m (16 ft 5 in) and only needed a few inches of trim to find the sweet spot. The 40m and 30m figures, on the other hand, call for 997 cm (32 ft 9 in) and 704 cm (23 ft 1 in) of element respectively — well beyond what a 549 cm (18 ft) telescoping whip can reach on its own. That's exactly why 40m needs the center-loading coils rather than just cranking the whip out further; 30m would need the same treatment.
 
 On **40m and 30m**, this mast puts the apex well under half a wavelength up, so the elements radiate mostly straight overhead. That's a feature, not a bug, if the goal is reliable regional contacts — POTA hunters, state and county nets, and the like — with no skip zone to fight. It's not the height I'd pick if 40m DX were the priority; that would call for getting the apex closer to 21.3 m (70 ft).
 
@@ -156,7 +156,7 @@ From **17m on up through 10m**, the same 9.14 m (30 ft) of mast represents a ste
 
 **6m** is a special case. At over 1.5λ up, the simple "height sets the takeoff angle" model starts breaking into multiple lobes instead of one clean low-angle beam, but it mostly doesn't matter — 6m propagation leans on sporadic-E, meteor scatter, and tropo ducting rather than classic F-layer NVIS/skywave, so the antenna just needs to get the energy out at a reasonably low angle, which this height does fine.
 
-One more wrinkle worth flagging: this is a vertical V, not an inverted V — the hub sits at the bottom of the V, and the elements slope upward and outward from it at 120°, so the tips end up above the apex, not below it. The longer the element (the lower the band), the higher above the mast top the tips reach. That means the real effective height of the radiating wire is consistently a bit higher than the simple apex-height numbers in the table above, nudging every band slightly toward a lower takeoff angle than indicated — most noticeably on the lower bands, where the legs are longest.
+One more detail worth flagging: this is a vertical V, not an inverted V — the hub sits at the bottom of the V, and the elements slope upward and outward from it at 120°, so the tips end up above the apex, not below it. The longer the element (the lower the band), the higher above the mast top the tips reach. That means the real effective height of the radiating wire is consistently a bit higher than the simple apex-height numbers in the table above, nudging every band slightly toward a lower takeoff angle than indicated — most noticeably on the lower bands, where the legs are longest.
 
 These are general expectations from dipole-over-ground theory, not measured pattern data — I haven't run this through modeling software or compared real-world reports band-by-band yet, but it's a reasonable framework for picking which band to chase regional contacts versus DX on a given outing.
 
