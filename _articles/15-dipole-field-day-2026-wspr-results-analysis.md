@@ -15,11 +15,8 @@ The notebook is intentionally structured to explain the purpose of each analysis
 
 Here's what the antenna under test looks like deployed, for reference (same hub and whips as the 20m test, just retuned shorter for 15m):
 
-> The rigid V dipole deployed in the field on the hand-steerable mast  
-<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_233411494.jpg' | relative_url }}" alt="The rigid V dipole deployed in the field on the hand-steerable mast">
-
-> DIY rigid V dipole on top of the DIY hand-steerable mast  
-<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_234654777.jpg' | relative_url }}" alt="DIY rigid V dipole on top of the DIY hand-steerable mast">
+> The 15m rigid V dipole deployed at the Field Day 2026 site  
+<img src="{{ '/assets/images/15m_dipole_field_day_2026_wspr_analysis/field_day_2026_15m_dipole.jpg' | relative_url }}" alt="The 15m rigid V dipole deployed at the Field Day 2026 site">
 
 ---
 

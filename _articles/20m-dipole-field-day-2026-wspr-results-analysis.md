@@ -15,11 +15,14 @@ The notebook is intentionally structured to explain the purpose of each analysis
 
 Here's what the antenna under test looks like deployed, for reference:
 
-> DIY 20m rigid V dipole on top of the DIY hand-steerable mast  
-<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_234031295.jpg' | relative_url }}" alt="DIY 20m rigid V dipole on top of the DIY hand-steerable mast">
+> The 20m rigid V dipole deployed at the Field Day 2026 site  
+<img src="{{ '/assets/images/20m_dipole_field_day_2026_wspr_analysis/field_day_2026_20m_dipole.jpg' | relative_url }}" alt="The 20m rigid V dipole deployed at the Field Day 2026 site">
 
-> The 20m rigid V dipole deployed in the field on the hand-steerable mast  
-<img src="{{ '/assets/images/portable_mast_build/20m_dipole/PXL_20260621_234719939.jpg' | relative_url }}" alt="The 20m rigid V dipole deployed in the field on the hand-steerable mast">
+> The WSPR station and 20m dipole set up under the pavilion at Field Day 2026  
+<img src="{{ '/assets/images/20m_dipole_field_day_2026_wspr_analysis/field_day_2026_20m_dipole_and_wspr_setup.jpg' | relative_url }}" alt="The WSPR station and 20m dipole set up under the pavilion at Field Day 2026">
+
+> The WSPR station running on 20m during the Field Day 2026 test  
+<img src="{{ '/assets/images/20m_dipole_field_day_2026_wspr_analysis/field_day_2026_wspr_station_on_20m.jpg' | relative_url }}" alt="The WSPR station running on 20m during the Field Day 2026 test">
 
 ---
 
