@@ -2,6 +2,9 @@ title: Technical Notes & Engineering Log
 description: Documentation and Research
 theme: jekyll-theme-architect # A clean, technical theme
 
+# Google Search Console Verification
+google_site_verification: XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w
+
 # CRITICAL for project sites:
 baseurl: "/hamradio" 
 url: "https://hatandspecs.github.io"
