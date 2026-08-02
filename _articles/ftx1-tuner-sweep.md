@@ -5,7 +5,7 @@ category: article
 date: 2026-08-01
 ---
 
-I picked up a mAT-Tuner mAT-30 external automatic antenna tuner for the FTX-1 Optima, and it's great once it's broken in on a given antenna. It stores a tuning memory per frequency, so after it's learned a band it snaps to a match almost instantly. The problem is the learning part. Every time I put the radio on a new or different antenna, I'd have to walk the VFO across a band a step at a time and manually trigger a tune at each stop before the memories were actually useful. That's fine for a couple of test points, tedious for a whole band, and I have several bands and swap antennas often enough that this became the actual bottleneck in getting on the air.
+I picked up a mAT-Tuner mAT-30 external automatic antenna tuner for the FTX-1 Optima, and it's great once it's broken in on a given antenna. It stores a tuning memory per frequency, so after it's learned a band it snaps to a match almost instantly. The problem is the learning part. Every time I put the radio on a new or different antenna, I'd have to walk the VFO across a band a step at a time and manually trigger a tune at each stop before the memories were actually useful. That's fine for a couple of test points, tedious for a whole band, and I swap antennas often enough and use multiband antennas often enough that this became the actual bottleneck in getting on the air.
 
 So I built a small tool to do it for me: a local web app that steps the FTX-1's VFO across whatever bands I pick and triggers the mAT-30 at each stop, unattended.
 
@@ -30,7 +30,7 @@ The `AC` command turned out to be the interesting one. It takes three parameters
 
 My first version polled that `RI` status bit in a loop after triggering a tune, expecting it to flip back to "not tuning" as soon as the mAT-30 finished its cycle, then move on to the next frequency. In testing, it never did. Every single step sat there for the full timeout regardless of how fast the tuner actually finished.
 
-The reason makes sense once you think about the wiring: the mAT-30 is a third-party tuner that does its SWR search completely on its own once triggered. The interface it uses is essentially one-way, a start signal out to the tuner, with no real feedback path telling the radio "I'm done." The FTX-1 can track this for its own internal coupler, where it's directly driving the relays, but it has no way to know what an external tuner is doing.
+The reason makes sense once you think about the wiring: the mAT-30 is a third-party tuner that does its SWR search completely on its own once triggered. The interface it uses is essentially one-way, a start signal out to the tuner, with no real feedback path telling the radio "I'm done." The FTX-1 can track this for its own internal coupler, where it's directly driving the relays, but it has no way to know what an external tuner is doing.  If I'm wrong here, please leave a comment and I'll figure out what I missed!
 
 So the tool doesn't try to detect completion anymore. It just holds each frequency for a fixed dwell time (I've settled on 5 seconds) that comfortably covers how long the mAT-30 actually takes, then moves on. Simpler and it actually works.
 
@@ -52,4 +52,4 @@ I ran it against the real FTX-1 Optima and mAT-30 on 15m and 12m. Both the compl
 
 ## One operating note
 
-Every step here is a real transmission, brief but real, and the tool has no way to know if a frequency is already in use before it keys up there. I only run this when a band sounds dead or nearly so, at the minimum power that gets a reliable tune (5 W has been plenty), and I keep an ear on it so I can stop it immediately if I'm about to sweep across someone.
+Every step here is a real transmission, brief but real, and the tool has no way to know if a frequency is already in use before it keys up there. I only run this when a band sounds dead or nearly so, at the minimum power that gets a reliable tune (5 W has been plenty), and I keep an ear on it and my finger on the stop button so I can stop it immediately if I'm about to sweep across someone.  I may add a "skip" button so instead of stopping the sweep if I hear someone on the frequency, it will just skip that frequency and move onto the next in the sweep.
