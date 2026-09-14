@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Bidirectional APRS iGate with a Strict Whitelist | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>A Bidirectional APRS iGate with a Strict Whitelist</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: September 13, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <blockquote>
+  <p>An SMS from my phone, delivered over RF to my FT5DR: phone to the web to my gateway to RF to the radio<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ft5d-rx-sms-first-downlink-laptop-prototype.jpg" alt="An SMS from my phone, delivered over RF to my FT5DR: phone to the web to my gateway to RF to the radio" /></p>
+</blockquote>
+
+<p>In my <a href="/hamradio/articles/ft5dr-mobile-setup/">FT5DR article</a> I mentioned wanting my own APRS igate with strictly whitelisted two-way traffic, so I could message my wife’s phone from a radio and she could message me back when I’m in range. That project for another day turned out to be only a few weeks out. This is how it came together: a prototype on the FTX-1 and a laptop, a headless Raspberry Pi I’m calling the <strong>pi-gate</strong>, and a second radio profile for my VX-6R on a Digirig Lite. It also covers the handful of gotchas that each looked like a working station while doing nothing useful.</p>
+
+<p>Code and full documentation are up at <a href="https://github.com/hatandspecs/aprs_igate_bidirectional_whitelist">github.com/hatandspecs/aprs_igate_bidirectional_whitelist</a>. The README has four quickstarts (laptop or Pi, FTX-1 or VX-6R), and there’s a separate step-by-step guide for building the pi-gate.</p>
+
+<hr />
+
+<h2 id="why-a-whitelist-and-why-it-has-to-be-strict">Why a whitelist, and why it has to be strict</h2>
+
+<p>Most APRS iGates are receive-only. They listen on 144.390 MHz and pass what they hear up to APRS-IS, the internet backbone that sites like aprs.fi are built on. Going the other direction, from the internet back onto RF, is where it gets touchy. A two-way iGate is a transmitter that traffic from the internet can key up, and I didn’t want my station relaying anything for anyone I hadn’t chosen.</p>
+
+<p>So the rule I built around is short: <strong>only APRS messages addressed to callsigns on my whitelist are ever transmitted.</strong> Positions, telemetry, bulletins, and messages to anyone else are all dropped. Right now the list is <code class="language-plaintext highlighter-rouge">KD3CCO*</code>, which covers every SSID of my own call.</p>
+
+<p>Here’s the round trip it enables, in both directions:</p>
+
+<pre><code class="language-mermaid">flowchart LR
+  Phone["Cell phone"] --&gt;|"SMS text"| SMSGW["APRS SMS gateway"]
+  SMSGW --&gt;|"message to KD3CCO-7"| IS(("APRS-IS"))
+  IS --&gt;|"matches whitelist"| GATE["pi-gate&lt;br/&gt;Direwolf"]
+  GATE --&gt;|"144.390 MHz"| HT["My handheld&lt;br/&gt;KD3CCO-7"]
+  HT --&gt;|"ack or reply on RF"| GATE
+  GATE --&gt;|"gated up"| IS
+  IS --&gt; SMSGW
+  SMSGW --&gt;|"SMS text"| Phone
+</code></pre>
+
+<blockquote>
+  <p>Sending from the FT5DR to my phone through the SMS gateway<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ft5d-tx-sms-radio-to-phone.jpg" alt="Sending from the FT5DR to my phone through the SMS gateway" /></p>
+</blockquote>
+
+<h2 id="how-the-whitelist-actually-works">How the whitelist actually works</h2>
+
+<p>The gateway itself is <a href="https://github.com/wb2osz/direwolf">Dire Wolf</a>, the software TNC. My scripts generate its configuration from a much simpler config file. Four directives do the work that matters:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IGFILTER  g/KD3CCO*
+FILTER    IG 0 g/KD3CCO*
+IGMSP     0
+IGTXLIMIT 6 10
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">FILTER IG 0 g/KD3CCO*</code></strong> is the whitelist itself. The <code class="language-plaintext highlighter-rouge">g/</code> filter matches on a message’s <em>addressee</em>, which is what makes this a message whitelist rather than a general traffic filter. Anything from APRS-IS that doesn’t match never reaches the transmitter.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IGFILTER</code></strong> asks the APRS-IS server to send me that traffic in the first place. Without it, the server only forwards traffic for stations my iGate has recently heard on RF, which is nothing until something has been decoded.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IGMSP 0</code></strong> turned out to matter a lot. Dire Wolf has a courtesy feature that transmits a message <em>sender’s</em> position report, regardless of filtering, after it gates their message. I watched it transmit the SMS gateway’s own beacon right after delivering my message. <code class="language-plaintext highlighter-rouge">IGMSP 0</code> turns that off, so the whitelist has no exceptions, courtesy or otherwise.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IGTXLIMIT 6 10</code></strong> caps traffic from the internet at 6 transmissions a minute and 10 every five minutes, as a backstop. Anything over the limit is dropped, not queued for later.</li>
+</ul>
+
+<p>This is the decision every packet arriving from APRS-IS goes through:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["Packet arrives from APRS-IS"] --&gt; B{"Is it an APRS message?"}
+  B -- no --&gt; D["Dropped"]
+  B -- yes --&gt; C{"Addressee on the whitelist?"}
+  C -- no --&gt; D
+  C -- yes --&gt; E["Wrapped in third-party format,&lt;br/&gt;rate limited, transmitted on RF"]
+</code></pre>
+
+<h3 id="log-lines-dont-mean-what-they-look-like">Log lines don’t mean what they look like</h3>
+
+<p>This one cost me some confusion. Dire Wolf prints <code class="language-plaintext highlighter-rouge">[ig&gt;tx]</code> when a packet <em>arrives</em> from APRS-IS, before the whitelist has run. The line that means it was actually transmitted is <code class="language-plaintext highlighter-rouge">[0L]</code>. Read <code class="language-plaintext highlighter-rouge">[ig&gt;tx]</code> as “transmitted” and a perfectly working whitelist looks badly broken.</p>
+
+<p>So I wrote an annotating monitor that pairs the two by packet contents and labels the real outcome:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RF RX</code></td>
+      <td>Heard on the air and decoded</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RF-&gt;IS UP</code></td>
+      <td>Heard on RF and gated up to APRS-IS by this station</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IS GATED</code></td>
+      <td>Came from APRS-IS, matched the whitelist, was transmitted</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IS DROP</code></td>
+      <td>Came from APRS-IS, didn’t match, dropped</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TX LOCAL</code></td>
+      <td>This station’s own beacon</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A dropped packet can only be known by the <em>absence</em> of a transmission, so <code class="language-plaintext highlighter-rouge">IS DROP</code> shows up about 15 seconds after the packet arrives, once it’s clearly not just waiting its turn to transmit.</p>
+
+<h2 id="the-prototype-ftx-1-and-a-laptop">The prototype: FTX-1 and a laptop</h2>
+
+<p>I proved everything out on the bench first, with the FTX-1 Optima on a tripod and Dire Wolf running in a locked-down Docker container on my laptop.</p>
+
+<blockquote>
+  <p>The prototype: FTX-1 Optima at 144.390 and the laptop running the gateway in Docker<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ftx1-laptop-docker-prototype.jpg" alt="The prototype: FTX-1 Optima at 144.390 and the laptop running the gateway in Docker" /></p>
+</blockquote>
+
+<p>The FTX-1’s single USB-C cable exposes CAT control and PTT as <strong>two separate serial ports</strong>, and Dire Wolf’s rig-control PTT only takes one. <code class="language-plaintext highlighter-rouge">rigctld</code> from Hamlib bridges them, using the FT-991 model (1035), which works for the FTX-1. Dire Wolf then keys the radio through <code class="language-plaintext highlighter-rouge">rigctld</code> over loopback.</p>
+
+<p>The container is deliberately cramped: all Linux capabilities dropped, read-only root filesystem, non-root user, only the radio’s own device nodes (not the laptop’s built-in microphone), and outbound traffic filtered down to DNS and the APRS-IS port. Dire Wolf’s AGW and KISS network ports are disabled too. It binds them to every interface with no authentication, so anything on the network could have transmitted under my call.</p>
+
+<p>The first message from my phone to the FT5DR through this chain was a genuinely good moment. That’s it at the top of this article, sent from my phone to the web, to the FTX-1 and laptop, and over RF to the FT5DR.</p>
+
+<h3 id="three-things-that-looked-fine-and-werent">Three things that looked fine and weren’t</h3>
+
+<p><strong>Plain FM instead of D-FM.</strong> In plain FM, the FTX-1 modulates from the <em>microphone</em> input, not the USB audio. Dire Wolf keyed the radio, a clean carrier went out, SWR was fine, the waterfall showed a signal, and nothing on earth could decode it. The data mode is D-FM (Hamlib calls it <code class="language-plaintext highlighter-rouge">PKTFM</code>). The startup script now sets frequency and mode over CAT on every start, and warns if the radio reports plain FM.</p>
+
+<p><strong>Audio levels.</strong> The USB codec’s default transmit level over-deviates, again audible but undecodable, and the default capture gain is far too low. Levels reset whenever the radio’s USB re-enumerates, so the script sets them on every start.</p>
+
+<p><strong>RF on the USB cable.</strong> At 5 W on a quarter-wave whip with no ground plane, RF crashed the USB link mid-transmission, twice, and left the radio stuck keyed with nothing able to unkey it. The fix was a properly matched half-wave antenna on a tripod, plus a ferrite choke on the USB cable. That’s the red cable wound around the green toroid in these photos. I also set the radio’s time-out timer to 3 minutes, since that’s the only thing that can end a stuck transmission once the control path itself has died.</p>
+
+<h2 id="watching-it-work">Watching it work</h2>
+
+<p>The annotated monitor runs in a terminal, over SSH once the gateway lives on a Pi.</p>
+
+<blockquote>
+  <p>The monitor over SSH: a message from the FT5DR gated up, and the SMS gateway’s acknowledgement gated back down<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/pi-gate-monitor-over-ssh.jpg" alt="The monitor over SSH: a message from the FT5DR gated up, and the SMS gateway's acknowledgement gated back down" /></p>
+</blockquote>
+
+<p>I also wanted to check on it from my phone without logging in, so there’s a small read-only web page on the LAN. It streams the same annotated packet flow, and shows the callsign, whitelist and resolved filter. It’s read-only by design, with no way to edit anything. The whitelist is the only thing between the internet and the transmitter, so changes to it stay behind SSH.</p>
+
+<blockquote>
+  <p>The web monitor on my phone: live packet flow, callsign and whitelist chips at the top<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/web-monitor-phone-live-feed.png" alt="The web monitor on my phone: live packet flow, callsign and whitelist chips at the top" /></p>
+</blockquote>
+
+<h2 id="the-pi-gate">The pi-gate</h2>
+
+<p>A laptop tied up running an iGate isn’t a permanent solution, so the gateway moved to a <strong>Raspberry Pi 3A+</strong>: 512 MB of RAM, one USB port, no Ethernet, and small enough to forget about.</p>
+
+<blockquote>
+  <p>The Raspberry Pi 3A+ with the radio’s USB cable through a ferrite choke<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/raspberry-pi-3a-with-ferrite-choke.jpg" alt="The Raspberry Pi 3A+ with the radio's USB cable through a ferrite choke" /></p>
+</blockquote>
+
+<p>I didn’t want to hand-configure a Pi over a keyboard and monitor, so a script builds the SD card image on my laptop. It downloads Raspberry Pi OS Lite, loop-mounts the image, and writes everything in: WiFi profiles, SSH, the user account, the project, and systemd services. The Pi boots, joins WiFi, installs Dire Wolf, and starts gating with no console session at any point.</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["build_pi_image.sh on the laptop"] --&gt; B["Flash the SD card"]
+  B --&gt; C["First boot: joins WiFi,&lt;br/&gt;installs Dire Wolf"]
+  C --&gt; D["Gateway service runs 'up'"]
+  D --&gt; E{"Radio's USB devices present?"}
+  E -- "yes" --&gt; G["Set audio levels, start Dire Wolf"]
+  E -- "not yet" --&gt; W["Wait up to 60 s"]
+  W --&gt; F{"Present now?"}
+  F -- "yes" --&gt; G
+  F -- "no" --&gt; R["Fail, and systemd retries in 30 s"]
+  R --&gt; D
+  G --&gt; H["On the air, web monitor on port 8080"]
+</code></pre>
+
+<p>That wait-and-retry loop was added after real use. A radio plugged in or switched on after the Pi now brings the gateway up by itself.</p>
+
+<blockquote>
+  <p>The pi-gate running the FTX-1<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ftx1-pi-gate-desk.jpg" alt="The pi-gate running the FTX-1" /></p>
+</blockquote>
+
+<h3 id="built-to-be-unplugged">Built to be unplugged</h3>
+
+<p>A box like this gets pulled from the wall rather than shut down, and an SD card being written when power disappears is how Pis get corrupted. So the image removes the routine writers:</p>
+
+<ul>
+  <li>The runtime directory (logs, generated config, pid files) lives in RAM.</li>
+  <li>The packet log is rotated hourly, so it can’t fill that space.</li>
+  <li>The system journal is kept in RAM.</li>
+  <li>Swap is compressed RAM only. Raspberry Pi OS’s default also writes idle pages out to a swap file on the card, which I didn’t catch until I read the Pi’s own boot log.</li>
+</ul>
+
+<p>What’s left is a card that only gets written when I deliberately change something.</p>
+
+<blockquote>
+  <p>In its case, running on the FTX-1<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ftx1-pi-gate-cased.jpg" alt="In its case, running on the FTX-1" /></p>
+</blockquote>
+
+<h3 id="one-config-layered">One config, layered</h3>
+
+<p>The same station configuration runs on the laptop and on the Pi, so settings are split by what they actually describe:</p>
+
+<pre><code class="language-mermaid">flowchart BT
+  P["Radio profile&lt;br/&gt;how to drive the FTX-1 or VX-6R"] --&gt; S["igate.conf&lt;br/&gt;the station: callsign, whitelist, beacon"]
+  S --&gt; L["igate.local.conf&lt;br/&gt;this machine: Docker or bare metal, device paths"]
+  L --&gt; X["igate.secrets&lt;br/&gt;APRS-IS passcode"]
+</code></pre>
+
+<p>Each layer overrides the one below it. One restriction keeps this safe: <strong>the whitelist, callsign, beacon and transmit path can only come from <code class="language-plaintext highlighter-rouge">igate.conf</code>.</strong> A radio profile or a machine’s local file that tries to set them is refused. Which radio or which machine runs the gateway can never change what it transmits.</p>
+
+<h2 id="a-second-radio-the-vx-6r-on-a-digirig-lite">A second radio: the VX-6R on a Digirig Lite</h2>
+
+<p>The FTX-1 is too nice a radio to leave parked on 144.390, so I added a profile for my VX-6R on a Digirig Lite. It’s a very different arrangement:</p>
+
+<ul>
+  <li><strong>No CAT.</strong> The VX-6R has no computer control, so frequency is set by hand and nothing in software can check it. The gateway prints a reminder on every start instead.</li>
+  <li><strong>PTT through the sound card.</strong> The Digirig Lite is a CM108 USB sound card whose GPIO3 pin keys the radio through Digirig’s VX-6R cable. Dire Wolf drives that pin directly through the chip’s <code class="language-plaintext highlighter-rouge">/dev/hidraw</code> device.</li>
+  <li><strong>Finding the right device.</strong> The FTX-1’s built-in codec is <em>also</em> a C-Media chip. So the script doesn’t take the first C-Media device it finds: it finds the one on the same USB device as the configured audio card, so a machine with both radios attached keys the right one.</li>
+</ul>
+
+<p>From the VX-6R manual: set <strong>Receive Battery Saver (Set Mode 53) off</strong>, because its sleep cycle clips the start of incoming packets. Also turn auto power-off off and keep the time-out timer on. At the Digirig’s documented 50% starting levels, it carried full SMS round trips in both directions.</p>
+
+<blockquote>
+  <p>The VX-6R pi-gate: radio in its charger cradle, the Pi, and the powered USB hub<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/vx6r-digirig-pi-gate-powered-hub.jpg" alt="The VX-6R pi-gate: radio in its charger cradle, the Pi, and the powered USB hub" /></p>
+</blockquote>
+
+<h3 id="what-the-digirig-taught-me">What the Digirig taught me</h3>
+
+<p>This part took the most troubleshooting, and each problem looked like a different one:</p>
+
+<ol>
+  <li><strong>The Pi 3A+ couldn’t run the Digirig directly.</strong> Its single USB port connects straight to the processor with no hub chip, and the Digirig simply never showed up. Through an unpowered hub the Pi logged under-voltage. Through a <strong>powered</strong> hub, it worked.</li>
+  <li><strong>Don’t power the radio from the same hub.</strong> I’d powered the VX-6R through a USB-to-barrel cable with a 12 V boost converter, plugged into that hub. On the gateway’s first transmission, the radio’s current draw pulled the hub’s supply down and knocked the Digirig off USB. The Pi itself reported no under-voltage, because it regulates its own rail. The radio now has its own wall adapter.</li>
+  <li><strong>My Digirig’s USB-C connection only works one way round.</strong> Plugged in upside down, it was electrically invisible, with no error and nothing in the kernel log, on the Pi and on the laptop alike. Every replug was a coin toss, which made it look like an intermittent fault for a while. The working orientation is now marked.</li>
+  <li><strong>Card numbers weren’t stable.</strong> The Pi’s HDMI audio registered as sound card 1 at boot, so a Digirig plugged in afterwards became card 2. The image now turns HDMI audio off, so the radio is always card 1.</li>
+</ol>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["Digirig missing from lsusb"] --&gt; B{"USB-C plug the right way round?"}
+  B -- "not sure" --&gt; F["Flip it and check again"]
+  B -- "yes" --&gt; C{"Powered hub between&lt;br/&gt;the Pi 3A+ and the Digirig?"}
+  C -- "no" --&gt; H["Add a powered hub"]
+  C -- "yes" --&gt; D{"Radio drawing power&lt;br/&gt;from that hub?"}
+  D -- "yes" --&gt; P["Give the radio its own supply"]
+  D -- "no" --&gt; R["Replug it and let the&lt;br/&gt;service retry on its own"]
+</code></pre>
+
+<h2 id="one-more-gotcha-third-party-messages">One more gotcha: third-party messages</h2>
+
+<p>I added a friend to the whitelist, and his station never acknowledged a single message, even though my gateway transmitted every retry at 5 W on the half-wave antenna. The cause was his APRS app.</p>
+
+<p>My gateway can’t transmit a message as if it came from the SMS gateway, since that’s not my station’s callsign. So Dire Wolf wraps every message it gates in APRS <strong>third-party</strong> format:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>KD3CCO-10&gt;APDW17:}SMS&gt;APOSMS,TCPIP,KD3CCO-10*::KD3CCO-7 :@XXXXXXXXXX phone to pigate test{16565
+</code></pre></div></div>
+
+<p>Everything after the <code class="language-plaintext highlighter-rouge">}</code> is the original packet. My FT5DR unwraps it, sees a message for KD3CCO-7, and acks within seconds. His Dire Wolf decoded the packet fine, but the app on top of it ignored third-party packets. It never saw a message addressed to him, so it never acked, and the SMS gateway kept retrying. The RF path was working; the software wasn’t. The fix is on the receiving end: an app that handles third-party packets.</p>
+
+<blockquote>
+  <p>The web monitor showing a full round trip: message gated out, acknowledgement heard and gated back up<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/web-monitor-phone-round-trip.png" alt="The web monitor showing a full round trip: message gated out, acknowledgement heard and gated back up" /></p>
+</blockquote>
+
+<h2 id="where-it-stands">Where it stands</h2>
+
+<p>The pi-gate runs unattended on the VX-6R, beacons every 30 minutes as an <code class="language-plaintext highlighter-rouge">R</code>-overlay iGate (“RX iGate, TX whitelist only”), and carries messages to and from my radios in both directions. The beacon position is the center of my 6-character grid square rather than my house, which keeps it a couple of kilometers from exact.</p>
+
+<blockquote>
+  <p>KD3CCO-10 on aprs.fi, identified as Dire Wolf with the “RX iGate, TX whitelist only” comment<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/aprs-fi-kd3cco-10-station-page.png" alt="KD3CCO-10 on aprs.fi, identified as Dire Wolf with the RX iGate, TX whitelist only comment" /></p>
+</blockquote>
+
+<h2 id="whats-next">What’s next</h2>
+
+<ul>
+  <li><strong>A Raspberry Pi 3B+.</strong> It has a USB hub chip built in, which should let the Digirig plug in directly without the external hub.</li>
+  <li><strong>Surviving power loss properly.</strong> A battery or supercapacitor HAT could turn a pulled plug into a clean shutdown, and a read-only root filesystem would make the SD card immune.</li>
+  <li><strong>Graywolf.</strong> It’s a newer APRS stack that reportedly decodes better than Dire Wolf. My whitelist guarantee depends on Dire Wolf behavior I verified by watching it, including that <code class="language-plaintext highlighter-rouge">IGMSP</code> bypass, so I’d evaluate Graywolf on separate hardware first, starting with whether it can express a filter this strict at all.</li>
+</ul>
+
+<p>If you build one, the repo’s quickstarts cover the laptop and Pi versions for both radios: <a href="https://github.com/hatandspecs/aprs_igate_bidirectional_whitelist">github.com/hatandspecs/aprs_igate_bidirectional_whitelist</a>. Questions and corrections are welcome in the comments below.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+  <!-- Mermaid diagrams: only on pages with "mermaid: true" in their front matter.
+       kramdown renders a ```mermaid fence as either <pre><code class="language-mermaid">
+       or, with Rouge highlighting, <div class="language-mermaid highlighter-rouge">.
+       Both are turned into <div class="mermaid"> before rendering. -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
+      var code = el.matches('code') ? el : el.querySelector('code');
+      var block = el.matches('code') ? el.parentElement : el;
+      if (!code || !block) return;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = code.textContent;
+      block.replaceWith(diagram);
+    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict' });
+    await mermaid.run({ querySelector: '.mermaid' });
+  </script>
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

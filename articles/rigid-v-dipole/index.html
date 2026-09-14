@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building a DIY Rigid V Dipole for Portable Ops | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Building a DIY Rigid V Dipole for Portable Ops</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: March 09, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>If you have been looking into popular antennas for Parks on the Air (POTA), you have likely seen a specific rigid V dipole gaining a lot of traction. While the commercial version uses a distinct hexagonal hub to achieve its signature look, the physics behind it are surprisingly simple and very easy to replicate at home.</p>
+
+<p><img src="/hamradio/assets/images/rigid_v_dipole/5.jpeg" alt="diy rigid v dipole" /></p>
+
+<hr />
+
+<h2 id="why-the-v-shape">Why the “V” Shape?</h2>
+
+<p>A standard horizontal dipole usually has a feedpoint impedance of about <strong>75 ohms</strong>. However, when you bend those elements into a <strong>120° V configuration</strong> and mount them at a typical portable height (less than <strong>0.1 λ</strong>), something magical happens: the impedance drops to right around <strong>50 ohms</strong>. This makes it a perfect match for your radio without needing a complex tuner.</p>
+
+<p>The hexagonal shape of the commercial hubs isn’t just for aesthetics. A hexagon’s sides naturally provide those 120° mounting surfaces, making it mechanically simple to get the angle right every time.</p>
+
+<h2 id="simple-components-great-results">Simple Components, Great Results</h2>
+
+<p>The beauty of this design is that there are no complicated electrical components involved. It is essentially a mechanical hub, two <strong>18 foot telescoping whips</strong>, and basic hardware.</p>
+
+<p>The only “extra” you really need is a <strong>1:1 common mode choke</strong> at the feedpoint. This ensures your coax cable doesn’t become part of the antenna, which helps keep your SWR stable and prevents RF from coming back into the shack (or onto your microphone).</p>
+
+<p>Some commercial versions include extra nuts for running a single whip as a vertical with a counterpoise, but for this DIY project, I focused strictly on the dipole configuration.</p>
+
+<hr />
+
+<h2 id="the-build-process">The Build Process</h2>
+
+<h3 id="version-1-the-pvc-prototype">Version 1: The PVC Prototype</h3>
+<p>For my first experiment, I kept it low budget by using a <strong>PVC pipe fitting</strong> as the mounting hub. Even with this “ugly” prototype, the results were impressive.</p>
+
+<p><img src="/hamradio/assets/images/rigid_v_dipole/2.jpeg" alt="pvc hub rigid v dipole" /></p>
+
+<p><img src="/hamradio/assets/images/rigid_v_dipole/3.jpeg" alt="pvc rigid v deployed" /></p>
+
+<h3 id="version-2-the-3d-printed-hub">Version 2: The 3D Printed Hub</h3>
+<p>To move toward a more “pro” look, my friend <strong>KD3CCP</strong> 3D-printed a custom hexagonal box for me. This served as a sturdy, lightweight housing for the hardware.</p>
+
+<p><img src="/hamradio/assets/images/rigid_v_dipole/4.jpeg" alt="building the 3d printed hub" /></p>
+
+<hr />
+
+<h2 id="field-performance-and-tuning">Field Performance and Tuning</h2>
+
+<p>Tuning is a breeze with telescoping whips. I extended each side to approximately <strong>5 meters</strong>, screwed them into the hub, and checked the results on my <strong>nanoVNA</strong>.</p>
+
+<p>With just a few inches of adjustment to the whip lengths, I hit the sweet spot:</p>
+<ul>
+  <li><strong>SWR:</strong> 1.1</li>
+  <li><strong>Impedance:</strong> 52 ohms</li>
+  <li><strong>Reactance:</strong> Nearly zero</li>
+</ul>
+
+<h3 id="results-on-the-air">Results on the Air</h3>
+<p>As soon as I hooked up the radio, I realized I had dropped right into the middle of a DX contest. Using just <strong>6 watts SSB (QRP)</strong>, I logged four DX contacts in under ten minutes!</p>
+
+<p><img src="/hamradio/assets/images/rigid_v_dipole/6.jpeg" alt="bands come alive" /></p>
+
+<p><img src="/hamradio/assets/images/rigid_v_dipole/1.png" alt="dx contacts" /></p>
+
+<hr />
+
+<h2 id="final-thoughts">Final Thoughts</h2>
+
+<p>This antenna is a winner for portable enthusiasts. Setup and teardown each take less than five minutes. If you are looking for a fast, effective antenna for the <strong>20 meter band</strong> and shorter, this is an excellent DIY candidate.</p>
+
+<p><strong>The Budget Breakdown:</strong></p>
+<ul>
+  <li><strong>Two Telescoping Whips:</strong> ~$40</li>
+  <li><strong>Hardware/Hub Materials:</strong> &lt;$20</li>
+  <li><strong>Total Cost:</strong> <strong>Under $60</strong> (assuming you already have a tripod)</li>
+</ul>
+
+<p>It is affordable, effective, and a great way to get a high-performing station on the air without breaking the bank. Happy building!</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

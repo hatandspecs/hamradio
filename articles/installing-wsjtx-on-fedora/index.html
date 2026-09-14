@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WSJT-X on Fedora Linux for the Yaesu FTX-1 | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>WSJT-X on Fedora Linux for the Yaesu FTX-1</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: April 26, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>This guide details the steps required to configure a stable WSJT-X environment on Fedora Linux for use with the Yaesu FTX-1. The process focuses on three specific technical areas: time synchronization, hardware access, and audio stream persistence.</p>
+
+<h3 id="technical-requirements-for-wsjt-x-on-fedora-linux">Technical Requirements for WSJT-X on Fedora Linux</h3>
+
+<h4 id="1-time-synchronization">1. Time Synchronization</h4>
+<p>Digital modes like FT8 require the system clock to be synchronized within approximately 500 milliseconds of UTC. Fedora uses <code class="language-plaintext highlighter-rouge">chrony</code> as the default Network Time Protocol (NTP) client. The configuration process involves enabling the <code class="language-plaintext highlighter-rouge">chronyd</code> service and forcing an immediate synchronization (stepping the clock) to ensure the offset is minimized before the software begins decoding.</p>
+
+<h4 id="2-hardware-access-and-service-conflicts">2. Hardware Access and Service Conflicts</h4>
+<p>Standard Linux distributions often run a service called <code class="language-plaintext highlighter-rouge">brltty</code> to support Braille displays. This service frequently misidentifies USB-to-serial converters (such as those used for CAT control in Yaesu radios) and prevents other applications from accessing the serial port. The setup process involves masking this service. Additionally, the user account must be added to the <code class="language-plaintext highlighter-rouge">dialout</code> and <code class="language-plaintext highlighter-rouge">audio</code> groups to permit direct access to the radio’s serial interface and sound card.</p>
+
+<h4 id="3-audio-stream-persistence">3. Audio Stream Persistence</h4>
+<p>Fedora’s modern audio stack, PipeWire, typically suspends audio nodes when they are idle to conserve power. This can cause a delay in the transition from receive to transmit, which may clip the start of a transmission. To prevent this, a custom WirePlumber rule is created to disable the “suspend-on-idle” feature for ALSA nodes.</p>
+
+<h4 id="4-package-management-and-version-control">4. Package Management and Version Control</h4>
+<p>To ensure stability, the process involves removing any pre-release or experimental builds of WSJT-X. The standard General Availability (GA) version is installed alongside the latest <code class="language-plaintext highlighter-rouge">hamlib</code> libraries. Once installed, the WSJT-X package is locked using the <code class="language-plaintext highlighter-rouge">dnf versionlock</code> plugin to prevent the system from automatically updating to a potentially unstable future release.</p>
+
+<hr />
+
+<h3 id="implementation-script">Implementation Script</h3>
+
+<p>The following script automates the installation and configuration described above.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="c"># --- CONFIGURATION ---</span>
+<span class="c"># Target the stable General Availability (GA) version</span>
+<span class="nv">STABLE_WSJTX</span><span class="o">=</span><span class="s2">"wsjtx"</span>
+<span class="nb">echo</span> <span class="s2">"--- WSJT-X STABLE CONFIGURATOR for KD3CCO ---"</span>
+
+<span class="c"># 1. HARDWARE &amp; SPACE DETECTION</span>
+<span class="nb">echo</span> <span class="s2">"Step 1: Analyzing system..."</span>
+<span class="nv">CPU_CORES</span><span class="o">=</span><span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
+<span class="nb">echo</span> <span class="s2">"Detected: </span><span class="k">${</span><span class="nv">CPU_CORES</span><span class="k">}</span><span class="s2"> CPU Cores. Ready for decoding."</span>
+
+<span class="c"># 2. THE TOTAL RESET</span>
+<span class="nb">echo</span> <span class="s2">"Step 2: Removing experimental/pre-release versions..."</span>
+<span class="c"># Unlocking first ensures we can actually remove it</span>
+<span class="nb">sudo </span>dnf versionlock delete wsjtx 2&gt;/dev/null <span class="o">||</span> <span class="nb">true
+sudo </span>dnf remove <span class="nt">-y</span> wsjtx hamlib hamlib-utils hamlib-devel 2&gt;/dev/null <span class="o">||</span> <span class="nb">true
+sudo </span>dnf clean all
+
+<span class="c"># 3. INSTALL STABLE VERSION</span>
+<span class="nb">echo</span> <span class="s2">"Step 3: Installing Stable WSJT-X and core Hamlib..."</span>
+<span class="c"># Removed hamlib-utils as it is now integrated into hamlib</span>
+<span class="nb">sudo </span>dnf <span class="nb">install</span> <span class="nt">-y</span> wsjtx hamlib chrony pavucontrol <span class="s1">'dnf-command(versionlock)'</span>
+
+<span class="c"># 4. ENSURE LATEST RIG DEFINITIONS</span>
+<span class="nb">echo</span> <span class="s2">"Step 4: Ensuring Hamlib is up to date..."</span>
+<span class="c"># This ensures you have the latest Yaesu FTX-1 definitions</span>
+<span class="nb">sudo </span>dnf upgrade <span class="nt">-y</span> hamlib
+
+<span class="c"># 5. VERSION LOCK</span>
+<span class="c"># This prevents dnf update from accidentally pulling in a future beta/RC version</span>
+<span class="nb">echo</span> <span class="s2">"Step 5: Locking WSJT-X to the current stable release..."</span>
+<span class="nb">sudo </span>dnf versionlock add wsjtx
+
+<span class="c"># 6. PERMISSIONS &amp; RIG CONTROL FIX</span>
+<span class="nb">echo</span> <span class="s2">"Step 6: Configuring USB/Serial and masking conflicts..."</span>
+<span class="c"># dialout for CAT control; audio for PipeWire/Alsa access</span>
+<span class="nb">sudo </span>usermod <span class="nt">-a</span> <span class="nt">-G</span> dialout,audio <span class="nv">$USER</span>
+<span class="c"># Disable brltty (common conflict with USB-to-Serial adapters)</span>
+<span class="nb">sudo </span>systemctl mask brltty <span class="o">||</span> <span class="nb">true</span>
+
+<span class="c"># 7. TIME SYNC (The 'FT8 Heartbeat')</span>
+<span class="nb">echo</span> <span class="s2">"Step 7: Calibrating sub-second time accuracy via Chronyd..."</span>
+<span class="nb">sudo </span>systemctl <span class="nb">enable</span> <span class="nt">--now</span> chronyd
+<span class="nb">sudo </span>chronyc <span class="nt">-a</span> makestep
+
+<span class="c"># 8. AUDIO ENGINE OPTIMIZATION (PipeWire Fix)</span>
+<span class="c"># This prevents your rig's audio from 'sleeping' during RX/TX gaps</span>
+<span class="nb">echo</span> <span class="s2">"Step 8: Applying PipeWire idle-suspend fix..."</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> ~/.config/wireplumber/wireplumber.conf.d
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> &gt; ~/.config/wireplumber/wireplumber.conf.d/50-no-suspend.conf
+monitor.alsa.rules = [
+  {
+    matches = [ { node.name = "~alsa_input.*" }, { node.name = "~alsa_output.*" } ],
+    actions = { update-props = { session.suspend-on-idle = false } }
+  }
+]
+</span><span class="no">EOF
+
+</span><span class="c"># 9. OS GUI INTEGRATION</span>
+<span class="nb">echo</span> <span class="s2">"Step 9: Finalizing menu shortcuts..."</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> ~/.local/share/applications
+<span class="k">if</span> <span class="o">[</span> <span class="nt">-f</span> /usr/share/applications/wsjtx.desktop <span class="o">]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">cp</span> /usr/share/applications/wsjtx.desktop ~/.local/share/applications/
+<span class="k">fi
+
+</span><span class="nb">echo</span> <span class="s2">"-------------------------------------------------------"</span>
+<span class="nb">echo</span> <span class="s2">"STABLE INSTALL COMPLETE: KD3CCO STATION READY"</span>
+<span class="nb">echo</span> <span class="s2">"Current Hamlib Version: </span><span class="si">$(</span>rigctl <span class="nt">--version</span> | <span class="nb">head</span> <span class="nt">-n</span> 1<span class="si">)</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"-------------------------------------------------------"</span>
+<span class="nb">echo</span> <span class="s2">"1. REBOOT/LOGOUT: Required for USB 'dialout' permissions."</span>
+<span class="nb">echo</span> <span class="s2">"2. VERIFY SYNC: Run 'chronyc tracking' to ensure &lt; 100ms offset."</span>
+<span class="nb">echo</span> <span class="s2">"-------------------------------------------------------"</span>
+
+<span class="nb">read</span> <span class="nt">-p</span> <span class="s2">"Launch WSJT-X and Volume Control now? (y/n) "</span> choice
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$choice</span><span class="s2">"</span> <span class="o">=</span>~ ^[Yy]<span class="nv">$ </span><span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span>wsjtx &amp;
+    pavucontrol &amp;
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="instructions-for-execution">Instructions for Execution</h3>
+
+<ol>
+  <li><strong>Create the script file:</strong>
+Use a text editor to create a new file named <code class="language-plaintext highlighter-rouge">configure_wsjtx.sh</code>.</li>
+  <li><strong>Make the script executable:</strong>
+Before the script can be run, it needs the correct permissions. Run the following command in your terminal:
+<code class="language-plaintext highlighter-rouge">chmod +x configure_wsjtx.sh</code></li>
+  <li><strong>Run the script:</strong>
+Execute the script with the following command:
+<code class="language-plaintext highlighter-rouge">./configure_wsjtx.sh</code></li>
+  <li><strong>Finalize Permissions:</strong>
+Once the script completes, you must <strong>log out and log back in</strong> to your Fedora session. This ensures that the new group permissions for <code class="language-plaintext highlighter-rouge">dialout</code> and <code class="language-plaintext highlighter-rouge">audio</code> are applied to your user account.</li>
+</ol>
+
+<h1 id="wsjt-x-radio-settings-for-the-yaseu-ftx-1">WSJT-X Radio Settings for the Yaseu FTX-1</h1>
+
+<p>Radio Settings that worked for my FTX-1:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Parameter</th>
+      <th style="text-align: left">Setting</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Rig</strong></td>
+      <td style="text-align: left">Yaesu FT-991</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Serial Port</strong></td>
+      <td style="text-align: left">/dev/ttyUSB0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Baud Rate</strong></td>
+      <td style="text-align: left">38400</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Data Bits</strong></td>
+      <td style="text-align: left">Eight</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Stop Bits</strong></td>
+      <td style="text-align: left">Two</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Handshake</strong></td>
+      <td style="text-align: left">None</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Force Control Lines</strong></td>
+      <td style="text-align: left">no selections</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>PTT Method</strong></td>
+      <td style="text-align: left">CAT</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Port</strong></td>
+      <td style="text-align: left">/dev/ttyACM0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Transmit Audio Source</strong></td>
+      <td style="text-align: left">Front/Mic</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Mode</strong></td>
+      <td style="text-align: left">Data</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Split Operation</strong></td>
+      <td style="text-align: left">Fake it</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="testing-my-wsjt-x-configuration-using-wspr-mode">Testing my WSJT-X Configuration using WSPR mode</h1>
+<p>Please see the following article:
+<a href="../using-wspr-wsjtx/">How to use WSPR with WSJT-X</a></p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

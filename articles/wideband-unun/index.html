@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Designing a Multiband 75m to 10m EFHW and Wide-band 56:1 Unun | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Designing a Multiband 75m to 10m EFHW and Wide-band 56:1 Unun</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: May 31, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>The End-Fed Half-Wave (EFHW) antenna is an appealing choice for my situation in terms of deployment and for multi-band operation with one wire. The impedance transformer is the critical component of this system. It transforms the high feedpoint impedance of roughly 2500 ohms to the 50 ohms expected by the radio. The goal of this project is to document a 56:1 transformer and wire system that covers the 75 meter band (3.8 MHz, General license phone band) through 10 meters with flat SWR and acceptable efficiency for operations under 100W, without requiring a tuner.  Wideband operation introduces some engineering trade-offs and conflicts that had to be resolved.  Ultimately such antennas commerically exist and are quite popular, so I took this as evidence that the engineering trade-offs and conflicts are resolvable, and eventually I was able to achieve a functional DIY antenna to meet my goals..</p>
+
+<blockquote>
+  <p>DIY 75-10m Antenna System, Final nanoVNA Measurements - Looks Good!
+<img src="/hamradio/assets/images/wideband_unun/final_nanovna_antenna.jpg" alt="DIY 75-10m Antenna System, Final nanoVNA Measurements " /></p>
+</blockquote>
+
+<blockquote>
+  <p>Deployment of the 75-10m Antenna System in my Yard
+<img src="/hamradio/assets/images/wideband_unun/7510_deployment_yard.jpg" alt="Deployment of the 75-10m Antenna System in my Yard" /></p>
+</blockquote>
+
+<h2 id="antenna-system-overview-and-goals">Antenna System Overview and Goals</h2>
+<p>This analysis focuses on an antenna design utilizing a single wire consisting of approximately 134 feet of AWG 22 Poly Stealth. To manage resonance and impedance across 75m through 10m, specific matching elements were integrated into the radiator.</p>
+
+<ul>
+  <li><strong>Center RC Network:</strong> A 150M ohm resistor and a 300pF capacitor in parallel are placed in the center of the antenna wire. The two halves of the wire are in series with this network. Empirical testing with alligator clips showed this pulls the 80m resonance up into the 75m phone segment while minimizing impact to the tuning of the higher bands.</li>
+  <li><strong>Compensation Coil:</strong> This loading coil consists of 8 turns on a 1 inch OD PVC form, placed approximately 6.5 feet from the feedpoint. The PVC form has hook geometries cut into it to allow for rapid adjustment without full disassembly. This coil effectively pulls the resonance frequencies of the upper bands downward.</li>
+</ul>
+
+<blockquote>
+  <p>Hand-drawn Schematic of the 75-10m Antenna Design
+<img src="/hamradio/assets/images/wideband_unun/hand_drawn_schematic.jpg" alt="Hand-drawn Schematic of the 75-10m Antenna Design" /></p>
+</blockquote>
+
+<blockquote>
+  <p>Close up of the Adjustable PVC Compensation Coil
+<img src="/hamradio/assets/images/wideband_unun/compensation_coil.jpg" alt="Close up of the Adjustable PVC Compensation Coil" /></p>
+</blockquote>
+
+<p><strong>Hypothesis regarding the RC Network:</strong> While empirical testing showed the desired frequency shift, the operating mechanism is likely entirely capacitive. At 3.8 MHz, a 300pF capacitor presents a capacitive reactance of roughly 139 ohms. Because RF current follows the path of least impedance, it completely bypasses the 150M ohm resistor. The capacitor acts as a series reactance that electrically shortens the antenna at lower frequencies. The resistor is there to provide a static bleed for any static electricity that accumulates on the antenna wire.</p>
+
+<p>The compensation coil functions precisely as expected. By adding series inductance, it introduces electrical length. Because it sits 6.5 feet from the feedpoint, it resides at different voltage and current nodes depending on the harmonic frequency, allowing selective loading of higher harmonics without destroying the fundamental 75m resonance.</p>
+
+<p><em>A note on coil placement:</em> To maximize a loading coil’s effect on a specific higher band, it should be placed at a current maximum (a current loop) for that frequency’s standing wave. Conversely, placing it at a voltage maximum (a voltage node) minimizes its effect. Because an EFHW operates as multiple half-waves on its harmonics, calculating the current distribution for a target band like 10m or 15m allows you to pinpoint the exact distance from the feedpoint to install the coil, effectively tuning the high bands independently of the fundamental frequency.</p>
+
+<h2 id="wideband-unun-design-engineering-conflicts">Wideband Unun Design Engineering Conflicts</h2>
+<p>Designing a wide-band transformer for this frequency range involves competing technical requirements. To maintain efficiency on the lower bands, the inductive reactance ($X_L$) of the primary must be high enough to prevent the transformer from acting as a shunt to ground. The standard engineering target is an $X_L$ of 4 to 5 times the characteristic impedance (200 to 250 ohms).</p>
+
+<p>Higher frequencies present the opposite challenge. Every additional turn increases path length, leakage inductance, and parasitic capacitance between the windings. Large cores, thick core stacks, and 3-turn primaries create long path lengths. At higher frequencies, these factors cause SWR to climb rapidly.</p>
+
+<p>Based on many experiments winding and testing ununs, I apply the following rules of thumb to balance these conflicts:</p>
+
+<ol>
+  <li><strong>Wire length (or something that correlates with length like leakage inductance) seems to hurt high frequencies:</strong> I am observing that longer wire paths hurt performance on the upper bands. Big cores, thick stacks, and 3-turn primaries all contribute to excess wire length.</li>
+  <li><strong>Low primary inductive reactance is bad:</strong> Too little inductive reactance (X_L) on the primary causes the transformer to look like a short circuit to the radio and the unun doesn’t work well. Lower frequencies demand either a larger core cross-section, more primary turns, or materials with a higher inductance factor.</li>
+  <li><strong>Core materials matter:</strong> The ferrite mix matters significantly. Mix 43 is pretty common across HF frequencies, but other mixes favor smaller, specific segments of the amateur bands and will yield different inductance values for the exact same winding geometry.</li>
+  <li><strong>Wideband is hard, narrowband is easy:</strong> Creating an unun that effectively spans 75m to 10m has proven tricky. Building ununs for smaller spreads like 160m to 80m, 80m to 40m, or 20m to 10m is comparatively simple.</li>
+  <li><strong>Bigger wire for larger power:</strong> AWG 18 through 14 all seem to work fine for HF matching. Core size and wire gauge relate to power handling and duty cycle. For under 100 watts SSB, an FT240 core and AWG 18 or 16 wire have seemed to manage heat well enough for me.</li>
+  <li><strong>Calculate things and measure things:</strong> A lot “common wisdom” I’ve seen online, when I do some calculations and measure the results, seem a bit dubious.  There are clearly “more things on heaven and earth than in my philosophy (Horatio)” when it comes to RF.</li>
+</ol>
+
+<h2 id="quantitative-analysis-of-the-2x-ft240-43-stack">Quantitative Analysis of the 2x FT240-43 Stack</h2>
+<p>To balance the need for high primary inductance on 75m with the need for short wire paths on 10m, I utilized a stacked core design using two FT240-43 ferrites.</p>
+
+<p>Stacking two identical cores doubles the Inductance Factor ($A_L$).</p>
+<ul>
+  <li>Single FT240-43 $A_L$: 1075 nH/turn^2</li>
+  <li>Stacked 2x FT240-43 $A_L$: 2150 nH/turn^2</li>
+</ul>
+
+<p>Using the standard inductance formula:</p>
+
+\[L = A_L \times N^2\]
+
+<p>We can calculate the inductance ($L$) and the resulting inductive reactance ($X_L$) using:</p>
+
+\[X_L = 2 \times \pi \times f \times L\]
+
+<h3 id="example-calculation-2-turn-primary-at-38-mhz">Example Calculation: 2-Turn Primary at 3.8 MHz</h3>
+<p>To demonstrate how the values in the table below are derived, here is the step-by-step calculation for the 2-turn primary at the bottom of the 75m band (3.8 MHz).</p>
+
+<p><strong>Step 1: Calculate Inductance ($L$)</strong></p>
+
+\[L = 2150 \times 2^2\]
+
+\[L = 2150 \times 4\]
+
+\[L = 8600 \text{ nH}\]
+
+<p>To convert nanohenries (nH) to microhenries ($\mu$H) for the next formula, divide by 1000:</p>
+
+\[L = 8.6 \mu\text{H}\]
+
+<p><strong>Step 2: Calculate Inductive Reactance ($X_L$)</strong></p>
+
+\[X_L = 2 \times \pi \times 3.8 \times 8.6\]
+
+\[X_L = 205.3 \text{ ohms}\]
+
+<h3 id="inductive-reactance-results">Inductive Reactance Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Band</th>
+      <th style="text-align: left">Frequency</th>
+      <th style="text-align: left">2-Turn Primary ($L = 8.6 \mu\text{H}$)</th>
+      <th style="text-align: left">3-Turn Primary ($L = 19.35 \mu\text{H}$)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>75m</strong></td>
+      <td style="text-align: left">3.8 MHz</td>
+      <td style="text-align: left">205 ohms</td>
+      <td style="text-align: left">462 ohms</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>40m</strong></td>
+      <td style="text-align: left">7.1 MHz</td>
+      <td style="text-align: left">383 ohms</td>
+      <td style="text-align: left">863 ohms</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>20m</strong></td>
+      <td style="text-align: left">14.1 MHz</td>
+      <td style="text-align: left">762 ohms</td>
+      <td style="text-align: left">1714 ohms</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>15m</strong></td>
+      <td style="text-align: left">21.2 MHz</td>
+      <td style="text-align: left">1145 ohms</td>
+      <td style="text-align: left">2577 ohms</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>10m</strong></td>
+      <td style="text-align: left">28.4 MHz</td>
+      <td style="text-align: left">1534 ohms</td>
+      <td style="text-align: left">3452 ohms</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A 2-turn primary yields approximately 205 ohms of reactance at 3.8 MHz. This successfully hits the 200 ohm target, providing sufficient reactance to prevent the transformer from acting as a short on 75 meters. A 3-turn primary easily meets the low-frequency requirement but introduces too much wire length, destroying the 10m performance.  I tested and verified this with the nanoVNA.</p>
+
+<h2 id="unun-build-and-empirical-winding-geometry">Unun Build and Empirical Winding Geometry</h2>
+<p>The final unit is a 56:1 unun utilizing a 2-turn primary and a 15-turn secondary, wound with AWG 18 wire  since I am operating under 100W SSB and more typically under 50W. A 100pF 1kV C0G/NP0 ceramic capacitor is placed across the primary.  I had no luck with the conventional W1JR winding style for my broadband unun.  Testing with a 2500 ohm non-inductive dummy load, I observed that SWR climbed significantly on the higher bands.</p>
+
+<blockquote>
+  <p>Conventional W1JR winding for a Wideband 75-10m 56:1 Unun - Poor High Frequency Performance.
+<img src="/hamradio/assets/images/wideband_unun/conventional_w1jr_wind_56_unun.jpg" alt="Conventional W1JR winding for a Wideband 75-10m 56:1 Unun" /></p>
+</blockquote>
+
+<p>From pictures online showing commercially available ununs for similar 75m-10m antenna systems, I saw what appeared to be a different winding style. This, combined with a lack of success on higher bands for broadband ununs with typical W1JR and maximally spaced winding styles, led me to trying to figure out and replicate this unconventional winding style.  I also went with a 2 turn primary because in the pictures of commercial ununs, that is what I saw in commerical unun pictures online, and I did test the same design with a 3 turn primary and it didn’t perform as well on the higher bands.</p>
+
+<p>After sweeping numerous winding configurations with a NanoVNA to mitigate the high-band SWR climb, the following hybrid spacing configuration proved to be the only one that maintained relatively flat SWR from 75m through 10m without climbing precipitously on 12m and 10m:</p>
+
+<ol>
+  <li>A 2-turn bifilar primary/secondary.</li>
+  <li>5 tightly spaced secondary turns going clockwise around the core.</li>
+  <li>A crossover to the opposite side of the primary.</li>
+  <li>8 spaced-out secondary turns going counter-clockwise around the core.</li>
+</ol>
+
+<p>The total winding space only occupies about half the circumference of the stacked cores.</p>
+
+<blockquote>
+  <p>Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun - Good Broadband Performance!
+<img src="/hamradio/assets/images/wideband_unun/exotic_wind_56_unun.jpg" alt="Exotic Commercially-inspired winding for a Wideband 75-10m 56:1 Unun" /></p>
+</blockquote>
+
+<p>To further convince myself that it was the winding spacing that was helping reduce the SWR of the higher bands, I tried a control experiment. I wound a similar style on a roll of electrical tape that was approximately the size of an FT240 core. In this experiment, I am removing the effect of the core itself and the material mix, and any transformation or matching effect must be entirely due to the winding geometry.</p>
+
+<blockquote>
+  <p>Control Experiment - Exotic Wind on an Inert Core Showing SWR Decrease at Higher Frequencies
+<img src="/hamradio/assets/images/wideband_unun/tape_unun.jpg" alt="Control Experiment - Exotic Wind on an Inert Core (electrical tape roll) Showing SWR Decrease at Higher Frequencies" /></p>
+</blockquote>
+
+<p><strong>Operating Mechanism Hypothesis:</strong> The close-spaced initial winds reduce leakage inductance, which severely impacts high-frequency performance. At higher frequencies, the magnetic permeability of Mix 43 drops, and the device likely transitions from a purely magnetic transformer into something else.  I’m currently thinking it is behaving like a non-uniform Transmission Line Transformer (TLT). Or if I am misapplying or misunderstanding the idea of a TLT, perhaps it is just some other form of capacitive and inductive coupling. The specific tight-to-spaced winding geometry appears to facilitate this transition, keeping the self-resonant frequency of the transformer high enough to operate cleanly on 10m.</p>
+
+<h2 id="deployment">Deployment</h2>
+<p>The antenna deployment in my yard is pragmatic rather than ideal. the feedpoint is mounted outside of a second-story window, traveling 80 to 90 feet to a 25-foot mast mounted on a playhouse. From there, it doglegs and slopes down to a post in the backyard. There is roughly 10 feet of paracord between the post and the antenna end, keeping the lowest portion 8-10 feet above ground.  A large common mode choke (12 turns of coax through an FT240-43 core) is placed immediately after the unun. A dedicated counterpoise wire is attached to the unun ground terminal. Incrementally trimming this counterpoise had a measurable effect on the system tuning, with the final length settling at 8.75 feet.</p>
+
+<blockquote>
+  <p>Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise
+<img src="/hamradio/assets/images/wideband_unun/feed_point.jpg" alt="Feed Point of my 75-10m Antenna, Common Mode Choke, Unun, and Counterpoise" /></p>
+</blockquote>
+
+<blockquote>
+  <p>Deployment Map showing Dogleg Required for Pragmatic Reasons
+<img src="/hamradio/assets/images/wideband_unun/7510_deployment.png" alt="Deployment Map showing Dog-leg Required for Pragmatic Reasons" /></p>
+</blockquote>
+
+<blockquote>
+  <p>View from the far end of the antenna<br />
+<img src="/hamradio/assets/images/wideband_unun/far_end.jpg" alt="Far-End of the Antenna" /></p>
+</blockquote>
+
+<h2 id="results">Results</h2>
+<p>The on-air results have been excellent relative to my previous antennas. The system operates from 75m to 10m wideband without a tuner with acceptable SWR. I have successfully run WSPR on all 8 bands with solid results and made phone contacts on every phone band except 12m. 30m does not align as neatly as the other bands but cleans up easily with a tuner. An unexpected benefit is a noticeable reduction in QRM on 20m compared to my previous antennas. My current hypothesis is that this reduction occurs because more of the radiating element is positioned further away from house noise sources.</p>
+
+<p>73,
+KD3CCO</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>
