@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Keyboard-to-Keyboard Cyberdeck for the FTX-1 | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>A Keyboard-to-Keyboard Cyberdeck for the FTX-1</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: September 20, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <blockquote>
+  <p>My first BPSK31 contact, worked entirely from the deck’s own panel and keyboard<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/first-bpsk31-qso-n0dlr.jpg" alt="My first BPSK31 contact, worked entirely from the deck's own panel and keyboard" /></p>
+</blockquote>
+
+<p>I work on computers all week. When I get home I don’t want to look at one, let alone do a hobby on one. That single fact is the reason this thing exists.</p>
+
+<p>My station is a Yaesu FTX-1 on a 20” × 14” desk in the corner of my bedroom. There is no room for a laptop, and even if there were, opening a laptop to operate feels like clocking back in. But the digital modes I wanted to learn — RTTY, PSK31, Olivia — all assume a computer with a waterfall, a mouse, and a bunch of floating windows.</p>
+
+<p>So I built a terminal instead. A five inch panel, a Raspberry Pi, a Bluetooth keyboard, and one program that fills the whole screen. It boots into the application; there is no desktop behind it, no window manager, no pointer, and nothing to click.</p>
+
+<p>This thing looks like sci-fi in 1985. I was an infant in 1985 — so none of this is nostalgia for a thing I lived through. I’m just a huge fan of science fiction from the seventies and eighties, and I like gear that looks and behaves the way the gear in those films did. Monochrome text on black. Every control a key. A machine that tells you what it’s doing in words, on the same screen it does everything else on.</p>
+
+<p>Code and full documentation are at <a href="https://github.com/hatandspecs/keyboard-to-keyboard-cyberdeck">github.com/hatandspecs/keyboard-to-keyboard-cyberdeck</a> — including a design document explaining every decision below, a deployment runbook that takes a blank SD card to a station on the air, and an operating tutorial for anyone who, like me three days ago, had never worked a keyboard-to-keyboard QSO in their life.</p>
+
+<hr />
+
+<h2 id="the-three-goals">The three goals</h2>
+
+<p><strong>Portability.</strong> It’s a panel, a Pi, and a keyboard. It lives next to the radio rather than in front of it, and the whole thing goes in the same bag that already carries the FTX-1 to a park. There is deliberately no battery in it: it takes 5 V over USB like everything else I own, so in the field it hangs off the same big USB power bank or LiFePO4 battery box that’s already running the radio. One bank powers everything. That also means the deck itself is just a screen and a circuit board as far as an airline is concerned, and it packs in luggage without a lithium cell to explain.</p>
+
+<p><strong>Function.</strong> Compose while receiving, send an over, hand it back. Change mode, change band, tune the carrier, drop a canned message in — all from the keyboard, without ever leaving the conversation. Anything a contest logger does, it deliberately doesn’t do.</p>
+
+<p><strong>The interface.</strong> One hue on black — amber, green, red, cyan, or plain white — in a fixed 66 × 20 console with a 12 × 24 font. It happens to be genuinely practical: monochrome on a small panel in a dark bedroom is the most readable thing I’ve built. But the <em>Alien</em> and <em>Blade Runner</em> look is half the point, and I’m not going to pretend otherwise. The color schemes are named after what they’re imitating. Matrix is green, Deckard is amber, Hal is red, Tron is blue, and Ripley is white.</p>
+
+<blockquote>
+  <p>The whole station: the deck, a Logitech K380, and the FTX-1 just out of frame at top left<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/the-deck-on-the-desk.jpg" alt="The whole station: the deck, a Logitech K380, and the FTX-1 just out of frame at top left" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="what-its-built-from">What it’s built from</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Computer</strong></td>
+      <td>Raspberry Pi 3A+ — 512 MB, one USB port, and that is enough</td>
+    </tr>
+    <tr>
+      <td><strong>Display</strong></td>
+      <td>Waveshare 5” DSI LCD, 800 × 480, powered from the DSI connector itself</td>
+    </tr>
+    <tr>
+      <td><strong>Keyboard</strong></td>
+      <td>Logitech K380 over Bluetooth LE</td>
+    </tr>
+    <tr>
+      <td><strong>Radio</strong></td>
+      <td>Yaesu FTX-1, one USB-C cable carrying CAT, PTT and audio</td>
+    </tr>
+    <tr>
+      <td><strong>Clock</strong></td>
+      <td>Adafruit PiRTC — a DS3231 on the GPIO header, so it keeps time with no network</td>
+    </tr>
+    <tr>
+      <td><strong>Console</strong></td>
+      <td>66 × 20 characters, Terminus 12 × 24</td>
+    </tr>
+    <tr>
+      <td><strong>Software</strong></td>
+      <td>Python and <code class="language-plaintext highlighter-rouge">curses</code> on the framebuffer console; fldigi doing the modem work, invisibly</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Add that up. The Raspberry Pi 3A+ is a <strong>\$25</strong> proposition. The Waveshare 5” DSI panel is a <strong>\$43</strong> proposition. <strong>This entire build is \$68 plus shipping</strong>, assuming — as I did — that an SD card and a Bluetooth keyboard are already lying around. The clock came later and adds <strong>\$15</strong>; it is optional right up until you take the deck somewhere without WiFi, at which point it stops being optional. The 3A+ is the cheap, slightly awkward one with 512 MB and a single USB port, and it is completely adequate: it runs the modem, the terminal, the display and the radio interface at once with room to spare.</p>
+
+<p>The Pi mounts on the back of the panel on extra-long standoffs, and those standoffs <em>are</em> the stand — they hold the Pi off the panel and prop the whole thing at a readable angle on the desk. No enclosure, no bracket, no printed case — yet. The finished object is a screen leaning back on its own hardware with one cable coming out of it to the radio, and one cable for power.</p>
+
+<blockquote>
+  <p>The Pi 3A+ on the back of the panel, held on the long standoffs that also stand it up<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/pi-behind-the-panel.jpg" alt="The Pi 3A+ on the back of the panel, held on the long standoffs that also stand it up" /></p>
+</blockquote>
+
+<p>The one piece of genuine reuse is what happened to fldigi. I didn’t write a modem — writing a PSK31 demodulator that beats fldigi’s would be a multi-year project and I’d lose. Instead fldigi runs headless on a virtual X display that is never shown, doing DSP, AFC, squelch and RSID, and the terminal drives it over XML-RPC on the loopback interface. All the signal processing, none of the GUI.</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  subgraph console["tty1 — the framebuffer console"]
+    UI["cyberdeck.py&lt;br/&gt;curses, no X, no pointer"]
+  end
+  subgraph hidden["Xvfb :99 — never displayed"]
+    FL["fldigi&lt;br/&gt;modem, AFC, squelch, DSP"]
+  end
+  KB["Bluetooth keyboard"] --&gt; UI
+  UI -- "XML-RPC 127.0.0.1:7362" --&gt; FL
+  FL -- "ALSA plughw:1,0" --&gt; RIG["FTX-1"]
+  FL -- "hamlib NET rigctl&lt;br/&gt;127.0.0.1:4532" --&gt; RC["rigctld"]
+  RC -- "CAT and PTT over USB" --&gt; RIG
+</code></pre>
+
+<hr />
+
+<h2 id="how-you-actually-work-someone">How you actually work someone</h2>
+
+<p>The screen is three regions and never anything else: a status bar, the transcript, and the line you’re typing.</p>
+
+<p>The status bar carries my callsign, the dial frequency, the radio’s mode, the modem, the audio carrier, a mode-dependent signal figure, and UTC. The transcript is timestamped and prefixed — <code class="language-plaintext highlighter-rouge">RX</code> for received text, my callsign for mine, <code class="language-plaintext highlighter-rouge">--</code> for the deck talking to me. The bottom two lines are the line I’m composing and a hint row.</p>
+
+<p>Transmitting is <strong>over-based</strong>, which is how HF text has always worked and how fldigi works. You type while you’re receiving. <code class="language-plaintext highlighter-rouge">Enter</code> inserts a newline — it does not send. When your over is ready, <code class="language-plaintext highlighter-rouge">Ctrl-T</code> keys the radio and sends the buffer; <code class="language-plaintext highlighter-rouge">Ctrl-Y</code> hands it back, dropping to receive as soon as the audio drains; <code class="language-plaintext highlighter-rouge">Ctrl-C</code> aborts a transmission instantly. That’s the whole model, and it is the part I’m proudest of: the buffer is <em>yours</em> until you say the word.</p>
+
+<blockquote>
+  <p>My first RTTY QSO, and I said so on the air. N3QE gave me number 1 in the log.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/first-rtty-qso-n3qe.jpg" alt="My first RTTY QSO, and I said so on the air. N3QE gave me number 1 in the log." /></p>
+</blockquote>
+
+<p>That was a contest weekend, which turned out to be an excellent place to learn — everyone is exchanging the same four fields at machine speed, and you can watch the pattern for twenty minutes before opening your mouth.</p>
+
+<blockquote>
+  <p>A sprint exchange with K4ZW. The garbled <code class="language-plaintext highlighter-rouge">KD2CCO</code> in the middle is Baudot doing what Baudot does.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/rtty-sprint-exchange-k4zw.jpg" alt="A sprint exchange with K4ZW. The garbled KD2CCO in the middle is Baudot doing what Baudot does." /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="tuning-the-radio-has-the-waterfall-already">Tuning: the radio has the waterfall already</h2>
+
+<p>This was the hard design question, and the answer turned out to be sitting on the desk the whole time.</p>
+
+<p><strong>The FTX-1 has a waterfall.</strong> A good one, on a color screen, with a spectrum scope above it. A waterfall on a 66-column monochrome console would be a novelty by comparison — there simply aren’t enough pixels for it to tell me anything the radio’s own display doesn’t tell me better, and duplicating it would mean staring at the worse of the two.</p>
+
+<p>So the division of labor is: <strong>the radio gets me into the ballpark, and the deck closes the gap.</strong> I look at the FTX-1’s waterfall, see traces in the PSK segment, and put the dial roughly to the left of one. That’s a couple of seconds. Then the deck’s signal search lands the audio carrier exactly on it, to the hertz, and the text starts appearing — another couple of seconds. Neither tool is doing the other’s job badly.</p>
+
+<p>The tuning keys work directly on the conversation screen, where the decoded text is sitting right there as the only confirmation that actually matters:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl-W</code> and <code class="language-plaintext highlighter-rouge">Ctrl-S</code> run fldigi’s own signal search up and down the passband.</li>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl-A</code> and <code class="language-plaintext highlighter-rouge">Ctrl-D</code> nudge the carrier ten hertz at a time.</li>
+  <li>The deck narrates what happened, in the transcript, as a <code class="language-plaintext highlighter-rouge">--</code> line.</li>
+</ul>
+
+<p>That narration is the feature. A search that finds nothing says so, and says where it left you:</p>
+
+<blockquote>
+  <p>Searching for a signal on 80 m RTTY. Green is the night scheme; <code class="language-plaintext highlighter-rouge">INH</code> in the status bar means transmit is inhibited.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/signal-search-matrix.jpg" alt="Searching for a signal on 80 m RTTY. Green is the night scheme; INH in the status bar means transmit is inhibited." /></p>
+</blockquote>
+
+<p>And when it does find something, you land on a signal and the text starts:</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Ctrl-W</code> up to 2618 Hz, nothing; <code class="language-plaintext highlighter-rouge">Ctrl-S</code> down to 927 Hz, and there’s KC3FL finishing a contact.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/search-finds-kc3fl.jpg" alt="Ctrl-W up to 2618 Hz, nothing; Ctrl-S down to 927 Hz, and there's KC3FL finishing a contact." /></p>
+</blockquote>
+
+<h3 id="the-f2-tuning-screen">The F2 tuning screen</h3>
+
+<p>When the search isn’t enough — a weak signal, a crowded segment, RTTY coming through the wrong way round — <code class="language-plaintext highlighter-rouge">F2</code> swaps the whole screen for a tuning display. It swaps rather than overlays: on 66 columns, a tuning display worth reading and a conversation worth reading cannot share the space.</p>
+
+<blockquote>
+  <p>The tuning screen. Everything needed to land on a signal, and nothing else.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/screen-tuning.png" alt="The tuning screen. Everything needed to land on a signal, and nothing else." /></p>
+</blockquote>
+
+<p>Reading down it:</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">rig</code></strong> is the dial frequency and the radio’s mode, straight from CAT — the truth about where the radio actually is, not where I last told it to go.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">carrier</code></strong> is the audio tone inside the passband that fldigi is decoding, and the modem’s width. These are two different things and conflating them is the classic digital-modes mistake: <code class="language-plaintext highlighter-rouge">←</code> <code class="language-plaintext highlighter-rouge">→</code> move the <em>carrier</em> within the receiver, while <code class="language-plaintext highlighter-rouge">,</code> <code class="language-plaintext highlighter-rouge">.</code> <code class="language-plaintext highlighter-rouge">&lt;</code> <code class="language-plaintext highlighter-rouge">&gt;</code> move the <em>radio</em>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">signal</code></strong> is S/N and IMD. IMD only means anything for PSK, and it’s a transmitter quality figure — if someone reports mine as worse than about −20 dB I’m overdriving the radio.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">quality</code></strong> is the bar, 0 to 100, and it’s the one to watch while tuning. It peaks when the carrier is right. Chasing that number up is the entire tuning procedure.</li>
+  <li>The <strong>toggle row</strong> — AFC, squelch and its level, RSID, TXID, REV — each on a single letter. <code class="language-plaintext highlighter-rouge">v</code> for reverse is the one that saved my first RTTY contact: RTTY is conventionally lower sideband but the deck transmits through the radio’s DATA-U path, which is upper, so the mark and space tones arrive swapped and decode as plausible letters that never form words. One keystroke and it’s English.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">decode</code></strong> is a live two-line preview of what’s being copied right now. This is the confirmation the whole screen exists for — the quality bar can look healthy on noise, but text is text.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">↑</code> <code class="language-plaintext highlighter-rouge">↓</code> run the search from here as well, and <code class="language-plaintext highlighter-rouge">+</code> <code class="language-plaintext highlighter-rouge">-</code> set the squelch level. Getting the squelch just above the noise floor made a bigger difference to my copy than anything else I adjusted: too high and real signals never open it, too low and the transcript fills with garbage that buries the conversation.</p>
+
+<hr />
+
+<h2 id="the-menus">The menus</h2>
+
+<p><code class="language-plaintext highlighter-rouge">F1</code> opens the menu. Seven items, single-key or arrow-and-Enter, <code class="language-plaintext highlighter-rouge">Esc</code> to leave.</p>
+
+<blockquote>
+  <p>The <code class="language-plaintext highlighter-rouge">F1</code> menu. The <code class="language-plaintext highlighter-rouge">▸</code> marker moves with the arrow keys; the number selects directly.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/screen-menu.png" alt="The F1 menu. The marker moves with the arrow keys; the number selects directly." /></p>
+</blockquote>
+
+<p><strong>Mode</strong>, <strong>Tune Settings</strong>, <strong>Band</strong>, <strong>Display</strong>, <strong>Memories</strong>, <strong>Station</strong> and <strong>System</strong>. Everything the deck needs to know about my station — callsign, name, QTH, grid square, rig — is editable there, on the deck, with the deck’s own keyboard, and it survives a restart. There is no configuration file to edit over SSH for anything I’d change during a session.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">F3</code>, the mode picker. <code class="language-plaintext highlighter-rouge">&lt;</code> marks the mode in use; <code class="language-plaintext highlighter-rouge">m</code> opens all 97 modems.<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/screen-mode-picker.png" alt="F3, the mode picker. The marker shows the mode in use; m opens all 97 modems." /></p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">F3</code> gets its own key because mode is the thing that changes most during a session. Eleven curated conversational modes, <code class="language-plaintext highlighter-rouge">AUTO (RSID)</code> at the top — which lets fldigi detect and follow whatever mode a station is actually using — and <code class="language-plaintext highlighter-rouge">m</code> for the full list of 97, paginated, single-key selection.</p>
+
+<hr />
+
+<h2 id="the-rest-of-it-briefly">The rest of it, briefly</h2>
+
+<p><strong>Band presets move the dial</strong> — eleven of them, 80 m through 70 cm, low to high, with anything the radio doesn’t support marked as such rather than hidden. That works because the deck talks to the radio through <code class="language-plaintext highlighter-rouge">rigctld</code>. Getting <em>that</em> right cost me a weekend: Raspberry Pi OS ships hamlib 4.6.2, which has no FTX-1 backend at all, and every model that <em>does</em> read the radio sends a frequency command one digit short of what the FTX-1’s CAT manual requires. The radio discards it silently. So the deck displays the correct frequency while being completely unable to change it — the most annoying class of bug there is. The fix is hamlib 4.7.2 built from source and rig model 1051, and the deck’s first boot builds it, which is why the first boot takes almost half an hour.</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">F5</code> through <code class="language-plaintext highlighter-rouge">F12</code> are message memories</strong>, inserted at the cursor, edited in place on the memory page. <code class="language-plaintext highlighter-rouge">Ctrl-Z</code> undoes an insert. Mine are a CQ, my exchange, my station description, and a sign-off. They can be several lines — you write <code class="language-plaintext highlighter-rouge">\\n</code> where you want a break, because both places a memory is stored are line-based and there’s nowhere to type a real newline. That matters more than it sounds: a station description arrives as a formatted block the way everyone else on PSK31 sends one, not as a single long line the far end has to unwrap.</p>
+
+<p><strong>Command keys are case-folded.</strong> RTTY is Baudot, Baudot has no lowercase, so you operate with Caps Lock on — and if <code class="language-plaintext highlighter-rouge">Ctrl-T</code> stopped working the moment you did that, the whole thing would be useless.</p>
+
+<p><strong>Transmit starts inhibited at every power-on.</strong> <code class="language-plaintext highlighter-rouge">Ctrl-I</code> arms it. A radio that can be keyed by a program, in a bedroom, feeding an end-fed half-wave I built myself and strung across the yard outside the window, gets a safety catch.</p>
+
+<p><strong>Five color schemes on <code class="language-plaintext highlighter-rouge">F4</code></strong> — Matrix green, Deckard amber, Hal red, Tron cyan, Ripley white, and the names tell you exactly what I was going for. Monochrome means one hue, not one intensity: the dim variant carries the timestamps and the callsign column. In practice I use green at night and amber by day, which the photos above show. Ripley is the plain one: no hue at all, which is the oldest meaning of monochrome and the most legible of the five in daylight. Making the hues <em>actually</em> correct on the Pi’s framebuffer console turned out to need the <code class="language-plaintext highlighter-rouge">PIO_CMAP</code> ioctl; the usual <code class="language-plaintext highlighter-rouge">OSC P</code> escape sequence does nothing on this panel, which is why my amber spent two weeks rendering as a washed-out yellow.</p>
+
+<hr />
+
+<h2 id="on-the-air">On the air</h2>
+
+<p>A handful of evenings so far. 80 m RTTY during a contest to learn the rhythm, then 20 m PSK31 the following afternoon for actual conversation — which is what I built it for — and then, sooner than expected, some DX.</p>
+
+<blockquote>
+  <p>Telling KC3FL what he was talking to<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/explaining-the-deck-on-the-air.jpg" alt="Telling KC3FL what he was talking to" /></p>
+</blockquote>
+
+<p>John came back with a Flex 6400, a hex beam at 30 feet, a beverage for receive and 50 watts. I had 10 watts into an 80–10 m end-fed half-wave I made myself, strung across the yard outside my window. That asymmetry is most of why I love this hobby.</p>
+
+<blockquote>
+  <p>Signing off<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/signing-off-with-kc3fl.jpg" alt="Signing off" /></p>
+</blockquote>
+
+<p>Then the one I didn’t expect this soon. <strong>FM4TI in Martinique</strong>, 40 meters, answering his CQ DX — about 2,100 miles from a bedroom in central Pennsylvania.</p>
+
+<blockquote>
+  <p>FM4TI, Martinique. “this is my frist weekend doing psk31. i made a device on a raspberry pi to do it”<br />
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/dx-qso-fm4ti-martinique.jpg" alt="FM4TI, Martinique, worked on 40 m BPSK31 from the cyberdeck" /></p>
+</blockquote>
+
+<p>The typo is mine and it went out over the air at about 31 baud, which is the correct penalty for typing faster than you can spell. He came back with <em>“Hello dear digimode friend rst 5nn solid copy btu”</em> and we were done in four minutes. DX overs are short and a bit formulaic, and that turns out to suit a keyboard terminal perfectly — send the report, send your location, hand it back.</p>
+
+<p>Then Germany, a couple of days later and while I was in the middle of debugging the Bluetooth pairing screen — which is a good illustration of how this thing gets used. <strong>DL2OCE</strong>, grid JO41XW, 20 meters PSK31: about <strong>4,000 miles</strong>, nearly twice the Martinique path and the furthest the deck has reached.</p>
+
+<p>It turned into a proper ragchew, and the detail that made it was geographic. He’s in the Weser uplands of Lower Saxony; I’m in a valley in the Pennsylvania ridges. Two operators from scenic mountain villages four thousand miles apart, typing at each other at thirty-one baud. There is a particular pleasure in discovering that over the air rather than reading it off a cluster spot — you only learn it because somebody took the time to type it out, one character at a time, and you sat there and read it as it arrived.</p>
+
+<p>The Martinique contact was the first I made above QRP, at 20 watts, which meant finally sorting out transmit drive properly. The rule for digital modes is that the ALC meter must not move at all: any deflection means the radio is clamping a phase-modulated signal, and that splatters across whoever is next to you. What caught me out is how sharp the setting is. On the FTX-1 the control is <code class="language-plaintext highlighter-rouge">USB MOD GAIN</code>, 0–100, default 50. I’d backed it well down, seen no ALC movement and very little power, and concluded that clean and powerful were in tension.</p>
+
+<p>They aren’t. <strong>50 deflects. 49 is clean. 48 is clean with full output.</strong> The whole interesting region is about three counts wide, and the reading down at 45 told me nothing about where the edge actually was. Measure one step at a time; don’t extrapolate a curve from one point on it.</p>
+
+<p>The other thing worth saying about 20 watts: PSK31 is continuous key-down, unlike voice, so it heats the finals far harder than the same number on SSB suggests. The FTX-1 can put final amplifier temperature on its meter, and that’s where it lives now during a long contact.</p>
+
+<p>Everything above the hardware line — the terminal, the modes, the menus, the over model, line editing, the color schemes — is covered by 436 automated checks that run against a live fldigi.  Thanks Claude Code!</p>
+
+<hr />
+
+<h2 id="it-pairs-its-own-keyboard-now">It pairs its own keyboard now</h2>
+
+<p>This was top of the “what’s next” list when I first wrote this article, and it turned out to be the most satisfying thing I’ve built into the deck.</p>
+
+<p>The problem: the deck is driven by a Bluetooth keyboard, and pairing a Bluetooth keyboard needed me to SSH in from a laptop. So the one object built specifically so I wouldn’t have to look at a computer required a computer to set up.</p>
+
+<p>The obstacle looks fundamental at first. A Bluetooth LE keyboard delivers no input at all over an unbonded link, and bonding one requires a passkey <em>displayed by the host and typed on the keyboard being paired</em>. You cannot automate that, and you shouldn’t want to — typing the code is what proves the thing is a keyboard. But look at what it actually requires: a screen, and a keyboard that types. The deck has a screen. The keyboard being paired types. A laptop was never fundamentally necessary, just convenient at 2am.</p>
+
+<p>So now: put the keyboard in pairing mode, <strong>tap the panel</strong>, tap the keyboard you want, and type the six digits it shows you. Bonded and trusted, no other computer in the room.</p>
+
+<blockquote>
+  <p>The passkey, in the largest characters a 66-column console can manage
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/pairing-passkey.png" alt="The pairing screen showing a six-digit passkey in large block characters" /></p>
+</blockquote>
+
+<p>Those are block characters because it’s the one number on the deck you have to read off the screen and type somewhere else, against a pairing timeout, leaning over a five-inch panel. Six characters of body text is the wrong size for that job, and a terminal of the period would have done exactly the same thing for exactly the same reason.</p>
+
+<p>Two things made it harder than that summary sounds.</p>
+
+<p><strong>The agent problem.</strong> My original pairing script ran each <code class="language-plaintext highlighter-rouge">bluetoothctl</code> command as a separate process. BlueZ tracks the pairing agent <em>per connection</em>, so the agent died the instant each command finished — and pairing was attempted with no agent present, meaning BlueZ had nowhere to send the passkey. The script reported success on a keyboard that couldn’t type a character. The fix is to hold one connection open for the whole operation. I proved that worked in isolation before building any interface on top of it.</p>
+
+<p><strong>The bootstrap problem</strong>, which I only noticed after the screen was finished and working. Pairing lived behind the menu key. The menu key is on the keyboard. So the feature that attaches a keyboard required a keyboard — useless in exactly the situation it was built for.</p>
+
+<p>The deck notices instead. With nothing connected it raises a screen by itself, because that’s the one situation it can’t be told about:</p>
+
+<blockquote>
+  <p>The deck noticing it has no keyboard, and offering both answers
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/no-keyboard-screen.png" alt="The NO KEYBOARD screen: it lists already-paired keyboards and offers to pair a new one by tapping" /></p>
+</blockquote>
+
+<p>It doesn’t jump straight into scanning, because two different problems look identical from the deck’s side — a bonded keyboard that’s switched off or asleep, and no bond at all — and the first is far more common. So it names the keyboards already paired, says to switch one on, and offers pairing as the second answer. Any keypress dismisses it, which is my favorite part: a keystroke arriving is proof the problem is solved. The same check runs every few seconds, so a keyboard that sleeps mid-session brings the screen up and switching it back on clears it.</p>
+
+<p>One thing I learned the hard way. Working out “is a keyboard attached” seems trivial — the kernel tags input devices that can send keystrokes to a console. Except on this deck two things carry that tag permanently and neither is a keyboard: the radio’s own USB audio codec, because USB audio exposes volume and mute controls, and the HDMI remote-control input. My check was true forever and could never notice anything missing. What actually separates them is what they can <em>type</em>: a keyboard reports the whole top letter row, and a volume rocker doesn’t.</p>
+
+<p><strong>And the touchscreen finally does something.</strong> I’d been ignoring it on the assumption that using touch meant running a graphical desktop, which would wreck the whole premise. That turned out to be simply wrong — the panel reports as an ordinary input device and a drag is a handful of numbers read from a file. So there are now exactly two gestures and no pointer: drag the transcript to scroll it during a contact, and tap to choose on the pairing screen. No cursor, nothing else is selectable, and a touch <em>menu</em> still isn’t happening.</p>
+
+<hr />
+
+<h2 id="and-now-wifi-without-ssh-either">And now WiFi, without SSH either</h2>
+
+<p>Pairing was the first half of getting rid of the laptop. This is the other half: the deck’s WiFi networks used to be written into the SD card when it was built, which is exactly right for my house and useless at a park, a friend’s place, or anywhere I’d actually take it. Joining a new network meant editing a file on a laptop and reflashing.</p>
+
+<p><code class="language-plaintext highlighter-rouge">F1</code> <code class="language-plaintext highlighter-rouge">7</code> <code class="language-plaintext highlighter-rouge">w</code> now lists what’s in range.</p>
+
+<blockquote>
+  <p>The WiFi screen. Network names invented; my neighbors’ are none of your business
+<img src="/hamradio/assets/images/keyboard_to_keyboard_cyberdeck/wifi-screen.png" alt="The WiFi screen: a list of networks with signal bars, a tick on the connected one, and the security named on the right" /></p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">Enter</code> joins. A network the deck already knows needs no passphrase, because it wrote one down the last time. A new one asks, masked — and <code class="language-plaintext highlighter-rouge">^R</code> shows it and hides it again, which is not a nicety: a long passphrase typed on a keyboard in one hand, onto a panel showing nothing back, is how one wrong character becomes “wrong passphrase” a minute later with no way to tell <em>which</em> character. It starts hidden every time, because whether it’s safe to show depends on the room you’re in and not on the last decision you made somewhere else.</p>
+
+<p><code class="language-plaintext highlighter-rouge">r</code> switches the radio off, and that’s a normal way to operate rather than a fault state — more on why in a moment.</p>
+
+<p>Four things went wrong, and only one of them was mine in an interesting way.</p>
+
+<p><strong>The permission that isn’t about permissions.</strong> Every control on the screen was refused, with nmcli reporting “not authorized to control networking”. The deck’s account is in <code class="language-plaintext highlighter-rouge">netdev</code>, which is the group that exists for exactly this, and it had been all along. That isn’t what NetworkManager asks about. Its stock policy grants those actions to an <em>active local session</em> — a person logged in at a seat — and the terminal is a systemd service with no seat and no session. polkit sees a subject that is neither active nor inactive, falls through to asking an administrator, finds nobody to ask, and refuses. My error message helpfully told me to check the group membership that was already correct, which is worse than saying nothing. A polkit rule scoped to one user and four actions fixes it; the message now names the rule.</p>
+
+<p><strong>A failure you can’t see until you press something.</strong> Listing networks needs no authorization at all. So the screen drew a perfectly normal list of everything nearby and then refused the radio toggle, the rescan, and the join. It now asks NetworkManager what it will permit when the screen opens.</p>
+
+<p><strong>The connected marker could never have worked.</strong> nmcli has a column called <code class="language-plaintext highlighter-rouge">IN-USE</code>, which carries the asterisk in its human-readable output and is obviously the field to ask for. In machine-readable mode it comes back empty on every row, connected or not. <code class="language-plaintext highlighter-rouge">ACTIVE</code> answers the same question correctly. And beneath that: nmcli returns one row per <em>access point</em>, not per network — my router gives six rows for one name, ordered by signal, and the one actually associated is whichever radio the deck settled on, which was third. I was keeping the first row and discarding the only one marked active.</p>
+
+<p><strong>A console font is not a desktop font.</strong> I drew the signal bars with geometric block characters and the security with a padlock emoji. A padlock emoji is not in any console font at any size. It would have been a blank column with a legend line explaining a symbol that wasn’t there. The rule I settled on is narrow: a screen may use only characters already proven on a screen that ships — the box drawing, the full block that draws the pairing passkey, the middle dot, the tick. Naming the security turned out better than the symbol it replaced, because WPA2 and WPA3 are worth telling apart and a padlock can’t.</p>
+
+<p>There’s one rule that comes with the off switch, and it’s the reason the switch can exist. <code class="language-plaintext highlighter-rouge">nmcli radio wifi off</code> persists across reboots. With WiFi off and the keyboard battery flat there is no SSH, no keyboard, and a radio in the only USB port — the deck would be unreachable by every route it has. So it turns WiFi back on at every startup, deliberately. The toggle is for this session, not the next one, which is the opposite of what nmcli does by itself and therefore has to be said on the screen and in the config file. I tested it the honest way: switched the radio off from the panel, pulled the power, and checked that SSH came back on its own.</p>
+
+<h2 id="it-knows-what-time-it-is-now">It knows what time it is now</h2>
+
+<p>A Raspberry Pi has no clock. From power-on its time is whatever was saved at the last shutdown until something on a network corrects it — and every timestamp the deck shows is a system clock read, the status line and every line of the transcript. A field session with no WiFi was stamped wrong from beginning to end, and those stamps are what a log gets written from.</p>
+
+<p>So: an Adafruit PiRTC, a DS3231 that plugs onto the first ten pins of the GPIO header with nothing to wire. I bought the board rather than using one of the common ZS-042 modules for one specific reason — those carry a charging circuit for a rechargeable cell, and the non-rechargeable CR2032 usually found in one is being trickle-charged, which is not a thing to carry in a bag.</p>
+
+<p>Three things that look like faults and aren’t, because I hit all three:</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">i2cdetect</code> can’t see a bus the clock is happily using.</strong> <code class="language-plaintext highlighter-rouge">/dev/i2c-1</code> is created by a kernel module that neither the overlay nor enabling I²C loads. The RTC driver binds inside the kernel and never touches that device, so “could not open /dev/i2c-1” proves nothing at all about the chip. <code class="language-plaintext highlighter-rouge">cat /sys/class/rtc/rtc0/name</code> is the check that doesn’t lie.</li>
+  <li><strong>A DS3231 is driven by <code class="language-plaintext highlighter-rouge">rtc-ds1307</code>.</strong> One driver covers the whole family. That’s the right answer, not evidence of the wrong overlay — the same shape of trap as the Waveshare panel needing the overlay named for a 7-inch display.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">hwclock</code> isn’t installed.</strong> Debian moved it into a separate package, so every attempt reports “command not found” on a system that has all the rest of <code class="language-plaintext highlighter-rouge">util-linux</code>.</li>
+</ul>
+
+<p>Proving it works needs one non-obvious step: switch NTP off first. Otherwise the deck restores WiFi at boot, the network sets the clock within seconds, and you’ve learned nothing about a chip that might be doing nothing whatsoever. With NTP off and the power pulled for five minutes, it came back with the right time and the kernel logged where it got it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rtc-ds1307 1-0068: setting system clock to 2026-09-26T01:59:50 UTC
+</code></pre></div></div>
+
+<p>And it unpicks the argument in the section above. WiFi used to stay on partly because NTP was the only way to have a correct clock. It isn’t any more, so the radio can be switched off in the field to save power without the whole session being logged wrong.</p>
+
+<h2 id="the-mode-that-always-came-back-as-cw">The mode that always came back as CW</h2>
+
+<p>This one is my favorite, because the symptom was two words and the cause was three separate faults stacked on each other.</p>
+
+<p>Every time I power-cycled the deck it came up in CW, whatever I’d been using. I’d fixed this once already — the state file wasn’t recording the mode at the moment it settled — and it kept happening.</p>
+
+<p>The deck’s terminal starts after fldigi, which systemd guarantees in the only sense systemd means it: the fldigi <em>process</em> has been spawned. Under a virtual X server on a Pi 3A+ it takes several seconds more to open the port the deck talks to it through, and the terminal is already drawing a screen. Everything the deck does to the radio at startup sat behind a single “is fldigi answering” check, evaluated once, with nothing to try it again. On a cold boot, none of it ran — so fldigi stayed in the mode fldigi itself had saved, which is CW.</p>
+
+<p>That alone would have been an annoyance. What made it permanent was the saver. It compares what’s on screen against what it recorded at startup, and at startup it had recorded nothing — so ten seconds after every cold boot the deck wrote the CW it had come up in <em>over</em> the mode I’d chosen. Every power cycle destroyed the setting again, which is why it never recovered on its own no matter how many times I set it.</p>
+
+<p>And neither fault is visible if you restart the terminal, because fldigi is already up by then. Only pulling the power showed it. That asymmetry is why I’d “fixed” it twice before without fixing it.</p>
+
+<p>The repair is to defer the radio half of startup until fldigi actually answers, and to refuse to save anything until that’s happened. Then two smaller things fell out of it. The startup has to <em>check</em> that fldigi took the setting, because those calls return a plausible value whether or not they worked, and fldigi is busiest in the seconds after it starts. And the obvious guard — “if the operator picks a mode, don’t override it” — turned out to be wrong, and I only found out because I wrote the test to prove it and the test passed with the guard deleted. A mode key pressed while fldigi is still starting reaches nothing. There was no choice to protect, and cancelling the restore on the strength of it left the deck in CW again, by a different route.</p>
+
+<hr />
+
+<h2 id="whats-next">What’s next</h2>
+
+<p><strong>Radio profiles.</strong> Right now the FTX-1’s CAT port, PTT port, baud rate, hamlib model and supported bands are settings in one configuration file. They want to be a <code class="language-plaintext highlighter-rouge">radios/</code> directory with one file per rig — the same structure that worked well on my <a href="/hamradio/articles/aprs-igate-bidirectional-whitelist/">APRS iGate</a>, where a profile holds hardware facts only and never anything about what the station transmits. Pick your radio from the menu; the band list, the CAT settings and the audio device follow. I’d like to be able to hand this design to someone with an IC-7300 and have it just work.</p>
+
+<p><strong>A printed case.</strong> Right now it’s a bare board on standoffs, which is honest but not exactly rugged. Something that protects the Pi and the ribbon cable, keeps the stand angle, and doesn’t spoil the look is on the list — and it’s the piece that has to exist before this goes in a bag to a park.</p>
+
+<p><strong>A real field day.</strong> It has never run off anything but mains, and the longest session so far is an evening. I know what it draws in theory and nothing about what it draws in practice — how long the deck and the radio together last off one bank is the number I actually want. Portability is a claim I haven’t tested yet.</p>
+
+<hr />
+
+<h2 id="somebody-else-ran-it">Somebody else ran it</h2>
+
+<p>The deck is a specific object — a particular panel on a particular Pi with a particular radio — but the terminal is just a Python program, and I had been careful that none of the deck-shaped parts were load-bearing. The touchscreen, the Bluetooth pairing, the panel: every one of them treats “not present” as an ordinary condition rather than an error, because a friend or two wanted to try it on an ordinary computer.</p>
+
+<p>KD3CCP did, and reported back:</p>
+
+<blockquote>
+  <p>my testing was, read docs to understand what pieces do what, realize i didnt need any other stuff, run fldigi and then <code class="language-plaintext highlighter-rouge">./src/cyberdeck.py</code> and thats it</p>
+</blockquote>
+
+<p>That is the whole of it, and it is the nicest thing anyone has said about the documentation. No Pi, no panel, no Bluetooth, no SD card image — read enough to know what he could skip, start fldigi, run one file. The thing I was most unsure of is that middle step: <em>realize i didn’t need any other stuff</em>. Documentation for a project like this fails by making everything sound required, and the only way to find out whether it does is to hand it to somebody who was not there when it was written.</p>
+
+<h2 id="why-bother">Why bother</h2>
+
+<p>There is nothing here a \$400 tablet and a copy of fldigi couldn’t do, and do with a waterfall.</p>
+
+<p>But it wouldn’t be the same. This is a single-purpose object that does one thing, starts in twenty seconds, has no notifications, and cannot check my email. When I sit down at that little desk and it comes up amber on black at 66 columns, I’m not at work. I’m at a radio.</p>
+
+<p>Code, design document, deployment runbook and operating tutorial: <a href="https://github.com/hatandspecs/keyboard-to-keyboard-cyberdeck">github.com/hatandspecs/keyboard-to-keyboard-cyberdeck</a></p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+  <!-- Mermaid diagrams: only on pages with "mermaid: true" in their front matter.
+       kramdown renders a ```mermaid fence as either <pre><code class="language-mermaid">
+       or, with Rouge highlighting, <div class="language-mermaid highlighter-rouge">.
+       Both are turned into <div class="mermaid"> before rendering. -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
+      var code = el.matches('code') ? el : el.querySelector('code');
+      var block = el.matches('code') ? el.parentElement : el;
+      if (!code || !block) return;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = code.textContent;
+      block.replaceWith(diagram);
+    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict' });
+    await mermaid.run({ querySelector: '.mermaid' });
+  </script>
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

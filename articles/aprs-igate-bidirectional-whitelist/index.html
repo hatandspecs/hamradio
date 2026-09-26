@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Bidirectional APRS iGate with a Strict Whitelist | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>A Bidirectional APRS iGate with a Strict Whitelist</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: September 13, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <blockquote>
+  <p>An SMS from my phone, delivered over RF to my FT5DR: phone to the web to my gateway to RF to the radio<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ft5d-rx-sms-first-downlink-laptop-prototype.jpg" alt="An SMS from my phone, delivered over RF to my FT5DR: phone to the web to my gateway to RF to the radio" /></p>
+</blockquote>
+
+<p>In my <a href="/hamradio/articles/ft5dr-mobile-setup/">FT5DR article</a> I mentioned wanting my own APRS igate with strictly whitelisted two-way traffic, so I could message my wife’s phone from a radio and she could message me back when I’m in range. That project for another day turned out to be only a few weeks out. This is how it came together: a prototype on the FTX-1 and a laptop, a headless Raspberry Pi I’m calling the <strong>pi-gate</strong>, a second radio profile for my VX-6R on a Digirig Lite, teaching the thing to find its own radio and put itself back on the air without me, and finally a mobile radio with enough power to be worth asking whether the regional digipeater can hear it. It also covers the handful of gotchas that each looked like a working station while doing nothing useful.</p>
+
+<p>Code and full documentation are up at <a href="https://github.com/hatandspecs/aprs_igate_bidirectional_whitelist">github.com/hatandspecs/aprs_igate_bidirectional_whitelist</a>. The README has four quickstarts (laptop or Pi, FTX-1 or VX-6R), and there’s a separate step-by-step guide for building the pi-gate.</p>
+
+<hr />
+
+<h2 id="why-a-whitelist-and-why-it-has-to-be-strict">Why a whitelist, and why it has to be strict</h2>
+
+<p>Most APRS iGates are receive-only. They listen on 144.390 MHz and pass what they hear up to APRS-IS, the internet backbone that sites like aprs.fi are built on. Going the other direction, from the internet back onto RF, is where it gets touchy. A two-way iGate is a transmitter that traffic from the internet can key up, and I didn’t want my station relaying anything for anyone I hadn’t chosen.</p>
+
+<p>So the rule I built around is short: <strong>only APRS messages addressed to callsigns on my whitelist are ever transmitted.</strong> Positions, telemetry, bulletins, and messages to anyone else are all dropped. Right now the list is <code class="language-plaintext highlighter-rouge">KD3CCO*</code>, which covers every SSID of my own call.</p>
+
+<p>Here’s the round trip it enables, in both directions:</p>
+
+<pre><code class="language-mermaid">flowchart LR
+  Phone["Cell phone"] --&gt;|"SMS text"| SMSGW["APRS SMS gateway"]
+  SMSGW --&gt;|"message to KD3CCO-7"| IS(("APRS-IS"))
+  IS --&gt;|"matches whitelist"| GATE["pi-gate&lt;br/&gt;Direwolf"]
+  GATE --&gt;|"144.390 MHz"| HT["My handheld&lt;br/&gt;KD3CCO-7"]
+  HT --&gt;|"ack or reply on RF"| GATE
+  GATE --&gt;|"gated up"| IS
+  IS --&gt; SMSGW
+  SMSGW --&gt;|"SMS text"| Phone
+</code></pre>
+
+<blockquote>
+  <p>Sending from the FT5DR to my phone through the SMS gateway<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ft5d-tx-sms-radio-to-phone.jpg" alt="Sending from the FT5DR to my phone through the SMS gateway" /></p>
+</blockquote>
+
+<h2 id="how-the-whitelist-actually-works">How the whitelist actually works</h2>
+
+<p>The gateway itself is <a href="https://github.com/wb2osz/direwolf">Dire Wolf</a>, the software TNC. My scripts generate its configuration from a much simpler config file. Four directives do the work that matters:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IGFILTER  g/KD3CCO*
+FILTER    IG 0 g/KD3CCO*
+IGMSP     0
+IGTXLIMIT 6 10
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">FILTER IG 0 g/KD3CCO*</code></strong> is the whitelist itself. The <code class="language-plaintext highlighter-rouge">g/</code> filter matches on a message’s <em>addressee</em>, which is what makes this a message whitelist rather than a general traffic filter. Anything from APRS-IS that doesn’t match never reaches the transmitter.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IGFILTER</code></strong> asks the APRS-IS server to send me that traffic in the first place. Without it, the server only forwards traffic for stations my iGate has recently heard on RF, which is nothing until something has been decoded.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IGMSP 0</code></strong> turned out to matter a lot. Dire Wolf has a courtesy feature that transmits a message <em>sender’s</em> position report, regardless of filtering, after it gates their message. I watched it transmit the SMS gateway’s own beacon right after delivering my message. <code class="language-plaintext highlighter-rouge">IGMSP 0</code> turns that off, so the whitelist has no exceptions, courtesy or otherwise.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IGTXLIMIT 6 10</code></strong> caps traffic from the internet at 6 transmissions a minute and 10 every five minutes, as a backstop. Anything over the limit is dropped, not queued for later.</li>
+</ul>
+
+<p>This is the decision every packet arriving from APRS-IS goes through:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["Packet arrives from APRS-IS"] --&gt; B{"Is it an APRS message?"}
+  B -- no --&gt; D["Dropped"]
+  B -- yes --&gt; C{"Addressee on the whitelist?"}
+  C -- no --&gt; D
+  C -- yes --&gt; E["Wrapped in third-party format,&lt;br/&gt;rate limited, transmitted on RF"]
+</code></pre>
+
+<h3 id="log-lines-dont-mean-what-they-look-like">Log lines don’t mean what they look like</h3>
+
+<p>This one cost me some confusion. Dire Wolf prints <code class="language-plaintext highlighter-rouge">[ig&gt;tx]</code> when a packet <em>arrives</em> from APRS-IS, before the whitelist has run. The line that means it was actually transmitted is <code class="language-plaintext highlighter-rouge">[0L]</code>. Read <code class="language-plaintext highlighter-rouge">[ig&gt;tx]</code> as “transmitted” and a perfectly working whitelist looks badly broken.</p>
+
+<p>So I wrote an annotating monitor that pairs the two by packet contents and labels the real outcome:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RF RX</code></td>
+      <td>Heard on the air and decoded</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RF-&gt;IS UP</code></td>
+      <td>Heard on RF and gated up to APRS-IS by this station</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IS GATED</code></td>
+      <td>Came from APRS-IS, matched the whitelist, was transmitted</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IS DROP</code></td>
+      <td>Came from APRS-IS, didn’t match, dropped</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TX LOCAL</code></td>
+      <td>This station’s own beacon</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A dropped packet can only be known by the <em>absence</em> of a transmission, so <code class="language-plaintext highlighter-rouge">IS DROP</code> shows up about 15 seconds after the packet arrives, once it’s clearly not just waiting its turn to transmit.</p>
+
+<h2 id="the-prototype-ftx-1-and-a-laptop">The prototype: FTX-1 and a laptop</h2>
+
+<p>I proved everything out on the bench first, with the FTX-1 Optima on a tripod and Dire Wolf running in a locked-down Docker container on my laptop.</p>
+
+<blockquote>
+  <p>The prototype: FTX-1 Optima at 144.390 and the laptop running the gateway in Docker<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ftx1-laptop-docker-prototype.jpg" alt="The prototype: FTX-1 Optima at 144.390 and the laptop running the gateway in Docker" /></p>
+</blockquote>
+
+<p>The FTX-1’s single USB-C cable exposes CAT control and PTT as <strong>two separate serial ports</strong>, and Dire Wolf’s rig-control PTT only takes one. <code class="language-plaintext highlighter-rouge">rigctld</code> from Hamlib bridges them, using the FT-991 model (1035), which works for the FTX-1. Dire Wolf then keys the radio through <code class="language-plaintext highlighter-rouge">rigctld</code> over loopback.</p>
+
+<p>The container is deliberately cramped: all Linux capabilities dropped, read-only root filesystem, non-root user, only the radio’s own device nodes (not the laptop’s built-in microphone), and outbound traffic filtered down to DNS and the APRS-IS port. Dire Wolf’s AGW and KISS network ports are disabled too. It binds them to every interface with no authentication, so anything on the network could have transmitted under my call.</p>
+
+<p>The first message from my phone to the FT5DR through this chain was a genuinely good moment. That’s it at the top of this article, sent from my phone to the web, to the FTX-1 and laptop, and over RF to the FT5DR.</p>
+
+<h3 id="three-things-that-looked-fine-and-werent">Three things that looked fine and weren’t</h3>
+
+<p><strong>Plain FM instead of D-FM.</strong> In plain FM, the FTX-1 modulates from the <em>microphone</em> input, not the USB audio. Dire Wolf keyed the radio, a clean carrier went out, SWR was fine, the waterfall showed a signal, and nothing on earth could decode it. The data mode is D-FM (Hamlib calls it <code class="language-plaintext highlighter-rouge">PKTFM</code>). The startup script now sets frequency and mode over CAT on every start, and warns if the radio reports plain FM.</p>
+
+<p><strong>Audio levels.</strong> The USB codec’s default transmit level over-deviates, again audible but undecodable, and the default capture gain is far too low. Levels reset whenever the radio’s USB re-enumerates, so the script sets them on every start.</p>
+
+<p><strong>RF on the USB cable.</strong> At 5 W on a quarter-wave whip with no ground plane, RF crashed the USB link mid-transmission, twice, and left the radio stuck keyed with nothing able to unkey it. The fix was a properly matched half-wave antenna on a tripod, plus a ferrite choke on the USB cable. That’s the red cable wound around the green toroid in these photos. I also set the radio’s time-out timer to 3 minutes, since that’s the only thing that can end a stuck transmission once the control path itself has died.</p>
+
+<h2 id="watching-it-work">Watching it work</h2>
+
+<p>The annotated monitor runs in a terminal, over SSH once the gateway lives on a Pi.</p>
+
+<blockquote>
+  <p>The monitor over SSH: a message from the FT5DR gated up, and the SMS gateway’s acknowledgement gated back down<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/pi-gate-monitor-over-ssh.jpg" alt="The monitor over SSH: a message from the FT5DR gated up, and the SMS gateway's acknowledgement gated back down" /></p>
+</blockquote>
+
+<p>I also wanted to check on it from my phone without logging in, so there’s a small read-only web page on the LAN. It streams the same annotated packet flow, and shows the callsign, whitelist and resolved filter. It’s read-only by design, with no way to edit anything. The whitelist is the only thing between the internet and the transmitter, so changes to it stay behind SSH.</p>
+
+<blockquote>
+  <p>The web monitor on my phone: live packet flow, callsign and whitelist chips at the top<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/web-monitor-phone-live-feed.png" alt="The web monitor on my phone: live packet flow, callsign and whitelist chips at the top" /></p>
+</blockquote>
+
+<h2 id="the-pi-gate">The pi-gate</h2>
+
+<p>A laptop tied up running an iGate isn’t a permanent solution, so the gateway moved to a Raspberry Pi. It started on a <strong>3A+</strong> — 512 MB of RAM, one USB port, no Ethernet, and small enough to forget about — and now runs on a <strong>3B+</strong>, for reasons that come up later: the 3A+’s single USB port is wired straight to the processor, and the Digirig wants a hub in front of it. The 3B+ has one on the board. Everything else about the build is identical, and the same image script produces a card for either.</p>
+
+<blockquote>
+  <p>The Raspberry Pi 3A+ with the radio’s USB cable through a ferrite choke<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/raspberry-pi-3a-with-ferrite-choke.jpg" alt="The Raspberry Pi 3A+ with the radio's USB cable through a ferrite choke" /></p>
+</blockquote>
+
+<p>I didn’t want to hand-configure a Pi over a keyboard and monitor, so a script builds the SD card image on my laptop. It downloads Raspberry Pi OS Lite, loop-mounts the image, and writes everything in: WiFi profiles, SSH, the user account, the project, and systemd services. The Pi boots, joins WiFi, installs Dire Wolf, and starts gating with no console session at any point.</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["build_pi_image.sh on the laptop"] --&gt; B["Flash the SD card"]
+  B --&gt; C["First boot: joins WiFi,&lt;br/&gt;installs Dire Wolf"]
+  C --&gt; D["Gateway service runs 'up'"]
+  D --&gt; E{"Radio's USB devices present?"}
+  E -- "yes" --&gt; G["Set audio levels, start Dire Wolf"]
+  E -- "not yet" --&gt; W["Wait up to 60 s"]
+  W --&gt; F{"Present now?"}
+  F -- "yes" --&gt; G
+  F -- "no" --&gt; R["Fail, and systemd retries in 30 s"]
+  R --&gt; D
+  G --&gt; H["On the air, web monitor on port 8080"]
+</code></pre>
+
+<p>That wait-and-retry loop was added after real use. A radio plugged in or switched on after the Pi now brings the gateway up by itself.</p>
+
+<blockquote>
+  <p>The pi-gate running the FTX-1<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ftx1-pi-gate-desk.jpg" alt="The pi-gate running the FTX-1" /></p>
+</blockquote>
+
+<h3 id="built-to-be-unplugged">Built to be unplugged</h3>
+
+<p>A box like this gets pulled from the wall rather than shut down, and an SD card being written when power disappears is how Pis get corrupted. So the image removes the routine writers:</p>
+
+<ul>
+  <li>The runtime directory (logs, generated config, pid files) lives in RAM.</li>
+  <li>The packet log is rotated hourly, so it can’t fill that space.</li>
+  <li>The system journal is kept in RAM.</li>
+  <li>Swap is compressed RAM only. Raspberry Pi OS’s default also writes idle pages out to a swap file on the card, which I didn’t catch until I read the Pi’s own boot log.</li>
+</ul>
+
+<p>What’s left is a card that only gets written when I deliberately change something.</p>
+
+<blockquote>
+  <p>In its case, running on the FTX-1<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ftx1-pi-gate-cased.jpg" alt="In its case, running on the FTX-1" /></p>
+</blockquote>
+
+<h3 id="one-config-layered">One config, layered</h3>
+
+<p>The same station configuration runs on the laptop and on the Pi, so settings are split by what they actually describe:</p>
+
+<pre><code class="language-mermaid">flowchart BT
+  P["Radio profile&lt;br/&gt;how to drive the FTX-1 or VX-6R"] --&gt; S["igate.conf&lt;br/&gt;the station: callsign, whitelist, beacon"]
+  S --&gt; L["igate.local.conf&lt;br/&gt;this machine: Docker or bare metal, device paths"]
+  L --&gt; X["igate.secrets&lt;br/&gt;APRS-IS passcode"]
+</code></pre>
+
+<p>Each layer overrides the one below it. One restriction keeps this safe: <strong>the whitelist, callsign, beacon and transmit path can only come from <code class="language-plaintext highlighter-rouge">igate.conf</code>.</strong> A radio profile or a machine’s local file that tries to set them is refused. Which radio or which machine runs the gateway can never change what it transmits.</p>
+
+<h2 id="a-second-radio-the-vx-6r-on-a-digirig-lite">A second radio: the VX-6R on a Digirig Lite</h2>
+
+<p>The FTX-1 is too nice a radio to leave parked on 144.390, so I added a profile for my VX-6R on a Digirig Lite. It’s a very different arrangement:</p>
+
+<ul>
+  <li><strong>No CAT.</strong> The VX-6R has no computer control, so frequency is set by hand and nothing in software can check it. The gateway prints a reminder on every start instead.</li>
+  <li><strong>PTT through the sound card.</strong> The Digirig Lite is a CM108 USB sound card whose GPIO3 pin keys the radio through Digirig’s VX-6R cable. Dire Wolf drives that pin directly through the chip’s <code class="language-plaintext highlighter-rouge">/dev/hidraw</code> device.</li>
+  <li><strong>Finding the right device.</strong> The FTX-1’s built-in codec is <em>also</em> a C-Media chip. So the script doesn’t take the first C-Media device it finds: it finds the one on the same USB device as the radio’s audio card, so a machine with both radios attached keys the right one.</li>
+</ul>
+
+<p>From the VX-6R manual: set <strong>Receive Battery Saver (Set Mode 53) off</strong>, because its sleep cycle clips the start of incoming packets. Also turn auto power-off off and keep the time-out timer on. At the Digirig’s documented 50% starting levels, it carried full SMS round trips in both directions.</p>
+
+<blockquote>
+  <p>The VX-6R pi-gate on a 3A+: radio in its charger cradle, the Pi, and the powered USB hub it needed<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/vx6r-digirig-pi-gate-powered-hub.jpg" alt="The VX-6R pi-gate on a 3A+: radio in its charger cradle, the Pi, and the powered USB hub it needed" /></p>
+</blockquote>
+
+<blockquote>
+  <p>The same station on a 3B+, cased and running: no hub, just radio to Digirig to Pi, with a ferrite on the Digirig’s cable<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/vx6r-pi-gate-3bplus-cased.jpg" alt="The VX-6R pi-gate on a Raspberry Pi 3B+, cased and running: no hub, just radio to Digirig to Pi, with a ferrite on the Digirig's cable" /></p>
+</blockquote>
+
+<h3 id="what-the-digirig-taught-me">What the Digirig taught me</h3>
+
+<p>This part took the most troubleshooting, and each problem looked like a different one:</p>
+
+<ol>
+  <li><strong>The Pi 3A+ couldn’t run the Digirig directly.</strong> Its single USB port connects straight to the processor with no hub chip, and the Digirig simply never showed up. Through an unpowered hub the Pi logged under-voltage. Through a <strong>powered</strong> hub, it worked. This is what eventually moved the station to a 3B+, which has a hub chip on the board and takes the Digirig in any of its four ports with nothing in between.</li>
+  <li><strong>Don’t power the radio from the same hub.</strong> I’d powered the VX-6R through a USB-to-barrel cable with a 12 V boost converter, plugged into that hub. On the gateway’s first transmission, the radio’s current draw pulled the hub’s supply down and knocked the Digirig off USB. The Pi itself reported no under-voltage, because it regulates its own rail. The radio now has its own wall adapter.</li>
+  <li><strong>My Digirig’s USB-C connection only works one way round.</strong> Plugged in upside down, it was electrically invisible, with no error and nothing in the kernel log, on the Pi and on the laptop alike. Every replug was a coin toss, which made it look like an intermittent fault for a while. The working orientation is now marked.</li>
+  <li><strong>Card numbers weren’t stable.</strong> The Pi’s HDMI audio registered as sound card 1 at boot, so a Digirig plugged in afterwards became card 2. The image now turns HDMI audio off, so the radio is always card 1 — and, as of the rework below, the gateway no longer cares what number it gets.</li>
+</ol>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["Digirig missing from lsusb"] --&gt; B{"USB-C plug the right way round?"}
+  B -- "not sure" --&gt; F["Flip it and check again"]
+  B -- "yes" --&gt; C{"Pi 3A+ without&lt;br/&gt;a powered hub?"}
+  C -- "yes" --&gt; H["Add a powered hub,&lt;br/&gt;or use a 3B+"]
+  C -- "no" --&gt; D{"Radio drawing power&lt;br/&gt;from a shared hub?"}
+  D -- "yes" --&gt; P["Give the radio its own supply"]
+  D -- "no" --&gt; R["Replug it; the watchdog&lt;br/&gt;finds it and restarts"]
+</code></pre>
+
+<h2 id="more-power-the-ft-2900r-and-a-profile-named-for-the-interface">More power: the FT-2900R, and a profile named for the interface</h2>
+
+<p>A handheld in a charger cradle is a fine gateway radio right up to the point where you want it heard somewhere. The regional digipeater, W3YA-1, sits 10.3 km from my house on Pine Grove Mountain — 49 watts into an 8 dBi omni at 640 feet above average terrain, according to its own PHG beacon. Reaching it turns my gateway from a station my own radios can use into one that is part of the network. So I moved the pi-gate onto a Yaesu FT-2900R, a 75 watt mobile, on a bench supply with a vertical on a camera tripod.</p>
+
+<blockquote>
+  <p>The FT-2900R pi-gate: mobile radio on a bench supply, Digirig Lite at right, antenna on a tripod<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/ft2900r-pi-gate-tripod-antenna.jpg" alt="The FT-2900R pi-gate: mobile radio on a bench supply, Digirig Lite at right, antenna on a tripod" /></p>
+</blockquote>
+
+<p>Adding it needed a third radio profile, and writing that profile is what showed me the first two were wrong. I put <code class="language-plaintext highlighter-rouge">radtel880g.conf</code> next to <code class="language-plaintext highlighter-rouge">vx6r.conf</code> for a Radtel 880G, then diffed them: they were identical except for the description line. Every setting in a Digirig profile describes the <em>Digirig</em> — its C-Media codec is the sound card, its GPIO3 is the PTT line, its mixer controls have fixed names. What the radio contributes is a speaker jack, a microphone jack and a volume knob.</p>
+
+<p>So the two profiles became one, <code class="language-plaintext highlighter-rouge">digirig.conf</code>, named for the interface instead of the radio, and the FT-2900R joined it without a setting changing. The things that genuinely are per-radio — the frequency, the volume knob, the battery saver menu number, the transmit time-out, and now the power step — are all things no profile can set anyway, because there is no CAT port on any of them. The profile lists them as what the operator has to do, which is more honest than pretending a file controls them.</p>
+
+<h3 id="the-cable-that-keyed-the-radio-by-itself">The cable that keyed the radio by itself</h3>
+
+<p>The FT-2900R’s first night on the air was the best gotcha of the whole project, because every symptom pointed away from the cause.</p>
+
+<p>The gateway received perfectly. It decoded the digipeater, gated other people’s packets up to APRS-IS, and the monitor showed my own messages being transmitted. Dire Wolf logged <code class="language-plaintext highlighter-rouge">[ig&gt;tx]</code> and then <code class="language-plaintext highlighter-rouge">[0L]</code> for each one, which is it saying the frame went to the modem. Nothing ever reached the air. Three beacons addressed through W3YA-1 produced no response, and every copy of my station on aprs.fi had arrived over the internet.</p>
+
+<p>The tell was a light. With the Pi’s gateway stopped and nothing running at all, the Digirig’s PTT LED was on. Software cannot do that; PTT is a contact on the jack. I had the adapter cable in backwards — the TRS end in the Digirig’s TRRS socket, the TRRS end in the radio’s speaker jack. A three-conductor plug in a four-conductor socket bridges the second ring onto the sleeve, and on the Digirig that ring is PTT. It grounded the instant the plug seated.</p>
+
+<p>What follows from that is the part worth remembering. The radio keyed an unmodulated carrier, its time-out timer cut transmit off, and because PTT was never released it stayed in transmit-inhibit from then on. Receive was unaffected, because receive arrives on a different conductor. The result was a station that looked healthy in every log I had and transmitted nothing, for as long as it took me to look at a light instead of at a log. The cable will seat either way round and both ways feel identical.</p>
+
+<h3 id="asking-a-digipeater-whether-it-can-hear-me">Asking a digipeater whether it can hear me</h3>
+
+<p>Turning the cable round fixed it, and the next question was the one I had built the radio up to ask. Confirming it needs more care than it sounds, because the obvious tests all answer something else.</p>
+
+<p>Sending an SMS to my handheld proves nothing: the handheld is in the same house and hears the gateway directly whether or not a digipeater is involved. Watching for my beacon on aprs.fi proves nothing either, for a subtler reason. My beacon was set to <code class="language-plaintext highlighter-rouge">BOTH</code>, which sends a copy over the internet as well as over the air. APRS-IS discards duplicate packets within about thirty seconds, matching on source and payload while ignoring the path — so the internet copy, which arrives in milliseconds, masks the radio copy that took a digipeater to get there. The evidence destroys itself.</p>
+
+<p>The test config that does answer it changes four settings:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TX_VIA       = W3YA-1     name the digipeater instead of an alias
+RX_VIA       = W3YA-1     gate only packets that digipeater actually repeated
+BEACON_TO    = RF         the beacon is the test transmission
+BEACON_EVERY = 2:00       ask often enough to get an answer
+</code></pre></div></div>
+
+<p>Naming the digipeater rather than <code class="language-plaintext highlighter-rouge">WIDE1-1</code> removes the question of which aliases it answers: a digipeater repeats any packet carrying its own callsign, whatever else it is configured for. <code class="language-plaintext highlighter-rouge">RX_VIA</code> leans on the AX.25 has-been-repeated bit, so it means genuinely relayed by that station and not merely addressed to it. And <code class="language-plaintext highlighter-rouge">RF</code> rather than <code class="language-plaintext highlighter-rouge">BOTH</code> is the whole point — with it, the only way that beacon can reach aprs.fi is by radio.</p>
+
+<p>Two minutes later the monitor had the answer, and it needed nobody else’s station to confirm it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>17:01:03  TX LOCAL   KD3CCO-10&gt;APDW17,W3YA-1:!4046.25NR07747.50W&amp;RX iGate | TX whitelist only
+17:01:05  RF RX      KD3CCO-10&gt;APDW17,W3YA-1*:!4046.25NR07747.50W&amp;RX iGate | TX whitelist only
+</code></pre></div></div>
+
+<p>The same packet, two seconds apart, with the asterisk moved onto <code class="language-plaintext highlighter-rouge">W3YA-1</code>. I transmitted it, the digipeater repeated it, and my own receiver decoded the repeat.</p>
+
+<p>It is a marginal path, though. Over eight beacons, two came back. I raised the radio two power steps partway through and it changed nothing I can defend as a result — two of three before, none of five after, which sounds decisive and isn’t: at that sample size the difference is indistinguishable from chance. Eight decibels bought no measurable improvement — and the reason, which took another day and a different fault to find, is that the antenna was not working.</p>
+
+<p>It was a dual-band mobile whip on a camera tripod in my living room. A mobile whip is designed to sit on a car roof, and the roof is the other half of it; without a ground plane the coax braid becomes the counterpoise, and a good deal of what I was radiating was coming off the feedline. More power into an antenna that is not one buys nothing, which is exactly the result I measured and exactly the wrong conclusion I drew from it.</p>
+
+<p>Obstruction was never the problem. I work the local FM repeater from inside this house on five watts and a handheld whip; the path out is fine. The two-in-eight is a real number about that tripod arrangement and nothing else, and it needs measuring again now the antenna is outside.</p>
+
+<p>The measurement that did mean something came from a station I never asked. Every one of those eight beacons reached aprs.fi, gated a second after transmission by W3SWL-2, a receive-only gate that heard all eight at both power settings. That rules out a lot at once: a distorted signal from RF getting into the audio would have failed there too, and so would a radio folding its power back into a bad match. The transmitter is clean, and it is one particular path that is marginal. My gateway was already on APRS-IS by radio through a neighbor the whole time — W3YA-1 was never a requirement for the station to be part of the network, only the question I happened to be asking.</p>
+
+<p>If I run this test again I will change the beacon between transmissions. Mine was byte-identical every two minutes, and digipeaters suppress duplicates — which does not explain this particular pattern, but it does make an unchanging position beacon a poor instrument for asking the question.</p>
+
+<p>One last trap, which cost me a wrong conclusion before I read my own log properly. aprs.fi showed that same beacon as <code class="language-plaintext highlighter-rouge">KD3CCO-10&gt;APDW17,W3YA-1,qAO,W3SWL-2</code>, with no asterisk — apparently proof the digipeater had <em>not</em> repeated it. That entry is a different copy of the same transmission: a neighboring receive-only gate heard me directly, gated it a second earlier, and won the duplicate race. My own gateway’s copy of the repeat arrived afterwards and was discarded. What you see on aprs.fi is whichever copy got there first, which may have taken a different route than the one you heard yourself. For what your own station heard, the only authority is your own monitor.</p>
+
+<p><code class="language-plaintext highlighter-rouge">RX_VIA</code> is deliberately antisocial — while it is set, everything that did not come through that one digipeater goes ungated — so it belongs in a separate config file that is never the one running by default, and it goes back off as soon as it has answered.</p>
+
+<h2 id="making-it-a-box-you-can-just-power-on">Making it a box you can just power on</h2>
+
+<p>Two things still needed a human, and both of them produced a station that looked fine.</p>
+
+<p>The first was the sound card’s number. The Digirig shows up as an ALSA card, and which number it gets depends on which USB port it’s in and what else enumerated first. The config named that number, so moving the Digirig to a different port meant editing a file.</p>
+
+<p>The second was worse. Every so often the kernel would <strong>reset the sound card in place</strong> — <code class="language-plaintext highlighter-rouge">usb 1-1.1.3: reset full-speed USB device number 4</code>. RF getting into the USB cable does this, and it happened most often right after the gateway transmitted. A reset leaves the device present: <code class="language-plaintext highlighter-rouge">lsusb</code> still lists it, <code class="language-plaintext highlighter-rouge">arecord -l</code> still shows the card, the gateway still reports itself as running. But the handle Dire Wolf opened at startup is dead, and it says so, forever:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Audio input device 0 error code -19: No such device
+</code></pre></div></div>
+
+<p>Nothing is gated from that moment until someone notices and restarts the service. Systemd wasn’t going to help: the unit is a <code class="language-plaintext highlighter-rouge">oneshot</code> that launches Dire Wolf and returns, so once a start has succeeded, systemd considers the job done.</p>
+
+<p><strong>Finding the radio by what it is.</strong> The radio profile stopped naming a card number:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ADEVICE = auto
+USB_ID = 0d8c:0012
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">0d8c:0012</code> is the C-Media chip as <code class="language-plaintext highlighter-rouge">lsusb</code> prints it. The gateway searches for the sound card belonging to <em>that</em> USB device — at every start, and again on every retry while it’s waiting for the radio to appear. Any port, any card number, plugged in before or after boot. PTT comes along for free, because the <code class="language-plaintext highlighter-rouge">/dev/hidraw</code> node was already being found on the audio card’s own USB device. If two cards match the same id it refuses rather than guessing; guessing means keying the wrong radio.</p>
+
+<p><strong>A watchdog for everything after startup.</strong> A systemd timer runs a check every minute, and a udev rule runs the same check the moment a USB sound card appears, so a replug is caught in seconds rather than at the next tick.</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  A["Check runs: timer, or udev on plug-in"] --&gt; B{"Gateway ever started here?"}
+  B -- "no" --&gt; Z["Do nothing"]
+  B -- "yes" --&gt; C{"Radio present?"}
+  C -- "no" --&gt; W["Say so once, wait.&lt;br/&gt;Restarting would only&lt;br/&gt;time out"]
+  C -- "yes" --&gt; D{"Dire Wolf running?"}
+  D -- "no" --&gt; R["Restart"]
+  D -- "yes" --&gt; E{"Radio on a different&lt;br/&gt;ALSA card now?"}
+  E -- "yes" --&gt; R
+  E -- "no" --&gt; F{"New '-19' errors&lt;br/&gt;since last check?"}
+  F -- "yes" --&gt; R
+  F -- "no" --&gt; Z
+</code></pre>
+
+<p>That last branch is the one that catches the reset, because it’s the only signal that disagrees: the process is alive, the device is listed, and the card number hasn’t moved. Restarts are limited to one every three minutes so a genuinely broken radio can’t put the station in a loop — except that the limit is cleared whenever the radio goes missing, since a radio that’s come back isn’t a loop, it’s a new situation. I got that wrong first time round and watched a replug sit waiting out a limit set by something that happened before I’d unplugged anything.</p>
+
+<p><strong>And one more thing that looked right and wasn’t.</strong> The udev rule didn’t fire. It matched <code class="language-plaintext highlighter-rouge">ENV{ID_BUS}=="usb"</code>, and <code class="language-plaintext highlighter-rouge">udevadm info</code> cheerfully reports <code class="language-plaintext highlighter-rouge">ID_BUS=usb</code> on the card — but <code class="language-plaintext highlighter-rouge">udevadm test</code>, which replays the rules, shows that property <em>absent</em> from the set the rules are evaluated against. The database has it; the rules never see it. The filter was only there to avoid waking the check for a non-radio sound card, and the check costs nothing and decides for itself anyway, so I dropped it.</p>
+
+<p>On the bench it now does what it says. A reset at 20:19:34 had the gateway restarted 18 seconds later with no input from me. Unplugging the Digirig and putting it back in a <em>different</em> USB port — a different branch of the Pi’s internal hub — produced a watchdog run six seconds after the plug went in, off the timer’s cadence, and the gateway came back on the re-resolved card.</p>
+
+<p>None of which fixes the actual fault. Four resets in one evening is RF getting somewhere it shouldn’t, and the honest repair is ferrites and distance between the antenna and the Pi, not a watchdog that tidies up afterwards. But an unattended box should put itself back on the air, and now it does.</p>
+
+<h2 id="one-more-gotcha-third-party-messages">One more gotcha: third-party messages</h2>
+
+<p>I added a friend to the whitelist, and his station never acknowledged a single message, even though my gateway transmitted every retry at 5 W on the half-wave antenna. The cause was his APRS app.</p>
+
+<p>My gateway can’t transmit a message as if it came from the SMS gateway, since that’s not my station’s callsign. So Dire Wolf wraps every message it gates in APRS <strong>third-party</strong> format:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>KD3CCO-10&gt;APDW17:}SMS&gt;APOSMS,TCPIP,KD3CCO-10*::KD3CCO-7 :@XXXXXXXXXX phone to pigate test{16565
+</code></pre></div></div>
+
+<p>Everything after the <code class="language-plaintext highlighter-rouge">}</code> is the original packet. My FT5DR unwraps it, sees a message for KD3CCO-7, and acks within seconds. His Dire Wolf decoded the packet fine, but the app on top of it ignored third-party packets. It never saw a message addressed to him, so it never acked, and the SMS gateway kept retrying. The RF path was working; the software wasn’t. The fix is on the receiving end: an app that handles third-party packets.</p>
+
+<blockquote>
+  <p>The web monitor showing a full round trip: message gated out, acknowledgement heard and gated back up<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/web-monitor-phone-round-trip.png" alt="The web monitor showing a full round trip: message gated out, acknowledgement heard and gated back up" /></p>
+</blockquote>
+
+<h2 id="where-it-stands">Where it stands</h2>
+
+<p>The pi-gate runs unattended on a Pi 3B+ — on the FT-2900R now, with the VX-6R and the Radtel as drop-in alternatives on the same Digirig profile — beacons every 30 minutes as an <code class="language-plaintext highlighter-rouge">R</code>-overlay iGate (“RX iGate, TX whitelist only”), carries messages to and from my radios in both directions, and reaches APRS-IS over the air rather than only over the internet. It finds its radio by USB id rather than by port, and puts itself back on the air after a replug or a USB reset without being asked. The beacon position is the center of my 6-character grid square rather than my house, which keeps it a couple of kilometers from exact.</p>
+
+<blockquote>
+  <p>KD3CCO-10 on aprs.fi, identified as Dire Wolf with the “RX iGate, TX whitelist only” comment<br />
+<img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/aprs-fi-kd3cco-10-station-page.png" alt="KD3CCO-10 on aprs.fi, identified as Dire Wolf with the RX iGate, TX whitelist only comment" /></p>
+</blockquote>
+
+<h2 id="what-i-have-actually-proved-and-what-i-havent">What I have actually proved, and what I haven’t</h2>
+
+<p>The point of all this is a specific thing: my wife texts my phone number from her phone, and it comes out of a radio in my pocket somewhere I have no cell coverage, and I can answer her. It is worth being precise about which parts of that are demonstrated and which are still assumption.</p>
+
+<p><strong>Proved.</strong> The whitelist holds, and the gateway transmits nothing else. Both directions of the SMS round trip work with the handheld in the house. The gateway reaches APRS-IS over the air rather than only over the internet — seventeen beacons out of seventeen, every one of them gated by a neighboring receive-only station without a single gap. And crucially, the gateway will transmit a message to my handheld <strong>whether or not it has heard my handheld</strong>, because the explicit IS-to-RF filter replaces Dire Wolf’s default of only messaging stations heard nearby recently. That one is a design decision rather than a measurement, but it is the decision the whole idea rests on: if my gateway only talked to radios already in its own range, extending that range would be pointless.</p>
+
+<p><strong>Not proved.</strong> The case that matters. Everything above is a house full of radios talking to each other.</p>
+
+<p>I have come close once. With the VX-6R as the gateway radio I had reliable two-way messaging from South Hills Business School, across town, where the Nittany Amateur Radio Club holds its monthly meetings — much nearer the real thing than anything I did tonight. There is a neatness to that: W3YA-1 is NARC’s own digipeater, so whichever way the messages traveled, the club was involved. What I failed to do was record the path, and without it that success is ambiguous in precisely the way that matters. If a digipeater relayed those messages, the case is made. If my handheld was still inside my own gateway’s footprint, it was a range test rather than a relay test, and the capability I am trying to build remains untested. Messages arriving looks identical either way, which is the whole problem.</p>
+
+<p>There is a clue buried in it, though. That was five watts from a handheld sitting in a charger cradle. The mobile radio on a tripod, at six times the power, gets repeated by the digipeater one time in four. If the handheld’s antenna happened to be somewhere better in the house, that says more about what is wrong with the current arrangement than any amount of power ever will.</p>
+
+<p>The one link standing between the two is the one I measured: a digipeater repeated my gateway twice in nine. That is not a delivery path yet.</p>
+
+<p>There is an irony in those two numbers sitting next to each other. The station that hears me perfectly is receive-only, so it can never send anything back; the station that could send something back hears me one time in four. My reach is excellent on the leg that was never the problem.</p>
+
+<h3 id="why-30-watts-inside-a-house-loses-to-5-watts-on-a-handheld">Why 30 watts inside a house loses to 5 watts on a handheld</h3>
+
+<p>What confused me is that I work the local FM repeater easily from inside the house, with a whip on a handheld at 5 watts. So why does a 75 watt mobile struggle to be heard by a digipeater 10 km away?</p>
+
+<p>Path loss is reciprocal, and that turns out to be the whole story. My gateway decodes W3YA-1’s repeats all evening. The path carries its signal to me perfectly well. What differs is the two ends: it runs 49 watts into an 8 dBi omni at 640 feet above average terrain, and I run 30 watts into a Diamond SG7500NMO — a dual-band mobile whip, on an NMO mount on a camera tripod in my living room. That is ten to twenty decibels of asymmetry, almost all of it antenna and surroundings. A link can be comfortably one-way, and mine is.</p>
+
+<p>The mode makes it worse in ways voice never shows you:</p>
+
+<ul>
+  <li><strong>A packet is all or nothing.</strong> 1200 baud AX.25 has no forward error correction. One corrupted bit fails the CRC and the whole frame is discarded. There is no mostly-decoded packet. Voice stays useful through hiss, flutter and picket-fencing because my ears do the error correction; the modem has none.</li>
+  <li><strong>It has to hold for the whole burst.</strong> A voice transmission is seconds long and only the syllables need to survive. A beacon is one burst of about half a second. Indoors, multipath puts deep nulls in the room that move as people do. Voice rides through them. A packet that meets one dies completely, which is exactly what an intermittent result with no dependence on power looks like.</li>
+  <li><strong>Collisions are invisible and immune to power.</strong> 144.390 is a single shared national channel carrying every APRS station for a hundred miles. If anything else arrives at the digipeater while my burst does, FM capture takes the stronger one. I see my transmission go out and nothing come back, which looks identical to being too weak. On a voice repeater I listen before keying and hear immediately when I did not make it.</li>
+  <li><strong>The comparison was never like for like.</strong> The FM repeater I can work is not that digipeater. Different site, different height, different receiver.</li>
+</ul>
+
+<p>What it is <em>not</em> is my audio levels, and that is worth stating because it was my first suspicion. The same transmissions were decoded seventeen times out of seventeen by another station. The signal leaving the radio is fine.</p>
+
+<p>So the fix is not watts. Eight decibels of extra power bought nothing measurable, because the limiting item was the antenna rather than the path: an N9TAX slim jim is a self-contained end-fed half-wave whose matching stub does the job the missing ground plane was doing, so it does not need the feedline as a counterpoise. Hung outside, it fixes the asymmetry, the multipath and the stray RF in one move.</p>
+
+<h3 id="the-test-that-would-settle-it">The test that would settle it</h3>
+
+<p>Three stages, and only the last one needs a car.</p>
+
+<ol>
+  <li><strong>Measure the real downlink reach from home.</strong> Beacon with a generic <code class="language-plaintext highlighter-rouge">WIDE1-1</code> path rather than naming one digipeater, and tally which callsigns come back with the has-been-repeated bit set, and how often. Naming a digipeater answers “can that one hear me”; coverage is a question about all of them, and my logs are full of digipeaters I have never once asked. This is a measured map of where a message to me could land, obtained without leaving the house.</li>
+  <li><strong>Fix the antenna, then measure again.</strong> Same test, so the numbers are comparable.</li>
+  <li><strong>Go somewhere out of my own range.</strong> Qualify the location first, or the result means nothing: at the spot, my handheld should decode the digipeater’s beacons and should <em>not</em> decode my gateway directly. Then have a message sent from a phone, and check the path in the frame that arrives, not merely that something arrived — my gateway’s callsign has to be in it, or some other transmitting iGate did the work and I have learned nothing about mine. Then reply, and confirm the reply lands. Several times, because a single success proves nothing about a path currently running at one in four.</li>
+</ol>
+
+<p>One thing works in my favor throughout. Both ends retry: I watched the handheld resend an unacknowledged message four times over four minutes, and the SMS gateway resend one after seventy-five seconds. A link that gets through one time in four still delivers, it just takes a few minutes and costs airtime. Marginal and useless are not the same thing here. The acknowledgement coming back is the real success criterion, because it is the only event that proves both directions completed.</p>
+
+<h2 id="the-station-that-restarted-every-time-it-transmitted">The station that restarted every time it transmitted</h2>
+
+<p>The morning after all that, the gateway was flaky in a way I could not put my finger on. The web monitor was frozen at a timestamp eight hours old while aprs.fi showed the station beaconing happily right up to the present minute.</p>
+
+<p>Those are two different things being watched, which is the first thing worth saying. The beacons on aprs.fi were all <code class="language-plaintext highlighter-rouge">qAS</code> — the <em>internet</em> copy, sent over TCP. They proved Dire Wolf was alive and said nothing whatever about the radio, or about the page. The page is a separate program reading the log. A frozen page is not evidence about the gateway, and I spent a few minutes treating it as though it were.</p>
+
+<p>The real fault was in the beacon timestamps, and it took reading them as a sequence rather than a list. Every so often there was an <em>extra</em> beacon about a minute after a scheduled one, and from that point the 30-minute schedule ran from the new time. That is what a restart looks like from outside: Dire Wolf beacons shortly after it starts. Counting them gave seven restarts in eight hours.</p>
+
+<p>The monitor had caught one in the act:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>00:14:37  TX LOCAL   KD3CCO-10&gt;APDW17,WIDE1-1:...
+00:14:38  WARN       Audio input device 0 error code -19: No such device
+00:14:46  INFO       Now connected to IGate server noam.aprs2.net
+</code></pre></div></div>
+
+<p>Error −19 is <code class="language-plaintext highlighter-rouge">ENODEV</code>. The sound card had not gone quiet or misbehaved — it had <em>left the bus</em>. One second after transmitting.</p>
+
+<p>The kernel log settled it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Sat Sep 26 00:14:38] usb 1-1.1.3: reset full-speed USB device number 4 using dwc_otg
+</code></pre></div></div>
+
+<p>Eight of those, and every one within a second or two of a transmission, with none in between. Two details in that line matter more than they look:</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">reset</code>, not <code class="language-plaintext highlighter-rouge">disconnect</code>, and the same device number throughout.</strong> A disconnect means the thing lost power or fell out of its socket. A reset means the kernel saw errors on a link that never left the bus — which is RF corrupting USB traffic, not a connection problem.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">vcgencmd get_throttled</code> returned <code class="language-plaintext highlighter-rouge">0x0</code>.</strong> No under-voltage, not then and not latched since boot. The Pi browning out under transmit current produces an identical-looking log and needs the opposite fix, so that was one command well spent.</li>
+</ul>
+
+<p>I nearly drew a wrong conclusion here. The first reset in the log was 19:43 on the Friday, which is about when the mobile radio went into service — tidy evidence that the previous handheld never did this. Except <code class="language-plaintext highlighter-rouge">dmesg</code> only covers the current boot, and the Pi had booted at 19:42:36. The first reset was 57 seconds after power-on, on Dire Wolf’s own startup beacon. I had read an empty buffer as an absence of events. The journal is <code class="language-plaintext highlighter-rouge">Storage=volatile</code> on this image to spare the SD card, so the older history is genuinely gone and that question stays open.</p>
+
+<p><strong>What was actually wrong was the antenna, not the power.</strong> A dual-band mobile whip is designed to sit on a car roof, and the roof is the other half of it. On a camera tripod in a living room that half is missing, so the coax braid becomes the counterpoise — common-mode current is not a side effect there, it is structural. The strongest RF in the room was running along the feedline, past the Pi.</p>
+
+<p>The fix was three things at once: a common-mode choke at the feedpoint, more ferrites on the interface and power cables, and the mobile whip replaced with a slim jim hung outside several meters from everything. A slim jim is a self-contained end-fed half-wave — the matching stub does the job the missing ground plane was doing, so it does not need the feedline as a counterpoise.</p>
+
+<p>Then the honest test: put the radio on <strong>full power</strong>, the setting that had been causing a reset roughly every other transmission, and see if it falls over. Eight transmissions later — a beacon, four gated messages, and the acknowledgements coming back — the reset count had not moved. At the old rate, eight clean transmissions is about a one percent coincidence.</p>
+
+<p>Backing the power off would have hidden this and I would have called it fixed. It is worth being clear that lower power was never the cure, only a way to stop noticing.</p>
+
+<h2 id="whats-next">What’s next</h2>
+
+<ul>
+  <li><strong>A persistent journal, bounded.</strong> The journal lives in RAM to spare the SD card, which is the right call until the morning you want to know what happened before the last reboot — and then the evidence is gone. A capped <code class="language-plaintext highlighter-rouge">SystemMaxUse</code> would keep a post-mortem at a known, small write cost.</li>
+  <li><strong>Surviving power loss properly.</strong> A battery or supercapacitor HAT could turn a pulled plug into a clean shutdown, and a read-only root filesystem would make the SD card immune.</li>
+  <li><strong>Graywolf.</strong> It’s a newer APRS stack that reportedly decodes better than Dire Wolf. My whitelist guarantee depends on Dire Wolf behavior I verified by watching it, including that <code class="language-plaintext highlighter-rouge">IGMSP</code> bypass, so I’d evaluate Graywolf on separate hardware first, starting with whether it can express a filter this strict at all.</li>
+</ul>
+
+<p>If you build one, the repo’s quickstarts cover the laptop and Pi versions for both radios: <a href="https://github.com/hatandspecs/aprs_igate_bidirectional_whitelist">github.com/hatandspecs/aprs_igate_bidirectional_whitelist</a>. Questions and corrections are welcome in the comments below.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+  <!-- Mermaid diagrams: only on pages with "mermaid: true" in their front matter.
+       kramdown renders a ```mermaid fence as either <pre><code class="language-mermaid">
+       or, with Rouge highlighting, <div class="language-mermaid highlighter-rouge">.
+       Both are turned into <div class="mermaid"> before rendering. -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
+      var code = el.matches('code') ? el : el.querySelector('code');
+      var block = el.matches('code') ? el.parentElement : el;
+      if (!code || !block) return;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = code.textContent;
+      block.replaceWith(diagram);
+    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict' });
+    await mermaid.run({ querySelector: '.mermaid' });
+  </script>
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

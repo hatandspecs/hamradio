@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>First Attempt at a Shortened Rigid V-Dipole for 40m | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>First Attempt at a Shortened Rigid V-Dipole for 40m</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: April 27, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <h2 id="project-overview">Project Overview</h2>
+<p>The goal for this project was to take my existing portable rigid V-dipole, which performs flawlessly on 20m and higher, and extend its range into the 40m band. I use a camera tripod-mounted hub with a <strong>120°</strong> included angle. I originally chose this geometry because it provides a near-perfect <strong>50Ω</strong> feedpoint impedance when mounted low to the ground. This setup allows me to use a simple 1:1 common mode choke instead of a matching transformer.</p>
+
+<p>To operate on 40m with physically shortened elements, I introduced inductive loading at the feedpoint using a pair of pre-made coils that happened to come with M10 threaded interfaces which are compatible with my setup.  I got them very inexpensively from an online retailer and decided to place a small bet on mystery coils rather than build something specific. Worst-case scenario, I will disassemble them, use the threaded interfaces and remanufacture the plastic core and wind different coils on them if needed.</p>
+
+<hr />
+
+<h2 id="system-configuration">System Configuration</h2>
+<h3 id="physical-architecture">Physical Architecture</h3>
+<ul>
+  <li><strong>Radiators:</strong> Two <strong>5.5m</strong> (approx. 18ft) stainless steel telescoping whips.</li>
+  <li><strong>Geometry:</strong> Rigid “V” configuration with a <strong>120°</strong> included angle.</li>
+  <li><strong>Loading:</strong> Dual non-adjustable base-loading coils <strong>~20 turns</strong> installed at the hub.  I will measure these at some point to see what the actual inductance is.</li>
+  <li><strong>Matching:</strong> A hastily constructed adjustable Beta match (shunt inductor) was added to transform the low radiation resistance up to <strong>50Ω</strong>.</li>
+</ul>
+
+<blockquote>
+  <p>The hub, with the loading coils and the hastily built Beta match
+<img src="/hamradio/assets/images/coil_loading_rigid_v_dipole/setup_wtih_beta_match.jpg" alt="The V-dipole hub with base loading coils and an adjustable Beta match" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="experimental-results-40m-band">Experimental Results (40m Band)</h2>
+<p>I tuned the system for the center of the 40m phone segment. While I was able to achieve a near-perfect match at the target frequency, the bandwidth proved to be exceptionally narrow.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Parameter</th>
+      <th style="text-align: left">Measured Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Resonant Frequency ($f_c$)</td>
+      <td style="text-align: left"><strong>7.236 MHz</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Minimum SWR</td>
+      <td style="text-align: left"><strong>1.03:1</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SWR &lt; 2.0 Bandwidth</td>
+      <td style="text-align: left"><strong>39 kHz</strong> (7.217 to 7.256 MHz)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Percentage Bandwidth</td>
+      <td style="text-align: left"><strong>0.54%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>39 kHz between the 2:1 points — the whole story of this experiment in one trace
+<img src="/hamradio/assets/images/coil_loading_rigid_v_dipole/bandwidth_measurement.jpg" alt="VNA sweep showing a 1.03:1 match at 7.236 MHz with SWR below 2.0 across only 39 kHz" /></p>
+</blockquote>
+
+<h3 id="key-observation">Key Observation</h3>
+<p>While the Beta match effectively brought the SWR down to <strong>1.03:1</strong> at resonance, the curve is incredibly steep. Moving even <strong>20 kHz</strong> away from $f_c$ causes the SWR to climb rapidly. This effectively limits me to a very small slice of the band without further physical adjustment of the antenna.</p>
+
+<hr />
+
+<h2 id="technical-analysis-why-the-narrow-bandwidth">Technical Analysis: Why the Narrow Bandwidth?</h2>
+<p>The narrow bandwidth is a direct result of high System Q (Quality Factor). Based on my observations, this is driven by three main factors.</p>
+
+<h3 id="1-reduced-radiation-resistance-r_r">1. Reduced Radiation Resistance ($R_r$)</h3>
+<p>A full-sized 40m dipole is roughly <strong>20m</strong> tip-to-tip. My <strong>11m</strong> total span is only about <strong>55%</strong> of a natural resonant length. This causes the $R_r$ to drop significantly, likely to the <strong>12Ω</strong> to <strong>18Ω</strong> range, which the Beta match then has to step up to <strong>50Ω</strong>.</p>
+
+<h3 id="2-inductive-reactance">2. Inductive Reactance</h3>
+<p>To reach resonance, the <strong>~20-turn</strong> coils must provide high inductive reactance to cancel the capacitive reactance of the short whips. This high ratio of stored energy to radiated energy creates a “sharp” resonance, meaning the antenna only wants to radiate efficiently in a very tight frequency window.</p>
+
+<h3 id="3-base-loading-position">3. Base Loading Position</h3>
+<p>Placing the coils at the feedpoint, where current is highest, is mechanically convenient but electrically the least efficient way to achieve bandwidth. It maximizes the influence of the coil on the system Q compared to placing the loading further up the radiator.</p>
+
+<hr />
+
+<h2 id="potential-next-steps-ranked-by-priority">Potential Next Steps (Ranked by Priority)</h2>
+<p>I am looking for ways to widen this window to cover more of the 40m phone band (<strong>7.125 MHz</strong> to <strong>7.300 MHz</strong>). Here is my roadmap for future modifications.</p>
+
+<h3 id="priority-1-top-hat-loading-capacity-hats">Priority 1: Top-Hat Loading (Capacity Hats)</h3>
+<p>This is my top priority. By adding small “whiskers” or a wire cross at the tips of the whips, I can increase the capacitance at the ends of the antenna. This would allow me to remove turns from or tap out turns from the loading coils. Less inductance should lead to a lower Q and wider bandwidth.</p>
+
+<h3 id="priority-2-adjustable-inductance">Priority 2: Adjustable Inductance</h3>
+<p>Since my current coils are fixed, I may look into tapped coils or a sliding contact system. This would not increase the native bandwidth, but it would allow me to shift the <strong>39 kHz</strong> window across the band quickly without having to collapse and adjust the whip lengths manually.</p>
+
+<h3 id="priority-3-moving-the-coils-outward-center-loading">Priority 3: Moving the Coils Outward (Center Loading)</h3>
+<p>I have considered adding <strong>1m</strong> rigid arms between the hub and the coils. This would transition the system toward center-loading, which increases radiation resistance and lowers System Q. The catch is that center loading needs <em>more</em> inductance than base loading to reach the same resonance, so the coils would have to grow even as I am trying to shrink them — which may cancel out some of the Q improvement I am chasing.</p>
+
+<hr />
+
+<h2 id="what-i-take-from-this">What I Take From This</h2>
+
+<p>The experiment worked exactly as designed and the design was the problem. A 1.03:1 match at 7.236 MHz is a good match, and 39 kHz of usable bandwidth is close to useless for phone work — I can cover one net frequency, not a band. Nothing here is a construction fault to be tightened up; it is what base-loading a 55%-size dipole costs, and the three factors above are all pulling in the same direction.</p>
+
+<p>That makes the next step clear enough. Every item on the list above is really the same move: get inductance out of the system so the Q comes down. Capacity hats do that by letting the coils shrink, which is why they are first.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>
