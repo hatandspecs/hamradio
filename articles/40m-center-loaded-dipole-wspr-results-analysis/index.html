@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WSPR Results Analysis on KD3CCP's 40m Center-Loaded Rigid V Dipole | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>WSPR Results Analysis on KD3CCP's 40m Center-Loaded Rigid V Dipole</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: June 26, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>Working with Github Copilot, I previously put together a Jupyter notebook to analyze WSPR results from my DIY 75-10m EFHW. That same notebook is reusable for any WSPR capture, so I pointed it at a different dataset this time: a 30-minute WSPR session captured while field-testing my friend KD3CCP’s DIY 40m center-loaded rigid V dipole, deployed on top of my <a href="/hamradio/articles/portable-mast-build/">DIY hand-steerable portable mast</a>.</p>
+
+<p>This <a href="https://github.com/hatandspecs/wspr_7510_analysis">repository</a> contains the Jupyter notebook. The dataset file for this run is <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>, captured under my own callsign, KD3CCO, since the WSPR transmissions during the mast test were run from my station.</p>
+
+<p>The notebook is intentionally structured to explain the purpose of each analysis, guide interpretation of the outputs, and draw conclusions from the actual dataset. It also adapts automatically to however many bands are present — since this capture is 40m-only, a couple of the multi-band analyses skip themselves as designed.</p>
+
+<p>Here’s what the antenna under test looks like deployed, for reference:</p>
+
+<blockquote>
+  <p>Close-up of one of KD3CCP’s DIY center-loading coils, partway up the whip<br />
+<img src="/hamradio/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_003600931.jpg" alt="Close-up of one of KD3CCP's DIY center-loading coils, partway up the whip" /></p>
+</blockquote>
+
+<blockquote>
+  <p>The 40m center-loaded rigid V dipole deployed on top of the hand-steerable mast<br />
+<img src="/hamradio/assets/images/portable_mast_build/40m_loaded_dipole/PXL_20260622_004738841.jpg" alt="The 40m center-loaded rigid V dipole deployed on top of the hand-steerable mast" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="1-notebook-based-detailed-analysis">1. Notebook-based Detailed Analysis</h2>
+
+<p>Each analysis in the notebook is documented below, followed by the specific findings from the <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code> dataset.</p>
+
+<h3 id="analysis-1-band-openings-and-closures">Analysis 1: Band Openings and Closures</h3>
+
+<p>This analysis tracks spot counts and mean SNR across time bins for each band.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Show when individual amateur bands are most active, and whether propagation is strengthening or weakening over time.</li>
+  <li>Highlight changes in the Maximum Usable Frequency (MUF) by comparing multiple bands in the same time window.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>A rising spot count means the band is opening and more stations are being heard.</li>
+  <li>An increasing mean SNR indicates better signal strength and propagation quality.</li>
+  <li>Bands that drop sharply suggest closures or fading conditions.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Identify the best operating times for each band.</li>
+  <li>Determine whether the dataset captures a transition from lower-frequency to higher-frequency propagation.</li>
+  <li>Spot any bands that remain weak despite others opening, which may suggest local antenna tuning or band-specific absorption.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li>Data covers a deliberately short window: 2026-06-21 from 21:30 UTC through 22:00 UTC, only 30 minutes.</li>
+  <li>Only one band is present, 40m, since this antenna is purpose-built for that band alone.</li>
+  <li>Spot counts and mean SNR by 15-minute time bin:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">21:30</code> bin: 324 spots, mean SNR ≈ -7.9 dB.</li>
+      <li><code class="language-plaintext highlighter-rouge">21:45</code> bin: 491 spots, mean SNR ≈ -7.9 dB.</li>
+      <li><code class="language-plaintext highlighter-rouge">22:00</code> bin (the closing edge of the window): 11 spots, mean SNR ≈ -16.5 dB.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>This analysis isn’t really meaningful over a window this short. With only 30 minutes and 3 time bins, the rise and fall here is just noise and the natural edges of a single test session, not a real band-opening/closing trend the way it would be over a multi-hour capture.</li>
+  <li>A multi-hour capture, like the 75-10m EFHW dataset, would be needed to say anything meaningful about how this antenna’s 40m performance changes with band conditions over an evening.</li>
+</ul>
+
+<blockquote>
+  <p>Band Openings and Closures<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis1_band_openings.png" alt="Band Openings and Closures" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-2-distance-profiling">Analysis 2: Distance Profiling</h3>
+
+<p>This analysis computes mean, maximum, and standard deviation of path distance <code class="language-plaintext highlighter-rouge">k</code> for every band.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Quantify how far the station is reaching on each band in the dataset.</li>
+  <li>Use the band-specific statistics to compare the effective propagation range across frequencies.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>Mean distance is the typical path length heard on each band.</li>
+  <li>Maximum distance shows the furthest recorded reach and can indicate DX potential.</li>
+  <li>Standard deviation reveals how variable the propagation is during the session.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Bands with higher mean distance are favoring longer skip paths.</li>
+  <li>A low standard deviation on a band suggests stable propagation, while a high value indicates mixed local and DX contacts.</li>
+  <li>If a high-frequency band has a very small mean distance, the band may be only marginally open.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">40m</code> (the only band present): mean ≈ 1803 km, max ≈ 18,429 km, std ≈ 2408 km, n = 826.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>That mean is, oddly enough, almost identical to my home EFHW’s own 40m mean distance from the 75-10m dataset (≈1764 km over 806 spots, captured across a full 3-hour evening) — a different antenna, location, and a 6x shorter capture window landing on nearly the same average.</li>
+  <li>The standard deviation (2408 km) is larger than the mean itself (1803 km), which flags a strongly bimodal distribution: most contacts are short and regional, with a handful of outsized DX paths pulling both the mean and the max way up.</li>
+  <li>A max of 18,429 km is close to the practical maximum distance achievable on Earth — essentially an antipodal-scale path. That matches what you’d expect from a low, near-vertical-incidence-skywave-leaning antenna: a strong regional lobe most of the time, with an occasional long-haul opening.</li>
+</ul>
+
+<blockquote>
+  <p>Distance Profiling by Band<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis2_distance_profiling.png" alt="Distance Profiling by Band" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-3-geographical-spread">Analysis 3: Geographical Spread</h3>
+
+<p>This analysis identifies the strongest footprint by the top <em>receive</em> grid prefixes.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Visualize the geographic distribution of contacts by the most active Maidenhead grid areas.</li>
+  <li>Understand whether the station is mainly heard domestically, regionally, or in long-distance DX regions.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>The top grid prefixes show the regions that contribute the largest number of spots.</li>
+  <li>A dense domestic footprint suggests strong local and regional propagation.</li>
+  <li>Presence of distant grid squares indicates longer skip or transoceanic paths.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Assess whether the dataset captures mostly local propagation or meaningful DX reach.</li>
+  <li>Identify key target regions that the antenna and current conditions favor.</li>
+  <li>Use this information to compare with azimuthal coverage and band-specific reach.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li>Top 20 receive grid prefixes (stations hearing KD3CCO):</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Grid</th>
+      <th>Count</th>
+      <th>Region</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>FM18</td>
+      <td>45</td>
+      <td>Washington DC area</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>FN30</td>
+      <td>35</td>
+      <td>New York City / Long Island</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>EN82</td>
+      <td>32</td>
+      <td>Southeast Michigan</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>FM05</td>
+      <td>28</td>
+      <td>Central North Carolina</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>DN70</td>
+      <td>21</td>
+      <td>Colorado Front Range</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>FN21</td>
+      <td>19</td>
+      <td>Northeastern Pennsylvania / Southern NY</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>FN31</td>
+      <td>16</td>
+      <td>Hudson Valley NY / Western Connecticut</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>FM08</td>
+      <td>16</td>
+      <td>Virginia / West Virginia</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>FN20</td>
+      <td>16</td>
+      <td>Eastern Pennsylvania</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>FN42</td>
+      <td>16</td>
+      <td>Eastern Massachusetts</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>EM38</td>
+      <td>14</td>
+      <td>Central Missouri</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>EL98</td>
+      <td>13</td>
+      <td>Central Florida</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>EM13</td>
+      <td>12</td>
+      <td>North Texas / Southern Oklahoma</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>JN87</td>
+      <td>12</td>
+      <td>Western Hungary</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>EN52</td>
+      <td>10</td>
+      <td>Southern Wisconsin</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>EN80</td>
+      <td>10</td>
+      <td>West-Central Ohio</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>FN13</td>
+      <td>10</td>
+      <td>Upstate New York</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>DN31</td>
+      <td>10</td>
+      <td>Northern Utah</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>EN58</td>
+      <td>9</td>
+      <td>Far Northern Wisconsin</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>IL38</td>
+      <td>8</td>
+      <td>Canary Islands / Western Sahara coast</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>This footprint is almost entirely a continental-scale regional one, covering the eastern half of North America with reach out to Colorado and Utah — exactly what a near-vertical-incidence-skywave-heavy 40m antenna should produce over a half-hour evening test.</li>
+  <li>Only two grids in the top 20 are intercontinental: <code class="language-plaintext highlighter-rouge">JN87</code> (Western Hungary) and <code class="language-plaintext highlighter-rouge">IL38</code> (Canary Islands/Western Sahara coast), both consistent with the moderate-DX cluster visible in the SNR/distance scatter around 7,000–8,000 km.</li>
+  <li>Notably absent from this top-20 list is the single most extreme contact in the dataset (Western Australia, 18,429 km) — it was strong and repeated, but with too few individual spots to crack the top 20 grid-count ranking. That underscores why Analysis 2’s max/mean comparison is the better tool for catching this kind of outlier path.</li>
+</ul>
+
+<blockquote>
+  <p>Geographical Footprint<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis3_geographical_spread.png" alt="Geographical Footprint" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-4-snr-vs-distance-regression">Analysis 4: SNR vs Distance Regression</h3>
+
+<p>This analysis examines path loss trends by plotting SNR against distance for each band.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Measure how signal strength declines with distance on each band.</li>
+  <li>Compare the relative attenuation characteristics across bands.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>A downward trend is expected: longer distances usually produce lower SNR.</li>
+  <li>A tight regression line indicates consistent path loss behavior.</li>
+  <li>Scatter far above the trend suggests strong openings or unusually favorable propagation.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Determine whether some bands are behaving more predictably than others.</li>
+  <li>Detect bands where antenna performance or local noise may be affecting SNR independently of distance.</li>
+  <li>Spot deviations that could indicate special propagation modes or anomalous paths.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li>The bulk of the 826 spots sit under 2,500 km, with SNR ranging from about +20 dB down to -30 dB — a wide spread for what is mostly regional/NVIS-style propagation.</li>
+  <li>A second, visibly separated cluster sits around 5,500–8,000 km, including paths to <code class="language-plaintext highlighter-rouge">SV1BTL</code> (Greece, 8,183 km), <code class="language-plaintext highlighter-rouge">LU8MIL</code> (Argentina, 8,199 km, heard on 3 separate WSPR cycles), and <code class="language-plaintext highlighter-rouge">SP8MK</code> (Poland, 7,231 km).</li>
+  <li>A small set of points beyond 18,000 km — all <code class="language-plaintext highlighter-rouge">VK6PVL</code> in Western Australia, 18,429 km — sit well past everything else on the plot. This path was decoded 5 separate times across the half-hour test (21:34, 21:38, 21:48, 21:52, and 21:56 UTC), so it was a real, sustained opening, not a single fluke decode.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>The overall downward trend is clear despite the short capture, and the regression line is pulled down by that one Australia outlier.</li>
+  <li>The repeated VK6PVL decodes are the most notable result in this dataset: a 5 W, electrically very low, temporarily-deployed 40m dipole sustained a long-path opening to Australia for at least 22 minutes.</li>
+  <li>The Argentina and European paths are a secondary group of moderate DX, while the bulk of the spots confirm the antenna is, as expected, primarily a strong regional performer at this height.</li>
+</ul>
+
+<blockquote>
+  <p>SNR vs Distance Regression<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis4_snr_distance.png" alt="SNR vs Distance Regression" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-5-tx-vs-rx-asymmetry-local-noise-floor-test">Analysis 5: TX vs RX Asymmetry (Local Noise Floor Test)</h3>
+
+<p>This comparison uses reciprocal paths involving KD3CCO as both transmitter and receiver.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Compare how the transmit and receive paths perform for the same remote station and band.</li>
+  <li>Reveal whether one direction is consistently stronger, which can indicate local noise, feedline loss, or antenna imbalance.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>The histogram of <code class="language-plaintext highlighter-rouge">SNR_delta</code> shows whether TX or RX is generally stronger.</li>
+  <li>Values above zero mean TX reports stronger signals than RX.</li>
+  <li>Values below zero mean RX reports stronger signals than TX.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>A positive skew suggests the receive path may be suffering from higher local noise or lower sensitivity.</li>
+  <li>A negative skew suggests the transmit path may have more loss or less effective radiation.</li>
+  <li>A distribution centered near zero indicates roughly symmetric link performance in both directions.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li>Only 11 paired measurements were matched within a ±20 minute window — a much smaller sample than the 38 pairs in the 75-10m EFHW dataset, as expected from a 30-minute capture.</li>
+  <li>Mean <code class="language-plaintext highlighter-rouge">SNR_delta</code> = +1.1 dB, median = +4 dB.</li>
+  <li>6 pairs were positive and 5 were negative — close to an even split.</li>
+  <li>Largest deltas in either direction:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">KD2CLR</code> on 40m: +24 dB (TX stronger)</li>
+      <li><code class="language-plaintext highlighter-rouge">N4JJS</code> on 40m: -21 dB (RX stronger)</li>
+      <li><code class="language-plaintext highlighter-rouge">KB3EDF</code> on 40m: +16 dB (TX stronger)</li>
+      <li><code class="language-plaintext highlighter-rouge">KA3SKN</code> on 40m: -16 dB (RX stronger)</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>This is much closer to symmetric than my home EFHW’s persistent +6.3 dB TX-favoring skew from the 75-10m dataset.</li>
+  <li>That tracks with the deployment context: this antenna was tested out in an open field on a temporary mast, away from the house, rather than feedpoint-mounted a few inches off the siding the way my EFHW is. Less proximity to household electrical noise on receive would plausibly close that asymmetry gap.</li>
+  <li>With only 11 pairs, this is suggestive rather than conclusive — a longer capture would be needed to confirm whether the near-zero skew holds up.</li>
+</ul>
+
+<blockquote>
+  <p>TX vs RX Asymmetry<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis5_tx_rx_asymmetry.png" alt="TX vs RX Asymmetry" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-6-azimuthal-pattern-mapping">Analysis 6: Azimuthal Pattern Mapping</h3>
+
+<p>This polar map shows spot direction and distance for KD3CCO transmissions.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Map how signal strength and path length vary with bearing from the station.</li>
+  <li>Identify favored antenna lobes and weak nulls in the horizontal plane.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>Angle corresponds to compass bearing.</li>
+  <li>Radius corresponds to path distance.</li>
+  <li>Color corresponds to received SNR, so brighter points show stronger paths.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Strong clusters in certain directions may reveal directional gain or propagation favoring those headings.</li>
+  <li>Low-density sectors may indicate nulls or blocked bearings.</li>
+  <li>Comparing distance and color helps separate directional propagation from antenna pattern effects.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li>This rigid V dipole is hand-steerable per the <a href="/hamradio/articles/portable-mast-build/">portable mast build</a>, and for this test it was oriented approximately north-to-south, which puts its broadside lobes pointing east and west.</li>
+  <li>Azimuth of TX spots ranges from 5° to 331°, mean ≈ 181°, std ≈ 96°.</li>
+  <li>Splitting spots into compass quadrants: 34.7% fall in the east sector (azimuth 20–160°) and 47.2% fall in the west sector (200–340°) — 81.9% combined. Only 2.6% fall in the narrow north sector (&gt;340° or &lt;20°) and 15.5% in the south sector (160–200°).</li>
+  <li>The moderate-DX paths (Greece, Poland, ~45–55°) sit inside the east lobe, while the Argentina path (~172°) sits right at the edge of the south null and the Australia path (~304°) sits inside the west lobe.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>This lines up well with basic dipole theory: with the wire running roughly north-south, the antenna should radiate most strongly broadside to itself (east/west) and weakest off the ends (north/south) — and that’s exactly the lopsided 81.9% vs. 18.1% split seen here.</li>
+  <li>The Australia path, despite being the most extreme distance in the whole dataset, came in through the west lobe, not through some odd off-axis direction — consistent with it riding the antenna’s actual main lobe rather than being a fluke through a null.</li>
+  <li>The Argentina contact sitting near the south null is the one result that doesn’t fit cleanly; that’s more likely explained by a strong enough path on the night to punch through a weaker lobe than by the antenna pattern itself.</li>
+  <li>Unlike my home EFHW, which has a single fixed, known wire azimuth, this V is hand-steered and could be re-oriented for a future test — repeating this capture with the V turned 90° (east-west wire, lobes north-south) would be a good way to confirm this pattern is really coming from the antenna and not just the night’s propagation.</li>
+</ul>
+
+<blockquote>
+  <p>Azimuthal Pattern Mapping<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis6_azimuthal_pattern.png" alt="Azimuthal Pattern Mapping" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-7-band-by-band-efficiency-normalization">Analysis 7: Band-by-Band Efficiency Normalization</h3>
+
+<p>This analysis compares <code class="language-plaintext highlighter-rouge">k/W</code> across bands for stations that heard KD3CCO on 3 or more bands, to normalize path reach by transmitted power and compare relative efficiency across frequencies.</p>
+
+<p><strong>Skipped for this dataset:</strong> it requires remote stations heard on 3 or more distinct bands, and this capture has only one band present (40m), so there’s no cross-band comparison to make. This antenna is purpose-built for 40m only, so this analysis would only become meaningful if the same station were tested across several bands in one capture.</p>
+
+<hr />
+
+<h3 id="analysis-8-take-off-angle-inference-via-minimum-skip-boundaries">Analysis 8: Take-Off Angle Inference via Minimum Skip Boundaries</h3>
+
+<p>This analysis examines the shortest paths on the higher bands, which informs the likely takeoff angle and near-skip zone.</p>
+
+<p><strong>Skipped for this dataset:</strong> it only looks at the higher bands (20m, 17m, 15m, 12m, 10m), none of which are present in a 40m-only dataset. This isn’t a gap in the antenna’s performance, just outside this analysis’s scope here — for what it’s worth, the <a href="/hamradio/articles/portable-mast-build/#mast-height-vs-wavelength-nvis-or-dx">Mast Height vs. Wavelength discussion</a> in the mast build article already predicts this antenna sits at roughly 0.22λ on 40m, solidly in NVIS territory, which lines up with the regional-heavy, occasionally-DX-punctuated pattern seen in Analyses 2 and 4 above.</p>
+
+<hr />
+
+<h3 id="analysis-9-ssb-qso-feasibility-and-minimum-power-mapping">Analysis 9: SSB QSO Feasibility and Minimum Power Mapping</h3>
+
+<p>This analysis estimates whether each WSPR spot’s path could plausibly support a voice (SSB) contact, and the minimum radio output power that would be required.</p>
+
+<p>WSPR SNR is reported relative to a ~2500 Hz reference bandwidth, which is close to a typical SSB receive bandwidth. That means a spot’s reported SNR scales directly with TX power: running the same station harder by <code class="language-plaintext highlighter-rouge">X</code> dB raises the SNR by the same <code class="language-plaintext highlighter-rouge">X</code> dB. Feedline loss and antenna gain are properties of the station, not the path, so as long as the same antenna and feedline are used for the WSPR transmission and the hypothetical SSB attempt, they cancel out of this power ratio and aren’t modeled as separate inputs.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Identify which spots in the dataset already represent a workable SSB path, and which would need more power than the radio can provide.</li>
+  <li>Quantify the minimum TX power required, spot by spot, to clear a configurable SSB SNR margin (default 3 dB).</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">required_tx_power_w</code> is the radio output power needed to raise that spot’s SNR to the configured minimum.</li>
+  <li>Spots with <code class="language-plaintext highlighter-rouge">can_make_ssb_qso == True</code> are achievable within the configured maximum radio power (default 100 W); the rest would need more power than is available.</li>
+  <li>The per-band maps color each path’s great-circle line by the required power (jet colormap); paths that can’t meet the SSB threshold within the configured maximum power are shown in gray and drawn beneath the others so the most favorable (lowest-power) paths stand out on top.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>A high fraction of gray paths on a band suggests SSB is impractical there at the current power level.</li>
+  <li>Clusters of low-power (favorable) paths point to directions/bands where an SSB QSO is comfortably within reach.</li>
+  <li>Bands where most spots already clear the threshold at low power are good candidates to actually attempt an SSB contact.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code></strong> (3 dB minimum margin, 100 W maximum radio power):</p>
+<ul>
+  <li>40m is the only band present, and it has a phone allocation, so nothing is excluded here. Of 826 spots, 515 (62.3%) could plausibly support an SSB QSO within 100 W.</li>
+  <li>Median required power across all spots: ≈39.7 W.</li>
+  <li>All of KD3CCO’s own WSPR transmissions in this capture ran at a fixed 5 W.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>This pass rate (62.3%) is noticeably better than the 75-10m EFHW’s own 40m figure from the other dataset (55.1% at a median 79.4 W) — consistent with this capture being even more weighted toward short, high-SNR regional contacts.</li>
+  <li>A would-be SSB contact on this antenna is realistic at modest power for the majority of this capture’s paths, which is a good sign for actually working stations on phone with this antenna in the field, not just logging WSPR beacons.</li>
+</ul>
+
+<blockquote>
+  <p>40m — SSB QSO Feasibility Map<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis9_ssb_qso_40m_screenshot.png" alt="40m SSB QSO Feasibility Map" /><br />
+<a href="/hamradio/assets/40m_loaded_dipole_ssb_qso_40m.html" target="_blank">Open interactive 40m map</a></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-10-interactive-folium-path-map">Analysis 10: Interactive Folium Path Map</h3>
+
+<p>This analysis creates a folium map showing the transmit and receive paths across bands.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Explore the geographic footprint and path geometry interactively.</li>
+  <li>Separate transmit and receive directions to reveal asymmetry in the visible propagation paths.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>Each path line represents a WSPR spot connection and follows the geodesic (great circle) path between TX and RX grid squares.</li>
+  <li>Use the checkboxes to filter by band and direction.</li>
+  <li>Popup details include TX/RX callsigns, grid locators, SNR, and path distance.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>:</strong></p>
+<ul>
+  <li>An interactive HTML map is saved alongside this article’s assets.</li>
+  <li>Since only 40m is present, the map’s band filter has just one option, but the <code class="language-plaintext highlighter-rouge">heard</code> vs <code class="language-plaintext highlighter-rouge">heard_by</code> role filter still separates KD3CCO’s TX and RX paths.</li>
+  <li>The broad North American fan is immediately visible, along with the small number of long lines reaching into Europe, South America, and the single line stretching to Western Australia.</li>
+</ul>
+
+<p><strong>Interpretation:</strong></p>
+<ul>
+  <li>The map confirms the same pattern shown statistically in Analyses 2–4: a wide regional base with a few standout long-haul paths layered on top.</li>
+</ul>
+
+<p><a href="/hamradio/assets/40m_loaded_dipole_spots_map.html" target="_blank">Link to Interactive Map</a></p>
+
+<blockquote>
+  <p>Screenshot of Interactive Map<br />
+<img src="/hamradio/assets/images/40m_center_loaded_dipole_wspr_analysis/analysis10_spots_map_screenshot.png" alt="Screenshot of Interactive Map" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-how-to-run-and-reproduce">2. How to run and reproduce</h2>
+
+<p>Open <code class="language-plaintext highlighter-rouge">wspr_7510_analysis.ipynb</code> in Jupyter, change <code class="language-plaintext highlighter-rouge">TSV_FILENAME</code> in the configuration cell to <code class="language-plaintext highlighter-rouge">40m_loaded_dipole_30ft_mast_spots.tsv</code>, and execute all cells in order. <code class="language-plaintext highlighter-rouge">CALLSIGN</code> stays <code class="language-plaintext highlighter-rouge">KD3CCO</code> since that’s the station that ran the WSPR session during this test.</p>
+
+<p>Dependencies:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pandas</code></li>
+  <li><code class="language-plaintext highlighter-rouge">numpy</code></li>
+  <li><code class="language-plaintext highlighter-rouge">matplotlib</code></li>
+  <li><code class="language-plaintext highlighter-rouge">seaborn</code></li>
+  <li><code class="language-plaintext highlighter-rouge">folium</code></li>
+  <li><code class="language-plaintext highlighter-rouge">geopy</code></li>
+</ul>
+
+<p>The notebook reads the TSV, builds derived fields, runs ten analyses, and displays the results while saving the key images and interactive maps. Analysis 9 (SSB QSO feasibility) and Analysis 10 (interactive path map) both use the helper module <code class="language-plaintext highlighter-rouge">wspr_folium_map.py</code> to generate their maps.</p>
+
+<p>Analyses 1, 2, 4, and 8 adapt automatically to however many bands are present in a dataset. Analysis 7 specifically requires stations heard on 3 or more distinct bands, and Analysis 8 only looks at bands above 20m — both skip themselves as designed on this single-band, 40m-only capture.</p>
+
+<hr />
+
+<h2 id="3-conclusions-from-this-dataset">3. Conclusions from this dataset</h2>
+
+<ol>
+  <li><strong>The most notable result is a sustained, repeated opening to Western Australia (18,429 km) on a 5 W, electrically very low, temporarily-deployed 40m dipole.</strong> <code class="language-plaintext highlighter-rouge">VK6PVL</code> was decoded 5 separate times across the 30-minute test, so this wasn’t a fluke — it was a real long-path opening that this antenna and this short test session happened to catch.</li>
+  <li><strong>The bulk of the capture is dominated by short, regional, high-SNR contacts</strong>, with a mean distance (1,803 km) that’s nearly identical to my home EFHW’s own 40m mean from a completely different antenna, location, and a 3-hour-longer capture window. This lines up with the <a href="/hamradio/articles/portable-mast-build/#mast-height-vs-wavelength-nvis-or-dx">Mast Height vs. Wavelength analysis</a> predicting this antenna sits around 0.22λ up on 40m, solidly in NVIS-favoring territory.</li>
+  <li><strong>TX/RX asymmetry was close to neutral here</strong> (+1.1 dB mean, nearly an even split of positive/negative pairs), in contrast to the home EFHW’s persistent +6.3 dB TX-favoring skew — plausibly because this test happened in an open field away from household electrical noise, though the sample size (11 pairs) is small.</li>
+  <li><strong>SSB is realistically achievable for most of this capture’s paths</strong> — 62.3% clear a 3 dB margin within 100 W, at a median requirement of just ~40 W — a better showing than the home EFHW’s 40m figure, likely because this capture skews even more regional.</li>
+  <li><strong>The azimuthal pattern matches basic dipole theory.</strong> With the V oriented roughly north-south, 81.9% of spots fell in the broadside east/west sectors versus only 18.1% off the ends — including the Australia DX path, which arrived through the west lobe rather than some odd off-axis direction.</li>
+  <li><strong>This was a short, single-band, proof-of-concept capture</strong>, not a multi-hour propagation study. It’s enough to confirm the antenna and mast both work, catch one notable DX opening, and see a believable dipole lobe pattern, but a longer capture — and ideally a repeat with the V rotated 90° — would be needed to properly characterize this antenna’s day-to-day behavior and confirm the lobe pattern isn’t just coincidental to this one night’s propagation.</li>
+</ol>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>
