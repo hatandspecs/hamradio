@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGENTS.md — hamradio-source (the blog) | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>AGENTS.md — hamradio-source (the blog)</h1>
+    
+  </header>
+
+  <main>
+    <h1 id="agentsmd--hamradio-source-the-blog">AGENTS.md — hamradio-source (the blog)</h1>
+
+<p>The Jekyll source for my amateur radio site, published at
+<code class="language-plaintext highlighter-rouge">hatandspecs.github.io/hamradio/</code>. It is a peer of my project repositories and
+gets updated alongside them, so a project advance and its write-up land together.</p>
+
+<h2 id="layout">Layout</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Path</th>
+      <th>Holds</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_articles/&lt;slug&gt;.md</code></td>
+      <td>One article each, with YAML front matter</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">assets/images/&lt;slug&gt;/</code></td>
+      <td>That article’s images</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">_config.yml</code></td>
+      <td><code class="language-plaintext highlighter-rouge">baseurl: /hamradio</code>, permalink <code class="language-plaintext highlighter-rouge">/articles/:name/</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PUBLISHING.md</code></td>
+      <td>How it gets built and published</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Reference images with the Jekyll helper, not a bare path:
+<code class="language-plaintext highlighter-rouge">/hamradio/assets/images/%3Cslug%3E/%3Cfile%3E</code>.</p>
+
+<h2 id="things-that-cost-a-lot-to-rediscover">Things that cost a lot to rediscover</h2>
+
+<ul>
+  <li><strong>Do not rewrite a published article’s narrative.</strong> Add a dated update
+section instead. The wrong turns are why these are worth reading, and
+quietly correcting them removes the value.</li>
+  <li><strong>When the update contradicts something earlier in the piece, say so
+explicitly.</strong> Do not silently edit the earlier claim, and do not leave the
+contradiction standing unremarked.</li>
+  <li><strong>No British spellings.</strong> <code class="language-plaintext highlighter-rouge">cspell.json</code> is in the repository.</li>
+  <li><strong>Check every image before adding it.</strong> Phone numbers appear in radio screens
+and log captures; coordinates appear in beacon lines and aprs.fi station
+pages; backgrounds show rooms. Redact and say what you redacted.</li>
+  <li><strong>Beacon coordinates in this project are the center of a 6-character grid
+square</strong>, deliberately rounded. Do not add anything that undoes that — two
+precise distances and bearings to known stations will triangulate a house.</li>
+  <li><strong>cspell runs in CI over every <code class="language-plaintext highlighter-rouge">**/*.md</code></strong>, so it reads image filenames too.
+A slug fragment that is not a word — <code class="language-plaintext highlighter-rouge">vna</code> in <code class="language-plaintext highlighter-rouge">vna-20m-beach.jpg</code>, for
+instance — fails the build until it is added to <code class="language-plaintext highlighter-rouge">cspell.json</code>.</li>
+</ul>
+
+<h2 id="articles-and-their-projects">Articles and their projects</h2>
+
+<p>Each write-up has a repository: the APRS iGate, the cyberdeck, the FTX-1 tuner
+sweep, and several WSPR analyses. Keep claims in an article consistent with the
+design document in the matching repository, and prefer the more conservative of
+the two when they disagree.</p>
+
+<h2 id="how-i-work--standing-preferences">How I work — standing preferences</h2>
+
+<p>These are the same in every repository of mine. They are restated in each one
+so that any assistant reads them, not only the one configured on my machine.</p>
+
+<p><strong>Git is mine.</strong> Never run <code class="language-plaintext highlighter-rouge">git commit</code> or <code class="language-plaintext highlighter-rouge">git push</code>, in any repository, for
+any reason. Reading history is encouraged — <code class="language-plaintext highlighter-rouge">log</code>, <code class="language-plaintext highlighter-rouge">diff</code>, <code class="language-plaintext highlighter-rouge">status</code>, <code class="language-plaintext highlighter-rouge">show</code> —
+and so is telling me when a good commit point has been reached, or drafting a
+commit message for me to use. Finish the work, leave it uncommitted, and say
+what changed and where.</p>
+
+<p><strong>Hardware is mine.</strong> Do not build SD-card images, <code class="language-plaintext highlighter-rouge">rsync</code> to a device, open an
+<code class="language-plaintext highlighter-rouge">ssh</code> session to one, or run anything on a Raspberry Pi or the cyberdeck unless
+I ask in that message. Hand me the exact commands to copy and paste — one block
+per step, in order — say what each should print, and stop. I will run them and
+paste the output back. Local work in the repository needs no such restraint.</p>
+
+<p><strong>Writing.</strong> No British spellings; US throughout. Design documents are
+declarative: no hero’s-journey narrative, no second-person “you”, and never
+state something as fact and then refute it a few lines later. For an article
+already published, add a dated update section rather than rewriting the
+narrative — the wrong turns are part of why it is worth reading. Do not repeat
+a warning I have already acknowledged.</p>
+
+<p><strong>Images.</strong> Look at any photograph or screenshot before adding it to an
+article, a slide deck, or a repository. Phone numbers show up in radio screens
+and log captures, coordinates show up in beacon lines and station pages, and
+backgrounds show rooms. Say what you found and redact it rather than guess.</p>
+
+<p><strong>Destructive commands.</strong> <code class="language-plaintext highlighter-rouge">/dev/sdX</code> stays a placeholder in any flashing or
+disk-writing instructions. Never substitute a real device node.</p>
+
+<p><strong>Amateur radio.</strong> Test traffic uses my own callsign and its SSIDs — never
+another operator’s call, unless I explicitly ask for one.</p>
+
+<p><strong>Working style.</strong> I start fresh sessions often rather than carrying one for
+weeks, so assume no memory of previous conversations. Everything you need
+should be in this file or in the documents it points at.</p>
+
+<p><strong>Keeping this file true is part of the work.</strong> Anything dated here records
+what was true on that date, not what is true now — check it against the
+repository before relying on it, and correct it when it is wrong. When a
+session has changed how the project works, turned up a gotcha worth the next
+session not rediscovering, or outdated something in a “where it stands”
+section, propose the edit to this file before the session ends. Do not wait to
+be asked, and do not save it for a tidy-up later: the next session starts cold,
+and this file is most of what it gets.</p>
+
+  </main>
+
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+</body>
+</html>
