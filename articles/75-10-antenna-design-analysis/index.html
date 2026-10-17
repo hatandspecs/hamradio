@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theory of Operation for a 75-10 EFHW Design | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Theory of Operation for a 75-10 EFHW Design</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: June 06, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p><strong>A full-length 80m end-fed half-wave antenna tuned to 75m phone by series capacitor, with inductor coil harmonic correction on the upper bands</strong></p>
+
+<p>This is an analysis and pontification on a very popular EFHW antenna design that works on 8 bands from 75m to 10m.  I built a DIY version of one of these and have been fascinated with how the complicating elements such as the wideband 56:1 unun with unconventional wind, the inductive compensation coil and the midpoint capacitor are actually working.  Initially I just built the design as specified online and based on pictures of other builds and then tuned it according to instructions/rules of thumb.  Now I’m trying to figure out “why”.</p>
+
+<blockquote>
+  <p>Hand-drawn Schematic of the 75-10m Antenna Design
+<img src="/hamradio/assets/images/wideband_unun/hand_drawn_schematic.jpg" alt="Hand-drawn Schematic of the 75-10m Antenna Design" /></p>
+</blockquote>
+
+<blockquote>
+  <p>Close up of the Adjustable PVC Compensation Coil
+<img src="/hamradio/assets/images/wideband_unun/compensation_coil.jpg" alt="Close up of the Adjustable PVC Compensation Coil" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="part-i-the-basic-idea">Part I: The Basic Idea</h2>
+
+<p>An end-fed half-wave antenna (EFHW) is a single wire, fed at one end, cut to approximately a half wavelength at the lowest operating frequency. What makes it useful to me as a multiband antenna is a basic fact about harmonics: a wire that is a half wavelength long at some frequency is also a full wavelength at twice that frequency, three half-wavelengths at three times that frequency, and so on.  I am also antenna-mounting-point deprived, so I can mount EFHW antennas easily between my house and a mast I put up in my yard. The wire resonates at all integer multiples of its fundamental, which means a single piece of wire can work on many bands at once, provided those bands line up with the harmonics.</p>
+
+<p>For an 80m wire, the harmonics fall near 80m, 40m, 20m, 15m, and 10m. That is a convenient set of frequencies, because those are several of the major HF amateur bands.</p>
+
+<h3 id="efhw-non-ideal-aspects">EFHW Non-ideal Aspects</h3>
+
+<p>A half-wave wire fed at its end presents a very high impedance, on the order of thousands of ohms, rather than the 50 ohms a modern transceiver expects. This is a direct consequence of where you are feeding the wire relative to its standing wave. At the end of a resonant wire, voltage is at a maximum and current is at a minimum. Impedance is voltage divided by current, so at the end of the wire, impedance is very high. A transformer, typically a 49:1 (or in my case 56:1) unun wound on a ferrite core, handles this mismatch by stepping the antenna’s impedance down to something close to 50 ohms for the feedline.</p>
+
+<p>Another non-ideal aspect of EFHWs is that they can create common mode current on the shield of the feedline coax.  This creates issues like RF in the shack and noise.  The way to deal with this problem is to build your EFHW antenna with its own dedicated counterpoise wire, attached to the unun ground lug, and to add a beefy common mode choke to the feedline right after the unun.</p>
+
+<h3 id="the-75m-phone-problem">The 75m Phone Problem</h3>
+<p>A full 80m EFHW is roughly 136 feet long and resonates near 3.5 MHz, the CW end of the band. Builders who want to work 75m phone need the fundamental resonance somewhere around 3.85 MHz instead. The obvious fix is to shorten the wire, and many builders do exactly that.</p>
+
+<p>The problem with physical shortening is that it shifts every harmonic upward by the same percentage. Shorten the wire enough to move the fundamental from 3.5 to 3.85 MHz and every other resonance shifts up by the same 10%. The 40m harmonic drifts up toward 7.7 MHz. The 20m harmonic drifts up proportionally. You have solved the 75m problem at the cost of cascading misalignment through every other band.</p>
+
+<p>The design described in this article takes a different approach. Instead of shortening the wire, it keeps the wire at nearly its full 80m length and places a series capacitor at the wire’s midpoint. The capacitor adds series reactance that electrically shortens the antenna’s apparent length at the fundamental frequency, pulling the resonance up from 3.5 MHz into the 75m phone segment, without physically disturbing the wire length that the upper band harmonics depend on. After a small amount of wire trimming to finish the tuning, the wire ends up around 130 to 134 feet rather than the 118 to 125 feet that physical shortening would require. The upper band harmonics stay close to their natural positions, and a small inductor coil near the feedpoint handles whatever residual correction they need.</p>
+
+<p>At 300 pF and 3.85 MHz, it presents about 138 ohms of series reactance, which is large enough to meaningfully shift the fundamental resonance of the full wire upward into 75m phone territory. It is acting as a frequency-selective electrical shortener at the fundamental while becoming increasingly transparent at higher frequencies where its reactance drops. At 28 MHz its reactance is only about 19 ohms, so the upper bands see essentially the full wire.</p>
+
+<p>A resistor appears in parallel with the capacitor. It is not an RF element. It is a static bleed resistor, typically around 150k ohms, that provides a DC path across the series capacitor. Because the capacitor breaks the wire at the midpoint, the far section of wire has no DC connection to ground through the feedpoint. Static charge can accumulate on that far section from wind, precipitation, and normal atmospheric charge separation. The resistor lets that charge drain continuously rather than building until it arcs. At RF frequencies, 150k ohms is so far above the capacitor’s reactance that it has no meaningful effect on antenna behavior.</p>
+
+<h3 id="pulling-down-the-upper-band-resonances-a-bit">Pulling Down the Upper Band Resonances a Bit</h3>
+<p>The inductor coil near the feedpoint is a lumped inductive element that is small enough to act as a small perturbation. It nudges the upper band harmonics that drifted slightly high during wire trimming and non-idealities of the deployment back down into their correct positions, with an effect on each band that is precisely predictable from the wave physics of the wire.</p>
+
+<p>To understand why the inductor coil affects some bands more than others, and why its placement can be used to tune the upper band resonances, you need a picture of how standing waves distribute themselves along a wire. The clearest path to that picture runs through a mechanical analogy.</p>
+
+<hr />
+
+<h2 id="part-ii-the-guitar-string-analogy">Part II: The Guitar String Analogy</h2>
+
+<p>Imagine a guitar string stretched between two fixed endpoints. Pluck it, and it vibrates. The simplest vibration, the fundamental mode, has the entire string moving together, with maximum displacement at the center and no motion at the endpoints. At twice the fundamental frequency, the string vibrates in two halves, with a stationary point at the center. At three times the fundamental, it vibrates in three segments. The stationary points are called nodes, and the points of maximum displacement are called antinodes.</p>
+
+<p>Now clip a small split-shot fishing weight to the string at some location. Mass resists acceleration: it takes more force to move something heavy than something light. If you put the weight at a node, it has almost no effect, because that point is not moving anyway and the added resistance to motion does not matter. If you put it at an antinode, the point the string is most actively trying to move, it has the maximum possible effect. The weight fights the motion at that point and lowers the resonant frequency of that mode.</p>
+
+<p>The key insight is that different modes have their antinodes in different places. A weight at the quarter point of the string sits at the antinode of the second harmonic, which has antinodes at the quarter and three-quarter points. But the fourth harmonic has a node at the quarter point, so the same weight barely affects the fourth harmonic at all. You can selectively shift some modes down while leaving others nearly alone, just by choosing where to place the weight. Moving the weight changes which modes are affected most.</p>
+
+<p>This is not a loose analogy for what happens on the antenna wire. It is the same mathematics running on the same underlying physics.  Apparently, waves and fields behave the same regardless of medium, and can be described with the same mathematics regardless of medium.  While this fact is something that physicists know like the back of their hand, this is quite amazing to think about for me.</p>
+
+<h3 id="the-correspondence-velocity-and-current">The Correspondence: Velocity and Current</h3>
+
+<p>I have recently learned that the standard mapping between the mechanical string and the electromagnetic wire is this: the transverse velocity of the string corresponds to the current on the wire, and the transverse displacement of the string corresponds to the voltage on the wire.</p>
+
+<p>This mapping is convenient because of where the energy lives. On the string, kinetic energy is stored in the moving mass and is proportional to velocity squared. On the wire, magnetic energy is stored in the inductance and is proportional to current squared. Potential energy on the string is stored in the tension and is proportional to displacement gradient squared. Electric energy on the wire is stored in the capacitance and is proportional to voltage squared. Matching the energy storage forms gives the correct correspondence.</p>
+
+<p>An inductor is a device that pays attention to current. It stores energy in its magnetic field in proportion to the current flowing through it. It resists changes in current the same way mass resists changes in velocity. This is why the split-shot weight is the right mechanical analog for the inductor coil: both resist changes in their respective quantities, both store energy proportional to the square of that quantity, and both shift resonant frequencies downward in proportion to the square of the relevant quantity at their placement location.</p>
+
+<p>A capacitor is a device that pays attention to voltage. It stores energy in its electric field in proportion to the voltage across it. It resists changes in voltage the same way a spring resists changes in displacement. A spring added to a vibrating string at a point of large displacement strongly affects modes with large displacement there and barely affects modes with small displacement there. A capacitor placed on a wire at a point of large voltage strongly affects modes with large voltage there and barely affects modes with small voltage there.</p>
+
+<p>On the resonant wire, voltage and current are spatially 90 degrees out of phase: where current is maximum, voltage is zero, and where voltage is maximum, current is zero. This means an inductor and a capacitor placed at the same point on the wire affect different sets of modes. The inductor maximally affects modes with a current antinode there. The capacitor maximally affects modes with a voltage antinode there, which are exactly the modes with a current node at that point.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mechanical</th>
+      <th>Electromagnetic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Transverse velocity $\partial y / \partial t$</td>
+      <td>Current $I$</td>
+    </tr>
+    <tr>
+      <td>Transverse displacement $y$</td>
+      <td>Voltage $V$</td>
+    </tr>
+    <tr>
+      <td>Point mass $m$</td>
+      <td>Lumped inductance $\ell$</td>
+    </tr>
+    <tr>
+      <td>Spring compliance $\kappa$</td>
+      <td>Lumped capacitance $C$</td>
+    </tr>
+    <tr>
+      <td>Total string mass $M = \mu L$</td>
+      <td>Total distributed inductance $L_{dist} L$</td>
+    </tr>
+    <tr>
+      <td>Linear mass density $\mu$</td>
+      <td>Distributed inductance per unit length $L_{dist}$</td>
+    </tr>
+    <tr>
+      <td>String tension $T$</td>
+      <td>Reciprocal of distributed capacitance $1/C_{dist}$</td>
+    </tr>
+    <tr>
+      <td>Wave speed $\sqrt{T/\mu}$</td>
+      <td>Wave speed $1/\sqrt{L_{dist} C_{dist}}$</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="part-iii-the-wave-equation">Part III: The Wave Equation</h2>
+
+<p>Both the vibrating string and the resonant antenna wire are governed by the one-dimensional wave equation:</p>
+
+\[\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}\]
+
+<p>where $u(x,t)$ is the relevant physical quantity, $x$ is position along the wire or string, $t$ is time, and $c$ is the wave propagation speed.</p>
+
+<p>For the mechanical string:</p>
+
+\[c_{string} = \sqrt{\frac{T}{\mu}}\]
+
+<p>where $T$ is the string tension and $\mu$ is the linear mass density in mass per unit length.</p>
+
+<p>For the antenna wire, treated as a transmission line:</p>
+
+\[c_{line} = \frac{1}{\sqrt{L_{dist} \cdot C_{dist}}}\]
+
+<p>where $L_{dist}$ is the distributed inductance per unit length and $C_{dist}$ is the distributed capacitance per unit length.</p>
+
+<p>These are formally the same expression. The physics does not know whether it is modeling a string or a wire. It sees a one-dimensional system in which a disturbance propagates at speed $c$ and reflects at the boundaries. The guitar string analogy works precisely because it is the same equation.</p>
+
+<h3 id="boundary-conditions">Boundary Conditions</h3>
+
+<p>The shape of the allowed modes depends on the boundary conditions at the ends of the wire. For the EFHW:</p>
+
+<ul>
+  <li>At the feedpoint ($x = 0$): voltage is at a maximum and current is zero. This is a current node and a voltage antinode.</li>
+  <li>At the far end ($x = L$): the wire simply stops, so current has nowhere to go and is again zero, while voltage is again at a maximum. This is also a current node and a voltage antinode.</li>
+</ul>
+
+<p>Both ends being open is what makes this a half-wave structure rather than a quarter-wave one: the current has to fall to zero at each end, and the shortest distribution that does so while having a maximum in between is a half wavelength.</p>
+
+<p>These boundary conditions give the following mode shapes. The current distribution for mode $n$ is:</p>
+
+\[I_n(x) = I_0 \sin\!\left(\frac{n\pi x}{L}\right), \quad n = 1, 2, 3, \ldots\]
+
+<p>and the corresponding voltage distribution is:</p>
+
+\[V_n(x) = V_0 \cos\!\left(\frac{n\pi x}{L}\right)\]
+
+<p>The sine and cosine are spatially 90 degrees out of phase, which is the mathematical expression of the fact that current maxima and voltage maxima never occur at the same point on the wire. The resonant frequencies are:</p>
+
+\[f_n = \frac{n \cdot c \cdot k_v}{2L}\]
+
+<p>where $k_v$ is the velocity factor of the wire (typically 0.95 to 0.98 for bare wire in free space) and $c = 3 \times 10^8$ m/s.</p>
+
+<hr />
+
+<h2 id="part-iv-finding-the-nodes-and-antinodes">Part IV: Finding the Nodes and Antinodes</h2>
+
+<h3 id="current-antinodes">Current Antinodes</h3>
+
+<p>The current distribution is $I_n(x) = I_0 \sin(n\pi x / L)$. The current antinodes, the points of maximum current magnitude, occur where the sine function reaches its peak:</p>
+
+\[x_{I,max} = \frac{(2k-1)L}{2n}, \quad k = 1, 2, \ldots, n\]
+
+<p>This gives $n$ antinodes per mode. For a wire of $L \approx 132$ ft (close to full 80m length, trimmed slightly during tuning), the antinode positions for each amateur band are:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>$n$</th>
+      <th>Current antinode positions (feet from feedpoint)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75m</td>
+      <td>1</td>
+      <td>66</td>
+    </tr>
+    <tr>
+      <td>40m</td>
+      <td>2</td>
+      <td>33, 99</td>
+    </tr>
+    <tr>
+      <td>30m</td>
+      <td>3</td>
+      <td>22, 66, 110</td>
+    </tr>
+    <tr>
+      <td>20m</td>
+      <td>4</td>
+      <td>16.5, 49.5, 82.5, 115.5</td>
+    </tr>
+    <tr>
+      <td>17m</td>
+      <td>5</td>
+      <td>13.2, 39.6, 66, 92.4, 118.8</td>
+    </tr>
+    <tr>
+      <td>15m</td>
+      <td>6</td>
+      <td>11, 33, 55, 77, 99, 121</td>
+    </tr>
+    <tr>
+      <td>12m</td>
+      <td>7</td>
+      <td>9.4, 28.3, 47.1, 66, 84.9, 103.7, 122.6</td>
+    </tr>
+    <tr>
+      <td>10m</td>
+      <td>8</td>
+      <td>8.3, 24.8, 41.3, 57.8, 74.3, 90.8, 107.3, 123.8</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Higher harmonics pack more antinodes into the wire. Any fixed point near the feedpoint end of the wire is progressively closer to a current antinode of higher harmonics, simply because higher harmonics have more antinodes to distribute.</p>
+
+<h3 id="current-nodes">Current Nodes</h3>
+
+<p>The current nodes, points of zero current, occur where the sine function crosses zero:</p>
+
+\[x_{I,node} = \frac{kL}{n}, \quad k = 0, 1, 2, \ldots, n\]
+
+<p>The feedpoint itself ($x = 0$) is always a current node, for every mode. This is why the feedpoint sees high impedance on every band.</p>
+
+<h3 id="voltage-antinodes">Voltage Antinodes</h3>
+
+<p>The voltage distribution is $V_n(x) = V_0 \cos(n\pi x / L)$. Voltage antinodes occur at:</p>
+
+\[x_{V,max} = \frac{kL}{n}, \quad k = 0, 1, 2, \ldots, n\]
+
+<p>Voltage antinodes and current nodes occur at the same positions. The feedpoint is a voltage antinode on every band, which is consistent with the high voltage and high impedance there.</p>
+
+<h3 id="voltage-nodes">Voltage Nodes</h3>
+
+<p>Voltage nodes (zero voltage) occur at:</p>
+
+\[x_{V,node} = \frac{(2k-1)L}{2n}, \quad k = 1, 2, \ldots, n\]
+
+<p>Voltage nodes and current antinodes coincide. Wherever the current is at its peak, the voltage is at zero.</p>
+
+<hr />
+
+<h2 id="part-v-the-series-capacitor-as-electrical-shortener">Part V: The Series Capacitor as Electrical Shortener</h2>
+
+<p>Before getting to the perturbation method that governs the inductor coil, it is worth treating the series capacitor separately, because it is operating in a different regime entirely.</p>
+
+<p>A series capacitor inserted into a wire presents a frequency-dependent series reactance:</p>
+
+\[X_C = \frac{1}{2\pi f C}\]
+
+<p>This reactance is in series with the wire’s radiation resistance and distributed reactance. At lower frequencies where $X_C$ is large, the capacitor impedes current flow along the wire and effectively makes the wire look electrically shorter than it is. At higher frequencies where $X_C$ is small, the capacitor becomes nearly transparent and the wire behaves as its full physical length.</p>
+
+<p>For a 300 pF capacitor at the midpoint of the wire:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>Freq (MHz)</th>
+      <th>$X_C$ (ohms)</th>
+      <th>Capacitor behavior</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75m</td>
+      <td>3.85</td>
+      <td>138</td>
+      <td>significant series impedance, electrically shortens wire</td>
+    </tr>
+    <tr>
+      <td>40m</td>
+      <td>7.15</td>
+      <td>74</td>
+      <td>moderate impedance</td>
+    </tr>
+    <tr>
+      <td>30m</td>
+      <td>10.1</td>
+      <td>53</td>
+      <td>moderate impedance</td>
+    </tr>
+    <tr>
+      <td>20m</td>
+      <td>14.2</td>
+      <td>37</td>
+      <td>smaller impedance</td>
+    </tr>
+    <tr>
+      <td>17m</td>
+      <td>18.1</td>
+      <td>29</td>
+      <td>small impedance</td>
+    </tr>
+    <tr>
+      <td>15m</td>
+      <td>21.2</td>
+      <td>25</td>
+      <td>small impedance</td>
+    </tr>
+    <tr>
+      <td>12m</td>
+      <td>24.9</td>
+      <td>21</td>
+      <td>small impedance</td>
+    </tr>
+    <tr>
+      <td>10m</td>
+      <td>28.5</td>
+      <td>19</td>
+      <td>nearly transparent</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>At 75m, 138 ohms of series reactance is large enough to shift the apparent resonant frequency of the full 132 ft wire upward from about 3.5 MHz into the 75m phone segment around 3.85 MHz. This is the primary job of the capacitor. It is not nudging a resonance by a small amount; it is making a full-length 80m wire behave like a somewhat shorter wire at the fundamental frequency, without physically shortening it.</p>
+
+<p>At 10m, 19 ohms of series reactance is small compared to the antenna’s impedance environment, and the wire behaves essentially as its full physical length. The transition between these two regimes is gradual across the HF spectrum.</p>
+
+<p>This frequency selectivity is the key advantage over physical shortening. Physical shortening moves all harmonics upward together. The series capacitor preferentially affects the fundamental, where its reactance is highest, and has progressively less effect on higher harmonics where its reactance is lower. The upper band harmonics of the full-length wire are largely preserved, which is exactly what you observe when you tune this antenna: the upper bands stay reasonably well behaved when the capacitor is added, in a way they would not if you had simply trimmed 10% off the wire.</p>
+
+<p>The residual correction that the upper bands need after the capacitor does its job is handled by the inductor coil, which is where the perturbation method becomes the right framework.</p>
+
+<hr />
+
+<h2 id="part-vi-the-perturbation-method-and-the-inductor-coil">Part VI: The Perturbation Method and the Inductor Coil</h2>
+
+<p>The perturbation method is a way of calculating how a small addition to a system shifts its resonant frequencies, without having to solve everything from scratch. The central idea is that the frequency shift caused by a small lumped element is proportional to the ratio of the energy that element stores to the total energy of the mode being perturbed.</p>
+
+<p>A resonant wire oscillates by continuously exchanging energy between its magnetic field, stored in the distributed inductance and proportional to $I^2$, and its electric field, stored in the distributed capacitance and proportional to $V^2$. The resonant frequency is set by the balance between the two. A lumped inductor adds magnetic storage and nothing else, so it tips that balance and drags the frequency down — but only by as much extra energy as it actually gets to store, and that depends entirely on how much current flows through it.</p>
+
+<p>So the coil’s effect is decided by where you put it. Sitting where current is large for a given mode, it stores a lot of extra energy and pulls that mode down noticeably. Sitting where current is small, it stores almost nothing and barely moves that mode at all. This is the split-shot weight on the guitar string: maximum effect at an antinode, none at a node.</p>
+
+<h3 id="the-inductor-shift-equation">The Inductor Shift Equation</h3>
+
+<p>For a lumped inductance $\ell$ placed at position $x = d$ on a wire of length $L$ with distributed inductance $L_{dist}$ per unit length, the fractional frequency shift for mode $n$ is the extra magnetic energy the coil stores, divided by the energy already in the mode:</p>
+
+\[\frac{\Delta f_n}{f_n} \approx -\frac{\ell \cdot I_n(d)^2 / 2}{\displaystyle\int_0^L L_{dist}\, I_n(x)^2\, dx}\]
+
+<p>Here is where the word <em>perturbation</em> earns its place, and it is worth being explicit about it, because everything downstream depends on it. To evaluate that expression I am about to use the current distribution of the <strong>unperturbed</strong> wire — the plain $\sin(n\pi x / L)$ from Part III, as though the coil were not there at all. That is obviously not quite true: adding a coil does disturb the current distribution. The assumption is that it disturbs it <em>so little</em> that using the undisturbed shape introduces negligible error. That is what makes the whole method work, and it is also precisely what fails when the coil gets large, which is the reason this design goes to such lengths to keep the required correction down to a few percent.</p>
+
+<p>Substituting $I_n(x) = I_0 \sin(n\pi x / L)$, the numerator becomes $\ell I_0^2 \sin^2(n\pi d / L) / 2$, and the integral in the denominator works out to $L_{dist} L I_0^2 / 2$. The $I_0^2 / 2$ appears on both sides and cancels, which is worth noticing: the answer does not depend on how hard you are driving the antenna, only on the geometry. What is left is:</p>
+
+\[\frac{\Delta f_n}{f_n} \approx -\frac{\ell}{L_{dist} L} \sin^2\!\left(\frac{n\pi d}{L}\right)\]
+
+<p>Two pieces, and they do different jobs. The prefactor $\ell / (L_{dist} L)$ is the ratio of the lumped inductance to the total distributed inductance of the wire — a small number for a compact coil on a long wire, and it sets the overall <em>size</em> of the correction. It is the same for every band. Everything about <em>which</em> modes get shifted, and in what proportion to each other, is in the other factor:</p>
+
+\[\boxed{\Delta f_n \propto -\sin^2\!\left(\frac{n\pi d}{L}\right)}\]
+
+<p>The frequency shift of mode $n$ is proportional to the square of the sine evaluated at the coil’s fractional position along the wire. Choosing the coil’s inductance sets how much correction you have to spend; choosing its position decides how that correction is divided among the bands.</p>
+
+<h3 id="quantitative-estimation">Quantitative Estimation</h3>
+
+<p>To get a numerical prediction of the shift, you need the distributed inductance of the wire. For a wire of diameter $D$ at average height $h$ above ground:</p>
+
+\[L_{dist} \approx \frac{\mu_0}{2\pi} \ln\!\left(\frac{4h}{D}\right) \quad \text{(H/m)}\]
+
+<p>For a typical field deployment, say 22 AWG wire (diameter 0.644 mm) at 10m average height:</p>
+
+\[L_{dist} \approx \frac{4\pi \times 10^{-7}}{2\pi} \ln\!\left(\frac{40}{0.000644}\right) \approx 2 \times 10^{-7} \times 11.04 \approx 2.21\;\mu\text{H/m}\]
+
+<p>For a 132 ft (40.2 m) wire, total distributed inductance $L_{dist} L \approx 2.21 \times 40.2 \approx 89\;\mu\text{H}$.</p>
+
+<p>If the coil is $\ell = 4\;\mu\text{H}$ and sits at $d = L/16$ (about 8.3 feet from the feedpoint), the shift on 10m ($n = 8$) is:</p>
+
+\[\frac{\Delta f_8}{f_8} \approx -\frac{4}{89} \times \sin^2\!\left(\frac{8\pi}{16}\right) = -0.045 \times 1.0 = -4.5\%\]
+
+<p>At 28.5 MHz that is about 1.3 MHz of downward pull. On 75m ($n = 1$):</p>
+
+\[\frac{\Delta f_1}{f_1} \approx -\frac{4}{89} \times \sin^2\!\left(\frac{\pi}{16}\right) = -0.045 \times 0.038 \approx -0.17\%\]
+
+<p>At 3.85 MHz that is about 6.5 kHz. The coil is essentially invisible to the 75m fundamental.</p>
+
+<h3 id="effect-of-the-coil-at-d-approx-l16">Effect of the Coil at $d \approx L/16$</h3>
+
+<p>A coil placed approximately 8 feet from the feedpoint on a 132 ft wire sits at $d/L \approx 1/16$. The relative effect on each amateur band is:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>$n$</th>
+      <th>$\sin^2(n\pi/16)$</th>
+      <th>Relative pull-down</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75m</td>
+      <td>1</td>
+      <td>$\sin^2(\pi/16) \approx 0.038$</td>
+      <td>very small</td>
+    </tr>
+    <tr>
+      <td>40m</td>
+      <td>2</td>
+      <td>$\sin^2(2\pi/16) \approx 0.146$</td>
+      <td>small</td>
+    </tr>
+    <tr>
+      <td>30m</td>
+      <td>3</td>
+      <td>$\sin^2(3\pi/16) \approx 0.308$</td>
+      <td>moderate</td>
+    </tr>
+    <tr>
+      <td>20m</td>
+      <td>4</td>
+      <td>$\sin^2(4\pi/16) = 0.500$</td>
+      <td>moderate</td>
+    </tr>
+    <tr>
+      <td>17m</td>
+      <td>5</td>
+      <td>$\sin^2(5\pi/16) \approx 0.692$</td>
+      <td>significant</td>
+    </tr>
+    <tr>
+      <td>15m</td>
+      <td>6</td>
+      <td>$\sin^2(6\pi/16) \approx 0.854$</td>
+      <td>large</td>
+    </tr>
+    <tr>
+      <td>12m</td>
+      <td>7</td>
+      <td>$\sin^2(7\pi/16) \approx 0.962$</td>
+      <td>very large</td>
+    </tr>
+    <tr>
+      <td>10m</td>
+      <td>8</td>
+      <td>$\sin^2(8\pi/16) = 1.000$</td>
+      <td>maximum</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Read down that column and the design justifies itself. The 75m fundamental is barely touched, the upper bands get progressively more correction, and 10m is pulled down maximally — which is exactly the shape of the problem, because the upper bands are the ones that drifted high during trimming and the fundamental is the one the capacitor already fixed. That is not a coincidence arranged by careful tuning. It falls out of where the coil sits: near the first current antinode of the 10m mode, and near the current node of the 75m fundamental.</p>
+
+<p>It also tells you what the adjustment does. Moving the coil toward the feedpoint reduces every correction proportionally while preserving the $\sin^2$ weighting between bands. Moving it away increases the correction on the lower bands faster than on the upper ones. So sliding the coil is not a single knob — it trades the bands against each other, and the $\sin^2$ column says which way.</p>
+
+<p>Which makes the tuning process rather satisfying to watch. A VNA showing resonances on several bands at once while you slide the coil along the wire is displaying this $\sin^2$ relationship in real time.</p>
+
+<hr />
+
+<h2 id="part-vii-the-complete-design-theory">Part VII: The Complete Design Theory</h2>
+
+<p>The design now makes sense as a coherent three-layer architecture.</p>
+
+<p><strong>Layer one: the full-length wire.</strong> The wire starts at approximately 136 feet, which is a natural half-wave for 80m CW near 3.5 MHz. The full-length wire has harmonics that fall close to 40m, 30m, 20m, 17m, 15m, 12m, and 10m without correction. This is the harmonic foundation the design is built on. It is preserved by not physically shortening the wire down to 75m phone length.</p>
+
+<p><strong>Layer two: the series capacitor.</strong> Inserted at the midpoint of the wire, the capacitor presents 138 ohms of series reactance at 3.85 MHz. This electrically shortens the apparent resonant length of the wire at the fundamental, pulling it up from 3.5 MHz into the 75m phone segment. Because the capacitor’s reactance drops with frequency, it has progressively less effect on higher harmonics and becomes nearly transparent at 10m. The upper band harmonic structure of the full wire is largely undisturbed. A small amount of wire is trimmed during tuning to land precisely in the phone segment, leaving the wire at roughly 130 to 134 feet. The resistor across the capacitor bleeds static charge off the far section of wire, which is otherwise DC-isolated by the series capacitor.</p>
+
+<p><strong>Layer three: the inductor coil.</strong> After the capacitor resolves the 75m problem, the upper band harmonics have drifted slightly high due to the wire trimming and the residual reactance of the capacitor at those frequencies. The inductor coil, placed approximately 8 feet from the feedpoint, applies a $\sin^2$-weighted correction that increases with harmonic number, pulling the upper bands back down by the right proportional amounts. Its position is adjusted empirically using a VNA.</p>
+
+<h3 id="why-this-is-better-than-physical-shortening">Why This Is Better Than Physical Shortening</h3>
+
+<p>Physical shortening to 75m phone length would require removing roughly 10 to 12 feet of wire, shifting every harmonic upward by about 10%. The inductor coil would then need to provide 10% correction across all upper bands, which pushes it outside the regime where the perturbation equations are reliable and requires a physically larger coil that interacts more strongly with the antenna’s current distribution. The series capacitor approach leaves the upper bands close to their natural positions, requiring only a few percent of correction from the coil. That is a correction the perturbation equations handle accurately and that a small coil can provide cleanly.</p>
+
+<h3 id="tuning-sequence">Tuning Sequence</h3>
+
+<p>The theory implies a specific order of operations:</p>
+
+<ol>
+  <li>Start with approximately 136 feet of wire and install the series capacitor at the midpoint. Verify the 75m resonance with a VNA and trim wire from the far end until the fundamental lands in the phone segment. Expect to remove only a few feet.</li>
+  <li>Place the inductor coil approximately 8 feet from the feedpoint. Observe the upper band resonances on the VNA.</li>
+  <li>Slide the coil along the wire to distribute the correction across the upper bands as needed. Moving it toward the feedpoint reduces all upper band corrections proportionally. Moving it away from the feedpoint increases correction on the lower bands.</li>
+  <li>Iterate between coil position and any final wire trimming until all target bands are in acceptable positions.</li>
+  <li>If any upper band harmonic cannot be corrected with a physically small coil, the wire trimming in step 1 removed too much wire. The perturbation equations are only reliable for corrections of a few percent. Larger corrections require a physically larger coil that is no longer a small perturbation.</li>
+</ol>
+
+<h3 id="design-equations-reference">Design Equations Reference</h3>
+
+<p><strong>Resonant frequencies of the wire:</strong></p>
+
+\[f_n = \frac{n \cdot c \cdot k_v}{2L}\]
+
+<p><strong>Series capacitor reactance:</strong></p>
+
+\[X_C = \frac{1}{2\pi f C}\]
+
+<p><strong>Current distribution, mode $n$:</strong></p>
+
+\[I_n(x) = I_0 \sin\!\left(\frac{n\pi x}{L}\right)\]
+
+<p><strong>Voltage distribution, mode $n$:</strong></p>
+
+\[V_n(x) = V_0 \cos\!\left(\frac{n\pi x}{L}\right)\]
+
+<p><strong>Current antinode positions:</strong></p>
+
+\[x_{I,max} = \frac{(2k-1)L}{2n}, \quad k = 1, 2, \ldots, n\]
+
+<p><strong>Voltage antinode positions:</strong></p>
+
+\[x_{V,max} = \frac{kL}{n}, \quad k = 0, 1, \ldots, n\]
+
+<p><strong>Frequency shift from inductor $\ell$ at position $d$:</strong></p>
+
+\[\frac{\Delta f_n}{f_n} = -\frac{\ell}{L_{dist} L} \sin^2\!\left(\frac{n\pi d}{L}\right)\]
+
+<p><strong>Distributed inductance per unit length:</strong></p>
+
+\[L_{dist} \approx \frac{\mu_0}{2\pi} \ln\!\left(\frac{4h}{D}\right) \quad \text{(H/m)}\]
+
+<p><strong>Distributed capacitance per unit length:</strong></p>
+
+\[C_{dist} \approx \frac{2\pi\epsilon_0}{\ln(4h/D)} \quad \text{(F/m)}\]
+
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

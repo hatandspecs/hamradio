@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lessons in Velocity Factor, A 20m T2LT Build | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Lessons in Velocity Factor, A 20m T2LT Build</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: February 28, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>This week, I spent some time experimenting with a <strong>Tuned Transmission Line Trap (T2LT)</strong> antenna. My goal was to create something ultra-light for field use, so I reached for some lightweight materials I had in the shop: <strong>RG-316 coax</strong> and <strong>AWG 22 antenna wire</strong>.</p>
+
+<p>The T2LT is a fantastic design for portable ops because the antenna and the feedline are essentially the same piece of cable, making it incredibly stealthy and easy to deploy.</p>
+
+<blockquote>
+  <p>The whole 20 m antenna, stowed. Feedline and radiator are the same cable.
+<img src="/hamradio/assets/images/diy_t2lt/4.jpeg" alt="The completed T2LT antenna coiled for storage" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="the-build-specs-20m-band">The Build Specs: 20m Band</h2>
+
+<p>Here is the breakdown of the measurements and materials used for this specific build:</p>
+
+<ul>
+  <li><strong>Radiator (Top Section):</strong> 4.9 meters of AWG 22 antenna wire.</li>
+  <li><strong>Sleeve Section (Lower Radiator):</strong> 4.9 meters of RG-316 coax.</li>
+  <li><strong>Assembly:</strong> The AWG 22 wire is soldered directly to the center conductor of the RG-316. I used two layers of adhesive-lined heat shrink to provide robust strain relief at the solder joint.</li>
+  <li><strong>The Trap (RF Choke):</strong> I used an <strong>FT140-43 ferrite toroid</strong> with <strong>14 turns</strong> of the RG-316 coax.</li>
+</ul>
+
+<p>The placement of the trap is critical: it is positioned exactly <strong>16 feet 1 inch</strong> from the point where the top wire attaches. This creates the high impedance necessary to “stop” the antenna and keep the rest of the feedline “cold” (RF-free).</p>
+
+<blockquote>
+  <p>The choke: 14 turns of RG-316 on an FT140-43
+<img src="/hamradio/assets/images/diy_t2lt/2.jpeg" alt="An FT140-43 ferrite toroid wound with 14 turns of RG-316 coax" /></p>
+</blockquote>
+
+<p>During bench testing, this choke measured at least <strong>-35dB of suppression</strong> across the 20m band, which is exactly what you want to see for effective common-mode rejection.</p>
+
+<blockquote>
+  <p>At least 35 dB of suppression across 20 m, measured on the bench
+<img src="/hamradio/assets/images/diy_t2lt/3.jpeg" alt="Bench measurement of the choke showing better than -35 dB across the 20 m band" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="the-aha-moment-velocity-factor">The “Aha!” Moment: Velocity Factor</h2>
+
+<p>If you build one of these, watch out for a common pitfall regarding <strong>Velocity Factor (VF)</strong>. I originally calculated the lower 1/4 wavelength section using a VF of <strong>0.7</strong> because that is the standard rating for RG-316.</p>
+
+<p>However, I quickly realized my mistake: <strong>when coax is used as an antenna radiator, the RF travels on the <em>outside</em> of the shield.</strong> In this scenario, the VF is closer to <strong>0.95</strong>, not 0.7.</p>
+
+<p>My first attempt was four feet too short, and the <strong>nanoVNA</strong> immediately showed the resonance was way too high. I had to unwrap the choke and move it to the <strong>16’ 1”</strong> mark. Once I corrected for the proper velocity factor, I was right in the ballpark and only needed a tiny bit of trimming on the top wire to hit my target frequency.</p>
+
+<blockquote>
+  <p>After correcting the velocity factor: the SWR curve I was hoping for
+<img src="/hamradio/assets/images/diy_t2lt/1.jpeg" alt="nanoVNA sweep of the finished T2LT showing low SWR across the 20 m band" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="field-testing-vs-the-wind">Field Testing vs. The Wind</h2>
+
+<p>Deployment was incredibly fast—it took only about five minutes to get the telescoping pole up and the antenna on the air.</p>
+
+<p>Testing took place on a particularly gusty Friday night. I was using a <strong>34 foot carbon fiber “POTA” pole</strong>, and while the manufacturer claims they are freestanding without support, I felt like I was placing a $150 wager against the valley winds.</p>
+
+<blockquote>
+  <p>Deployed on the 34 ft pole, and bending in the gusts
+<img src="/hamradio/assets/images/diy_t2lt/0.jpeg" alt="The T2LT hoisted on a carbon fiber telescoping pole in the field" /></p>
+</blockquote>
+
+<p>Even as the pole reached the limits of its elastic modulus, it held up beautifully. The antenna performed well; I heard plenty of activity on 20m, and <strong>KD3CCP</strong> even caught me calling CQ on his SDR across town.</p>
+
+<h3 id="final-verdict">Final Verdict</h3>
+<p>I eventually packed it in when the gusts got too intense, but teardown took a mere three minutes. If you want a lightweight, high-performance antenna that you can deploy in minutes, the T2LT is hard to beat—just remember to calculate your lengths based on the outside of the wire!</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

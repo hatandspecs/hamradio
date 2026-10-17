@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Beacon That Has to Own the Radio: WSPR on the Cyberdeck | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>A Beacon That Has to Own the Radio: WSPR on the Cyberdeck</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: October 17, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>The <a href="/hamradio/articles/keyboard-to-keyboard-cyberdeck/">ham radio cyberdeck</a> exists to do one thing: the ham radio that otherwise needs a desktop, a mouse, and a graphical program that makes the hobby feel like a second shift. It started with keyboard-to-keyboard digimodes because that was the itch at the time. <a href="/hamradio/articles/cyberdeck-logger-and-function-ring/">A logbook</a> followed, and the two became peers on a ring you move around with <code class="language-plaintext highlighter-rouge">^O</code> and <code class="language-plaintext highlighter-rouge">^P</code>.</p>
+
+<p>WSPR is the opposite kind of operating. Nobody is at the keyboard. The radio transmits a 110 second beacon into a two minute slot, or it listens, and the interesting part happens hours later on somebody else’s receiver. There is no conversation to have.</p>
+
+<p>It is also the digital mode I have the most hours on, and the one I reach for first. Every antenna I have built has been judged by it — <a href="/hamradio/articles/7510-wspr-results-analysis/">the 75-10 end-fed</a>, <a href="/hamradio/articles/40m-center-loaded-dipole-wspr-results-analysis/">the 40 m center-loaded dipole</a>, the field day dipoles. You put a wire up, you beacon for an afternoon, and the map tells you what you actually built rather than what the modeling software hoped you built. For antenna work there is nothing else that gives you that many independent receivers for free.</p>
+
+<p>So the awkward thing to admit is that until recently I did all of it from a laptop, and I did not enjoy any of it.</p>
+
+<p>That is not WSPR’s fault. It is that WSJT-X and fldigi both assume a desk, a mouse, a waterfall, and a stack of windows — and sitting down to that, in the evening, after a day of sitting down to exactly that, feels like clocking back in. I built the cyberdeck to get the conversation modes away from that feeling, and it worked better than I expected: I only discovered I <em>liked</em> digital modes once the operating position stopped looking like an office.</p>
+
+<p>Which left WSPR — the mode I use most — as the last thing still tethered to the laptop.</p>
+
+<p>What I did not expect was that bringing it over would be governed, start to finish, by one fact about a sound card.</p>
+
+<blockquote>
+  <p>The deck beaconing on 20 m, with the FTX-1 above it and a common-mode choke in the foreground. 455 stations heard in that session.
+<img src="/hamradio/assets/images/cyberdeck_wspr/deck-beaconing-20m.jpg" alt="The deck beaconing on 20 m, with the FTX-1 above it and a common-mode choke in the foreground. 455 stations heard in that session." /></p>
+</blockquote>
+
+<h2 id="one-sound-card-one-client">One sound card, one client</h2>
+
+<p>The deck drives fldigi, and fldigi holds the USB codec. WSPR needs that same codec — to record 114 seconds of audio for <code class="language-plaintext highlighter-rouge">wsprd</code>, and to play a rendered beacon back out.</p>
+
+<p>I assumed, reasonably, that two programs could share it. They cannot. With fldigi running:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ arecord -l
+  ... Subdevices: 0/1
+
+$ arecord -D plughw:1,0 -f S16_LE -r 12000 -c 1 -d 5 /tmp/x.wav
+arecord: main:850: audio open error: Device or resource busy
+</code></pre></div></div>
+
+<p>There is no <code class="language-plaintext highlighter-rouge">dmix</code> or <code class="language-plaintext highlighter-rouge">dsnoop</code> to share through — no <code class="language-plaintext highlighter-rouge">/etc/asound.conf</code>, no <code class="language-plaintext highlighter-rouge">~/.asoundrc</code>. One capture client, and fldigi is it.</p>
+
+<p>So WSPR cannot be a screen you visit while the digimodes keep running in the background. <strong>It has to stop fldigi, take the card, and give both back when it is done.</strong> That single constraint produced everything else: WSPR is a fourth ring area and the only <em>exclusive</em> one. While it runs the ring refuses to leave it, and the message says so rather than the key doing nothing.</p>
+
+<p>That is a worse user experience than the alternative, and I could not find an honest way around it.</p>
+
+<h2 id="making-a-signal-the-real-decoder-would-accept">Making a signal the real decoder would accept</h2>
+
+<p>WSPR packs a callsign, a four character grid and a power level into 50 bits, convolutionally encodes them to 162 symbols, interleaves, and adds a sync vector — one bit per symbol, 162 of them, fixed by the protocol.</p>
+
+<p>I needed that vector. Rather than copy it out of a document I could misread, I pulled it out of the decoder binary I was already going to ship:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ strings -t d /usr/bin/wsprd | ...
+</code></pre></div></div>
+
+<p>It appears twice in <code class="language-plaintext highlighter-rouge">wsprd</code>, and both copies agree: 162 values, 63 of them ones. Two independent copies in the artifact that will judge my output is better evidence than one table in a PDF.</p>
+
+<p>Then the real test. Generate a window with my encoder, write it to a WAV with the filename <code class="language-plaintext highlighter-rouge">wsprd</code> expects, and hand it to the actual decoder:</p>
+
+<blockquote>
+  <p>The deck’s own generated window, decoded by the real <code class="language-plaintext highlighter-rouge">wsprd</code>. Four decodes, 20 MiB peak, 14.5 seconds normal and 33.7 deep.
+<img src="/hamradio/assets/images/cyberdeck_wspr/wsprd-decodes-the-deck.jpg" alt="The deck's own generated window, decoded by the real wsprd. Four decodes, 20 MiB peak, 14.5 seconds normal and 33.7 deep." /></p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">18 dB  KD3CCO FN10 37</code>. The encoder was right, and I knew it because the program that would be reading my signal on the air read it on the bench.</p>
+
+<p>One detail worth keeping: <strong><code class="language-plaintext highlighter-rouge">wsprd</code> takes the timestamp from the filename, not from the file.</strong> I proved it by renaming <code class="language-plaintext highlighter-rouge">261017_0208.wav</code> to <code class="language-plaintext highlighter-rouge">991231_2358.wav</code> and watching the reported time follow. <code class="language-plaintext highlighter-rouge">YYMMDD_HHMM.wav</code> is load-bearing.</p>
+
+<h2 id="getting-the-decoder-onto-a-512-mb-board">Getting the decoder onto a 512 MB board</h2>
+
+<p><code class="language-plaintext highlighter-rouge">wsprd</code> is not packaged on its own — it ships inside WSJT-X. Installing the whole package on a Pi 3A+ costs 36 MB and drags in a Qt GUI that will never be displayed.</p>
+
+<p>It is a 55 KB binary. Extracting just that, plus <code class="language-plaintext highlighter-rouge">libgfortran5</code> because it is Fortran:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get download wsjtx
+dpkg-deb <span class="nt">-x</span> wsjtx_<span class="k">*</span>.deb /tmp/wsjtx
+<span class="nb">sudo install</span> <span class="nt">-m</span> 755 /tmp/wsjtx/usr/bin/wsprd /usr/local/bin/wsprd
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> libgfortran5
+</code></pre></div></div>
+
+<p>About 1 MB all in. On the deck it decodes a 120 second slot in 14.5 seconds normally, 33.7 with deep search, at 20 MiB peak.</p>
+
+<h2 id="two-measurements-i-got-wrong">Two measurements I got wrong</h2>
+
+<p>Both of these would have changed a decision, and both looked convincing at the time.</p>
+
+<p><strong>The memory figure.</strong> My first benchmark reported <code class="language-plaintext highlighter-rouge">wsprd</code> peaking at 315 MiB. On a 512 MB board that is close to fatal, and I nearly designed around it — decode on alternate slots, or not at all. The number came from <code class="language-plaintext highlighter-rouge">resource.getrusage(RUSAGE_CHILDREN).ru_maxrss</code>, which counts memory the child <em>inherited at <code class="language-plaintext highlighter-rouge">fork()</code></em> before <code class="language-plaintext highlighter-rouge">exec</code> replaced it. I was measuring my own benchmark harness. <code class="language-plaintext highlighter-rouge">/usr/bin/time -v</code> says 22 MiB. The feature was never in danger; my measurement was.</p>
+
+<p><strong>The audio level.</strong> An early capture read −59.7 dBFS, far below what <code class="language-plaintext highlighter-rouge">wsprd</code> wants, and I wrote down that the capture gain was about 35 dB low. The radio was connected to a <strong>dummy load</strong>. There was no signal to measure — a terminated antenna port produces exactly that reading. With an antenna on a live 40 m it reads −36.8 dBFS and decodes fine.</p>
+
+<p>The pattern in both is the same: a number produced by a real tool, in the right units, that answers a different question than the one I asked.</p>
+
+<h2 id="the-screen">The screen</h2>
+
+<blockquote>
+  <p>The WSPR screen, drawn by the same code the panel runs. Eight spots on 20 m, the state block below them, and the slot clock five seconds into a two minute window.
+<img src="/hamradio/assets/images/cyberdeck_wspr/wspr-screen.png" alt="The WSPR screen, drawn by the same code the panel runs. Eight spots on 20 m, the state block below them, and the slot clock five seconds into a two minute window." /></p>
+</blockquote>
+
+<p>The distance and bearing columns are computed from the two grid squares — WSPR carries a grid and no distance, so wsprnet and wspr.rocks fill their own kilometer column the same way. I validated mine against my own wsprnet records rather than against the formula alone: agreement inside 0.5 km on every six character path from 498 to 6855 km. Neither figure is stored in the log, because both are derivable from the grids that are.</p>
+
+<p>The power line is the one I am most pleased with. WSPR cannot encode an arbitrary wattage — the field holds a dBm from a fixed set, so only 1, 2, 5, 10, 20, 50 and 100 W land exactly. The deck reads what the radio is actually making over CAT, shows the dBm it will encode to, and highlights it when the two agree. Adjust the power control and watch for the highlight. 3 W is 34.77 dBm and goes out as 33, which is a small lie told on your behalf unless you can see it happening.</p>
+
+<p>Setting the receive level is its own screen, because a level set without a meter to watch is a number changed rather than a level set:</p>
+
+<blockquote>
+  <p>Calibrating the receive gain. The marked stretch of the meter is roughly what <code class="language-plaintext highlighter-rouge">wsprd</code> wants; <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">-</code> move the capture mixer while it updates.
+<img src="/hamradio/assets/images/cyberdeck_wspr/wspr-calibrate-receive.png" alt="Calibrating the receive gain. The marked stretch of the meter is roughly what wsprd wants; plus and minus move the capture mixer while it updates." /></p>
+</blockquote>
+
+<p>That gain is the ALSA capture mixer, which fldigi also uses — which is safe only because WSPR owns the codec exclusively while it runs. The deck reads the old value before it writes, and puts it back when the session ends.</p>
+
+<h2 id="three-small-truths-that-cost-a-day">Three small truths that cost a day</h2>
+
+<p><strong>The sound card index moves.</strong> The codec was card 1 one morning and card 2 after a reboot, with HDMI taking 1. Everything addressed as <code class="language-plaintext highlighter-rouge">plughw:1,0</code> was then pointed at the HDMI output, and <code class="language-plaintext highlighter-rouge">arecord</code> failed with <code class="language-plaintext highlighter-rouge">No such file or directory</code> — a <em>different</em> error from the busy one, and one that no amount of stopping fldigi fixes. Worse, the capture gain control had been aimed at the HDMI card too, so it had been silently doing nothing while the screen reported a percentage it had never managed to set. Everything now addresses the card by name: <code class="language-plaintext highlighter-rouge">plughw:CARD=Device,DEV=0</code>.</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">sudo</code> does not work from inside a systemd service.</strong> Stopping fldigi needs authorization. A <code class="language-plaintext highlighter-rouge">NOPASSWD</code> sudoers rule parses, verifies from a login shell, and still fails from inside <code class="language-plaintext highlighter-rouge">cyberdeck-ui</code> — which has no tty, no PAM session, and a capability bounding set narrowed to <code class="language-plaintext highlighter-rouge">CAP_SYS_TTY_CONFIG</code>. The answer was polkit, which is what the deck already uses to let the WiFi screen talk to NetworkManager, for exactly the same reason. The comment at the top of that older rule describes the failure precisely; I had read it months ago and still spent two deploys on <code class="language-plaintext highlighter-rouge">sudo</code>.</p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">Ctrl-I</code> is <code class="language-plaintext highlighter-rouge">Tab</code>.</strong> I put the transmit interlock on <code class="language-plaintext highlighter-rouge">Ctrl-I</code> for “inhibit”. They are the same byte — ASCII 9 — and no terminal can tell them apart, least of all the Linux console. So <code class="language-plaintext highlighter-rouge">Tab</code> was arming and inhibiting the transmitter, including on a form where <code class="language-plaintext highlighter-rouge">Tab</code> means “next field”. It is <code class="language-plaintext highlighter-rouge">Ctrl-B</code> now, and byte 9 toggles nothing.</p>
+
+<h2 id="what-it-heard-and-who-heard-it">What it heard, and who heard it</h2>
+
+<blockquote>
+  <p>819 spots in one afternoon. 710 on 20 m, 108 on 40 m.
+<img src="/hamradio/assets/images/cyberdeck_wspr/wspr-rocks-map.jpg" alt="819 spots in one afternoon. 710 on 20 m, 108 on 40 m." /></p>
+</blockquote>
+
+<p>Five watts on 40 m reached 43 receivers in a single slot. On 20 m it reached ON5KQ in Belgium at 6060 km, HK4CZE in Colombia, and the entire US west coast.</p>
+
+<p>Receiving is the half I find more satisfying, because it is the half that needed the decoder to work: eleven stations in one slot, including K5NAV at <strong>0.2 W</strong> over 2781 km. That is 13,905 km per watt, decoded on a Raspberry Pi 3A+ by a 55 KB binary extracted out of a package I did not install.</p>
+
+<blockquote>
+  <p>The deck’s own spots on wspr.rocks, reporting <code class="language-plaintext highlighter-rouge">version = cyberdeck</code>.
+<img src="/hamradio/assets/images/cyberdeck_wspr/wspr-rocks-spots.jpg" alt="The deck's own spots on wspr.rocks, reporting version = cyberdeck." /></p>
+</blockquote>
+
+<p>The uploader reports itself as <code class="language-plaintext highlighter-rouge">cyberdeck</code> rather than borrowing a WSJT-X version string. Claiming to be software you are not makes every bug reported against you somebody else’s problem. The field holds ten characters, which I know because a reporter calling itself <code class="language-plaintext highlighter-rouge">EasySpotter</code> appears in my records as <code class="language-plaintext highlighter-rouge">EasySpotte</code>.</p>
+
+<h2 id="what-is-not-done">What is not done</h2>
+
+<p>The time-out timer disarms transmit and leaves the receiver running — the timer is about an unattended transmitter, and listening costs nothing. That was a late change and it has not yet run its full hour unattended.</p>
+
+<p>Band hopping works and the rotation is set from the panel, but I have not left it hopping overnight, which is the case it exists for.</p>
+
+<p>And a type 2 or type 3 message — the compound and hashed callsigns, <code class="language-plaintext highlighter-rouge">W3USR/05</code> and friends — still rests on hand written test fixtures. My decoder parses them. I have not yet transmitted one.</p>
+
+<p>Code, design document and deployment runbook: <a href="https://github.com/hatandspecs/ham-radio-cyberdeck">github.com/hatandspecs/ham-radio-cyberdeck</a></p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

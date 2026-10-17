@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Cyberdeck Gets a Logbook, and Three Equal Applications | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>The Cyberdeck Gets a Logbook, and Three Equal Applications</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: October 11, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <!-- TODO before publishing: a field shot — the deck logging on a picnic
+     table during an activation. The photo below is the real thing working,
+     but at the home desk; the article's opening is about park activations.
+
+     Check each one for anything personal first — the panel shows a callsign
+     and a grid square, and the log screen shows other operators' details. -->
+
+<p>The <a href="/hamradio/articles/keyboard-to-keyboard-cyberdeck/">ham radio cyberdeck</a> exists to do one thing: the ham radio that otherwise needs a desktop, a mouse, and a graphical program that makes the hobby feel like a second shift. The first thing it took off the laptop was keyboard-to-keyboard digimodes, and it did that well. Then the obvious gap showed up on the first park activation. I was working someone on the deck and writing their callsign on paper.</p>
+
+<p>Paper had never bothered me before. I logged on paper because it was what I had always done, and because I had no particular evidence that software would be better — I assumed it was bookkeeping either way, and that the computer version of bookkeeping was still bookkeeping.</p>
+
+<p>Then the Pennsylvania QSO Party. It was the first time I sat down, installed <a href="https://github.com/foldynl/QLog">QLog</a>, configured it properly, and actually ran a session on it. The difference was not small and it was not subtle. Entering a contact took a fraction of the time. The duplicate check answered a question I had previously answered by squinting at a page. And because I was not writing, I was <em>listening</em> — which in a QSO party is the entire game. I came away with more contacts and better records than I would have had on paper, and the records were better precisely because I had spent less effort on them.</p>
+
+<p>Anyone who has read much of this site has probably worked out that I like good records. So that was that: loggers were a convert-on-the-spot experience.</p>
+
+<p>The trouble was what came with it. A logger meant the laptop was back on the table, with its mouse and its window manager and its general air of having clocked in for a shift — the exact thing the deck existed to get away from. I had solved the operating aesthetic and then reintroduced the problem through the back door, for the sake of a log.</p>
+
+<p>So the deck has a logbook now. That turned out to be the easy part. The hard part was what the logbook did to the shape of the program.</p>
+
+<h2 id="the-field-list-is-the-grammar">The field list is the grammar</h2>
+
+<p>The first version of the logger was one line you typed into:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; W3ABC 59 57 Bob Pittsburgh
+</code></pre></div></div>
+
+<p>Callsign, report sent, report received, name, and the rest as a QTH. It worked, and it worked for exactly one kind of operating. The moment I tried it in a contest the scheme fell apart, because a contest exchange is a serial number and a section — and <code class="language-plaintext highlighter-rouge">599</code> is both a valid report and a valid serial. No positional parser can tell them apart. You cannot look at <code class="language-plaintext highlighter-rouge">W3ABC 599 014</code> and know whether that is two reports or a report and a serial without knowing what kind of contact is being made.</p>
+
+<p>The answer was to stop guessing. An <strong>activity type</strong> is a named list of fields, in an order the operator chose, and that list <em>is</em> the grammar. General logging is reports and a name. A park activation adds their reference. A contest is a serial and an exchange and leaves the reports out entirely, because in a contest they are 59 every time and typing them is wasted motion.</p>
+
+<p>Choosing the fields happens on the panel, with a page of them to pick from:</p>
+
+<blockquote>
+  <p>Twenty-eight fields over two pages; POTA has four of them on. The picker asks which fields, and asks the order separately.
+<img src="/hamradio/assets/images/cyberdeck_logger_and_function_ring/log-fields.png" alt="Twenty-eight fields over two pages; POTA has four of them on. The picker asks which fields, and asks the order separately." /></p>
+</blockquote>
+
+<p>Twenty-eight fields over two pages. The first page is general and park logging — which is also, not by coincidence, most of what QRZ’s own QSO record holds. The second page is the contest exchange, the zones, and the programs that are not POTA.</p>
+
+<p>Six things never appear on that list, and the reason is worth saying because it looked like an omission to me too: the callsign, the UTC timestamp, the band, the frequency, the mode and my own callsign are on <strong>every</strong> contact regardless of activity. They are not typed. The time is stamped at commit, the band is derived from the frequency, and the frequency and mode come off the radio and sit on every form prefilled. A field in the selector is a field you have chosen to <em>type</em>, and none of those are.</p>
+
+<h2 id="an-activity-is-not-an-activity-type">An activity is not an activity type</h2>
+
+<p>This distinction cost me a rewrite to see. An activity <strong>type</strong> is the template — POTA, CONTEST, the one you built for county hunting. An <strong>activity</strong> is a session that uses one: <em>this</em> park on <em>this</em> afternoon, with its own log file named for it and dated.</p>
+
+<p>Both go into every record, because they answer different questions. The name is what you filter a log back down to. The type is what says how to read the fields in it.</p>
+
+<p>The files are stamped once, at creation, and remembered:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>activities/Bald-Eagle-SP_2026-10-15.log
+</code></pre></div></div>
+
+<p>Deriving the date when the file is opened instead would be the obvious shortcut and it is wrong: a contest weekend resumed on Sunday morning would quietly fork into a second file, and you would not find out until you went to export.</p>
+
+<blockquote>
+  <p>A contact logged on 15 m SSB, with the FTX-1’s waterfall above and the deck’s log below it. The entry form is cleared and waiting for the next callsign.
+<img src="/hamradio/assets/images/cyberdeck_logger_and_function_ring/deck-logging-ha3nu.jpg" alt="A contact logged on 15 m SSB, with the FTX-1's waterfall above and the deck's log below it. The entry form is cleared and waiting for the next callsign." /></p>
+</blockquote>
+
+<h2 id="the-log-screen">The log screen</h2>
+
+<blockquote>
+  <p>The log screen during a park activation. The columns are the ones this activity’s schema asked for, and the form below is what is waiting to be typed.
+<img src="/hamradio/assets/images/cyberdeck_logger_and_function_ring/log-pota.png" alt="The log screen during a park activation. The columns are the ones this activity's schema asked for, and the form below is what is waiting to be typed." /></p>
+</blockquote>
+
+<p>A contact can take one, two or three rows. The extra rows carry on down the activity’s own field order from where the first row stops — I had hardcoded “line two is where they are,” which is wrong for every type somebody else invents. A county-hunting type puts county second. A satellite type puts the bird second. Neither wants a row spent on a grid square it never asks for.</p>
+
+<p>The arrows do what the screen’s shape suggests: left and right walk the form across the bottom, up and down walk the list above it. Before that, up and down duplicated Tab and left and right moved the text cursor inside one field — so two of the four arrows did a job Tab already had, and the list of contacts had no keys at all.</p>
+
+<h2 id="fixing-a-contact-you-got-wrong">Fixing a contact you got wrong</h2>
+
+<p>The log file was append-only by design, and the design document said so. The reasoning was good: an append cannot damage what is already in the file, and this deck’s whole power story is that the plug gets pulled.</p>
+
+<p>What that reasoning missed is that a wrong record is also damage, and one you can see and cannot fix. A callsign taken down wrong is wrong in the exported ADIF and wrong in every upload made from it, and the documented recovery was “edit the file over SSH” — which is no recovery at all from a park bench.</p>
+
+<p>So contacts open:</p>
+
+<blockquote>
+  <p>One contact opened in full. A record has up to forty fields and the list has one row for it, so this is where the rest of them live.
+<img src="/hamradio/assets/images/cyberdeck_logger_and_function_ring/log-contact.png" alt="One contact opened in full. A record has up to forty fields and the list has one row for it, so this is where the rest of them live." /></p>
+</blockquote>
+
+<p>Every field is editable except the timestamp, which is the key the contact is found by and the one field nobody typed. The blank <code class="language-plaintext highlighter-rouge">Ref</code> is deliberate: POTA asks for a reference, this contact has none, and showing the empty row is what lets an omission be filled in rather than only a typo corrected.</p>
+
+<p>The file is still never written in place. An edit writes a temp file beside it, <code class="language-plaintext highlighter-rouge">fsync</code>s, and <code class="language-plaintext highlighter-rouge">os.replace</code>s — atomic within a filesystem, so a power cut leaves either the old log or the new one and never half of one. The directory gets an <code class="language-plaintext highlighter-rouge">fsync</code> too, because the rename itself is metadata and is not durable until that happens. The property the append-only rule was protecting is kept; the one given up is that the file only ever grows.</p>
+
+<p>Contacts are found by timestamp and guarded by callsign, never by a line number. The log is documented as hand-editable over SSH, and an index that had shifted by one would rewrite somebody else’s contact. A guard that does not match is a refusal, not a guess.</p>
+
+<hr />
+
+<h2 id="three-applications-not-one-with-two-tenants">Three applications, not one with two tenants</h2>
+
+<p>Here is the part that was not about logging at all.</p>
+
+<p>The deck started as a digital modes terminal. Everything else grew off the side of it. By the time the logger worked, the single menu behind <code class="language-plaintext highlighter-rouge">F1</code> looked like this:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mode · Tune Settings · Band · Display · Memories · Station · System · Logging
+</code></pre></div></div>
+
+<p>Three different concerns in one list, and an entire application — the logbook — behind one of its lines. Worse: the only way to reach the deck’s own settings, the callsign and the antenna and the rig, was to go <em>through the digital modes screen</em>. If you sat down to log a phone contest you started on a PSK31 waterfall screen and navigated out of it.</p>
+
+<p>That is backwards, and it was backwards by accident rather than by anyone’s decision. The digital modes screen was the deck’s home because it was the first thing written.</p>
+
+<p>So the deck now has three equal applications:</p>
+
+<ul>
+  <li><strong>Digimodes</strong> — the conversation, the tuner, the mode picker, the message memories</li>
+  <li><strong>The log</strong> — the entry form, the activities, the activity types</li>
+  <li><strong>Deck and rig</strong> — the callsign, the locator, the rig, the antenna, the power ceiling, the display, the system</li>
+</ul>
+
+<p><strong><code class="language-plaintext highlighter-rouge">Ctrl-O</code> and <code class="language-plaintext highlighter-rouge">Ctrl-P</code> walk between them.</strong> They read as a strip — settings, log, digimodes — wrapping, so each one is a single keystroke from both others. <code class="language-plaintext highlighter-rouge">F1</code> opens the menu for wherever you are, and a line belonging to one application is not on another’s menu. <code class="language-plaintext highlighter-rouge">F2</code> and <code class="language-plaintext highlighter-rouge">F3</code> are always that application’s two main views. <code class="language-plaintext highlighter-rouge">F4</code> cycles the color scheme from anywhere, which it did not before: it had been bound in exactly one place and was a dead key on every other screen.</p>
+
+<p>Each one remembers where you left it. Walk out of the activities list, go somewhere else, come back, and you are on the activities list. That is the difference between tabs and three buttons.</p>
+
+<p>The deck and rig settings became a <em>screen</em>, not just a menu, and that was the thing that forced the rest of the design. A menu is drawn over whatever screen was already there, so “arriving at the settings” meant arriving at the digimode screen with a menu on top of it. An application needs somewhere to actually be.</p>
+
+<blockquote>
+  <p>The station’s own details, edited in place. It was read-only at first, which invited the attempt and refused it.
+<img src="/hamradio/assets/images/cyberdeck_logger_and_function_ring/deck-rig.png" alt="The station's own details, edited in place. It was read-only at first, which invited the attempt and refused it." /></p>
+</blockquote>
+
+<p>It also answers a question nothing on the deck could answer in one place before, because the callsign was in one menu, the rig in another, and the log in a third.</p>
+
+<h3 id="why-not-the-arrow-keys">Why not the arrow keys</h3>
+
+<p>I wanted <code class="language-plaintext highlighter-rouge">Alt</code> and the arrows. You cannot have them, and the reason is a good illustration of why this project tests through a real terminal rather than by calling functions.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>infocmp linux          → no modified cursor-key entries at all
+infocmp xterm-256color → kLFT=\E[1;2D   (Shift only, no Alt)
+</code></pre></div></div>
+
+<p>Neither terminfo entry defines <code class="language-plaintext highlighter-rouge">Alt</code> plus a cursor key. On the framebuffer console the deck actually runs on, <code class="language-plaintext highlighter-rouge">Alt</code>+<code class="language-plaintext highlighter-rouge">Left</code> arrives as <strong>Esc followed by <code class="language-plaintext highlighter-rouge">KEY_LEFT</code></strong> — and Esc is load-bearing on every screen here, so it fires first and you have left the screen before the arrow lands.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Shift</code> plus the arrows is worse, in the way that matters: xterm defines it and the Linux console does not. It would have worked perfectly on the laptop test rig and been a dead key on the deck.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Ctrl-M</code> was the next idea. <code class="language-plaintext highlighter-rouge">Ctrl-M</code> <em>is</em> byte 13, carriage return — it is Enter, on every terminal ever made, and no amount of configuration separates them. Binding the application switch to it would mean Enter cycled screens instead of logging a contact.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Home</code>/<code class="language-plaintext highlighter-rouge">End</code> and <code class="language-plaintext highlighter-rouge">PgUp</code>/<code class="language-plaintext highlighter-rouge">PgDn</code> are both technically fine and both already busy: <code class="language-plaintext highlighter-rouge">Home</code> and <code class="language-plaintext highlighter-rouge">End</code> are the only in-field cursor movement left now that the arrows walk between fields, and <code class="language-plaintext highlighter-rouge">PgUp</code>/<code class="language-plaintext highlighter-rouge">PgDn</code> page the transcript, the contact list, the field selector and the mode list. “A screen is a page” is a better mnemonic than anything about O and P, and the collision is what beat it.</p>
+
+<p>Which left two adjacent, unbound control characters, O to the left of P. One caveat found by testing rather than reasoning: <code class="language-plaintext highlighter-rouge">Ctrl-O</code> is <code class="language-plaintext highlighter-rouge">VDISCARD</code> in the terminal line discipline and can be swallowed before it ever reaches the program. It is not, here — but the test drives both keys through a real pseudo-terminal, because the only proof that a control character arrives is watching it arrive.</p>
+
+<h2 id="mode-and-three-things-that-are-all-called-mode">Mode, and three things that are all called mode</h2>
+
+<p>A thing I got wrong for months. The status line read its mode from fldigi, always. fldigi always has a modem loaded, so the deck cheerfully said <code class="language-plaintext highlighter-rouge">BPSK31</code> while the radio sat in USB with a microphone in my hand.</p>
+
+<p>There are three different readings here and they want keeping apart:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Rig mode</strong></td>
+      <td>What the radio is in — <code class="language-plaintext highlighter-rouge">PKTUSB</code>, <code class="language-plaintext highlighter-rouge">USB</code>, <code class="language-plaintext highlighter-rouge">CW</code></td>
+    </tr>
+    <tr>
+      <td><strong>Modem</strong></td>
+      <td>What fldigi has loaded — <code class="language-plaintext highlighter-rouge">BPSK31</code>, <code class="language-plaintext highlighter-rouge">RTTY</code></td>
+    </tr>
+    <tr>
+      <td><strong>Logged as</strong></td>
+      <td>What goes in the record — <code class="language-plaintext highlighter-rouge">PSK</code>, <code class="language-plaintext highlighter-rouge">SSB</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The rule, now applied to the screen as well as the log: a radio in a data mode means the modem is what is on the air, so report the modem. A radio in anything else is being used for that thing, so report the radio.</p>
+
+<p>The same reading drives the transmit interlock, and that had a hole in it. The deck refused to <em>arm</em> transmit while the radio was in a voice mode — but a radio moved <em>out</em> of a data mode while transmit was already armed stayed armed. So the dangerous order, arm first and change the radio second, was the one case not covered. The deck now inhibits by itself the moment the radio leaves a data mode, and says why.</p>
+
+<p>The deck still never sets the radio’s mode. It used to, at startup and on every band change, on the reasoning that digital work is upper sideband on every band and that is easy to forget. The reasoning was right about the radio and wrong about whose decision it is. The mode is the operator’s; the deck’s side of the bargain is the interlock.</p>
+
+<h2 id="nothing-uploads-itself">Nothing uploads itself</h2>
+
+<p>Worth stating plainly because the opposite is the default everywhere else. Nothing on the deck sends a contact anywhere. There is no automatic QRZ upload, no timer, and no menu item that does it. A deck being tested is full of contacts that must not reach a permanent record, and that is most of the contacts this thing has made so far.</p>
+
+<p>The export writes an ADIF beside the log and prints the command to sign it. Uploading is a thing you do, later, on purpose.</p>
+
+<hr />
+
+<h2 id="whats-next-wspr-on-the-deck">What’s next: WSPR on the deck</h2>
+
+<p>The next thing I want is WSPR, and for a specific reason. Most of what I know about my own antennas I know from WSPR — the <a href="/hamradio/articles/7510-wspr-results-analysis/">75–10 m end-fed</a>, the field day dipoles, the center-loaded 40. Every one of those analyses started with a pile of spots and a notebook.</p>
+
+<p>The decoder is already free: <code class="language-plaintext highlighter-rouge">wsprd</code>, the C decoder out of WSJT-X. It is a self-contained program that takes a two-minute WAV file and prints the spots it found. That is exactly the shape this deck likes — one program that does one thing on the command line, with the panel as the terminal in front of it. No waterfall, no windows.</p>
+
+<p>The pieces that are missing are the unglamorous ones. Something has to key the transmitter on the even minute and hold it for 110.6 seconds, which means the deck needs to care about the clock in a way it currently does not — and the <a href="/hamradio/articles/keyboard-to-keyboard-cyberdeck/">DS3231 real-time clock</a> that went in for logging timestamps turns out to be most of the answer. Something has to capture two minutes of audio and hand it to <code class="language-plaintext highlighter-rouge">wsprd</code>, and something has to show the result on a 66-column screen in a way that is worth reading.</p>
+
+<p>It would make the deck a fourth application on the ring, which is the first real test of whether that structure holds up or whether three was just a number that happened to work.</p>
+
+<h2 id="it-is-gplv3-now-and-wspr-is-why">It is GPLv3 now, and WSPR is why</h2>
+
+<p>The deck was MIT licensed until I sat down to think about the paragraph above.</p>
+
+<p>What I thought I wanted was a license that let anyone use this and kept it from being taken private. The first half is easy and the second half is the whole problem — “open source” is a definition, and the Open Source Definition’s sixth clause is <em>no discrimination against fields of endeavor</em>. A license that carves out particular uses is not an open source license at all; it has a different name, source-available, and it closes doors I wanted left open.</p>
+
+<p>Then <code class="language-plaintext highlighter-rouge">wsprd</code> settled it. The WSPR decoder is GPLv3, out of WSJT-X. Calling another program as a separate process imposes nothing on your own code — that is how the deck already drives fldigi, which is also GPLv3. But the moment you want to <em>bundle</em> a GPL binary, GPLv3 and any license that adds its own carve-outs become mutually incompatible: section 10 forbids adding restrictions. A source-available license would have put a gate across the road I had just finished describing.</p>
+
+<p>GPLv3 was the obvious answer once I looked at the company this program keeps. fldigi is GPLv3. hamlib is LGPL. Dire Wolf, on the <a href="/hamradio/articles/aprs-igate-bidirectional-whitelist/">iGate</a>, is GPLv2. A permissive license here was the odd one out in a stack that is GPL from top to bottom.</p>
+
+<p>It also turns out GPL does the thing I actually cared about. What is worth discouraging is enclosure — this disappearing into something nobody else can read or change — and that is exactly what GPL discourages. Anything built on it stays open for the next person.</p>
+
+<p>One honest limitation: a license grant already made cannot be withdrawn. Every commit up to the change stays MIT for anyone who already has it. This governs what comes after.</p>
+
+<p>The iGate stays MIT. Different project, different call, and nothing in it is waiting on a GPL dependency.</p>
+
+<hr />
+
+<p>Code, design document, deployment runbook and operating tutorial: <a href="https://github.com/hatandspecs/ham-radio-cyberdeck">github.com/hatandspecs/ham-radio-cyberdeck</a></p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>
