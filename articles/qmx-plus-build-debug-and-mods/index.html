@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building a QMX+, Debugging It, and Turning It Into a Travel Radio | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Building a QMX+, Debugging It, and Turning It Into a Travel Radio</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: August 25, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>The QMX+ is the first radio I ever built. I finished it in December 2025, a few weeks after passing my Technician exam and on the same day I passed General. It works, it goes on trips with me now, and getting from the first to the second took a bad solder joint, a dropped probe, and eight months in a drawer.</p>
+
+<p>This is the whole of it, including the parts where I made things worse.</p>
+
+<h2 id="the-symptom-was-a-band-that-was-too-quiet">The symptom was a band that was too quiet</h2>
+
+<p>I built it, ran the full set of built-in diagnostics, and got on the air — listening to phone and CW on 40 m, 20 m and 10 m through a 40 m EFHW with a 56:1 unun. I sent some CQs into the segments I was allowed to use and made no contacts, which is its own kind of normal for a new Technician who has just ordered a Morserino.</p>
+
+<p>The thing that bothered me was that 80 m was much quieter than everything else. Not dead — quieter. Lower background noise than 160 m and 60 m either side of it.</p>
+
+<p>A quiet band is an ambiguous symptom. It can be propagation, it can be the time of day, it can be an antenna that is not resonant anywhere near there. It can also be a receiver that is not hearing, and the difference matters.</p>
+
+<h2 id="the-diagnostics-said-the-same-thing-five-different-ways">The diagnostics said the same thing five different ways</h2>
+
+<p>The QMX+ has a genuinely excellent set of built-in tests, and I ran all of them into a 50 Ω dummy load and captured every screen. That turned into a 216-slide deck, which sounds excessive until you are trying to describe a fault to strangers on the internet.</p>
+
+<p>What it showed:</p>
+
+<ul>
+  <li><strong>AF filter sweep</strong> — passband down at −63 dB on 80 m and −50 dB on 60 m. Every other band fine.</li>
+  <li><strong>Image sweep</strong> — poor rejection of image USB, image LSB and LSB on 160 m, 80 m, 60 m. Every other band fine.</li>
+  <li><strong>LPF sweep</strong> — bad on 80 m and 60 m.</li>
+  <li><strong>Test ADC I/Q</strong> — 160 m not showing anything like a 90° phase offset with I and Q imbalanced; 80 m very ragged; 60 m ragged.</li>
+  <li><strong>PA mod test</strong> — good.</li>
+</ul>
+
+<p>I did not know how to read the SWR sweep at all. The results looked inconsistent between bands, some running the y-axis to 10 and others staying in a much narrower range, and I had no idea which of those was normal.</p>
+
+<h2 id="asking-and-getting-a-better-answer-than-i-asked-for">Asking, and getting a better answer than I asked for</h2>
+
+<p>I posted the whole deck to the <a href="https://groups.io/g/QRPLabs/topic/116897954">QRP Labs group</a> and asked for help.</p>
+
+<p>Ludwig, DH8WN, replied with the sentence that reframed the entire problem:</p>
+
+<blockquote>
+  <p>the results for some bands are ok. So you have no general problem. That’s fine. There is a strong attenuation in the signal path for 80m and 60 m. Both the RX path and the TX path are affected. So I guess it’s the LPF1.</p>
+</blockquote>
+
+<p>Three things in that are worth pulling out, because they are how an experienced person reads a pile of failing tests and a beginner does not.</p>
+
+<p><strong>Bands that pass are evidence.</strong> I had been looking at five failing tests and seeing five problems. He looked at the same five and saw that most bands were fine in all of them, which rules out everything common to the whole radio — the clock, the ADC, the firmware, the assembly in general. Passing tests narrow things down as hard as failing ones do.</p>
+
+<p><strong>Both directions failing points at shared hardware.</strong> Receive and transmit take different paths through most of the radio. The low-pass filter bank is one of the few places they share, so a fault affecting both puts you there immediately.</p>
+
+<p><strong>Some of what looked wrong was not mine.</strong> He noted that the missing 90° on the 160 m Test ADC I/Q is a known firmware issue. I had been counting that as a fault in my build, which is exactly the sort of thing you cannot know on your first radio.</p>
+
+<p>He also asked whether I had a good dummy load, and whether JP501 was installed — a jumper related to T507 that would have affected most of the tests. It was.</p>
+
+<h2 id="following-the-protocol-and-building-a-matrix">Following the protocol, and building a matrix</h2>
+
+<p>Ludwig has a debugging document in the group wiki with a protocol for testing each low-pass filter in turn. I worked through it and found bad measurements concentrated on LPF_1 — when set to 160 m, 80 m and 40 m — while LPF_0 measured correctly on 160 m, LPF_2 correctly on 40 m, and LPF_3 through 5 correctly on their bands.</p>
+
+<p>Then, rather than keep poking at whatever seemed suspicious, I measured everything and put it in a table: the forward voltage across every diode, and the cathode-to-ground voltage of every diode, with each of the six LPFs selected in turn.</p>
+
+<p>That produced a pattern instead of an anecdote:</p>
+
+<ul>
+  <li>With an LPF active, its diodes showed about <strong>0.7 V</strong> forward — <strong>except D512, on LPF_1, which read −0.824 V</strong>.</li>
+  <li>With an LPF inactive, its diodes showed about <strong>−10.58 V</strong> — except D512, which read −0.824 V there too. It never changed.</li>
+  <li>Cathode-to-ground sat at about <strong>11.26 V</strong> for diodes on an inactive filter and about <strong>0 V</strong> for an active one — except for the diodes on LPF_1, which did neither.</li>
+</ul>
+
+<p>One component, wrong in every state, on exactly the filter the symptoms pointed at.</p>
+
+<blockquote>
+  <p>The LPF bank, with LPF_1 circled — D512 and L512 are neighbors
+<img src="/hamradio/assets/images/qmx_plus_build/lpf1-board-layout.jpg" alt="QMX+ main board layout with the LPF_1 section circled, showing D512 and L512 adjacent" /></p>
+</blockquote>
+
+<h2 id="the-part-i-replaced-was-not-the-problem">The part I replaced was not the problem</h2>
+
+<p>So I replaced D512. And D508 with it, since I was in there.</p>
+
+<p>The readings came back <strong>exactly the same</strong>.</p>
+
+<p>I have since decided this was the most useful hour of the whole build, because it forced the question I should have asked first: what else could produce that reading? A diode that measures wrong in every state is not necessarily a bad diode. It can be a diode that is not connected to what you think it is connected to.</p>
+
+<p>The measurements around D512 pointed at its neighbor. I reflowed the solder joint on <strong>L512</strong> — an inductor, not a diode, sitting immediately beside it on the board — and every measurement in the LPF section came good at once.</p>
+
+<p>The 80 m noise floor came up to match the other bands.</p>
+
+<p><strong>The fault was never a component. It was a joint that looked fine.</strong> Both of the parts I desoldered and replaced were innocent, and I would have kept replacing parts if the matrix hadn’t told me the fault sat between them rather than in them.</p>
+
+<h2 id="then-i-made-it-much-worse">Then I made it much worse</h2>
+
+<p>While I was in there, I dropped a <strong>multimeter probe</strong> onto the back of the board and shorted the finals.</p>
+
+<p>That killed the finals transistors, and it took the outputs of the surface-mount logic chip that drives them with it. So my first radio build turned into my first surface-mount rework: replace the driver IC, replace the finals, and confirm I had not lifted any pads.</p>
+
+<p>I am including this deliberately, because it is the most useful warning in this article and build logs almost never carry it. They go from “problem” to “fixed” without the part where the person doing the fixing caused a second, worse problem with a slip of the hand. <strong>One probe tip in the wrong place cost me more components than the fault I was chasing.</strong></p>
+
+<p>The lesson is not “be careful,” which nobody has ever acted on. It is mechanical:</p>
+
+<ul>
+  <li><strong>Probe with clips, not hands, wherever you can.</strong> A clip that is attached cannot be dropped. Hand-held probes on a dense board are two points of contact you are holding steady by muscle alone, usually while looking at the meter instead of the tip.</li>
+  <li><strong>Power down for anything that does not specifically require power.</strong> Continuity, diode drops and resistance all measure fine on a cold board. Most of what I was doing in that LPF matrix did not need the radio energized at all.</li>
+  <li><strong>Assume the probe will land in the worst possible place</strong>, because the dense, expensive part of the board is also the part you are leaning over.</li>
+</ul>
+
+<p>Felt extremely silly. Recommend not doing it.</p>
+
+<h2 id="eight-months-of-actually-using-it-and-then-not">Eight months of actually using it, and then not</h2>
+
+<p>With the radio working, I built a hand microphone and started operating.</p>
+
+<p>It was fine. It was also under 5 watts into an EFHW mounted a bit too close to the house and too close to the ground, and that combination is hard work. Around the same time I got my FTX-1, started using it heavily, and the QMX+ quietly stopped being the radio I reached for.</p>
+
+<p>What brought it back was air travel. I wanted to take an HF radio with me, and I did not want to take the FTX-1 — it is considerably heavier, and considerably more expensive to have something happen to. The QMX+ was the obvious candidate, with two things in the way:</p>
+
+<ol>
+  <li><strong>Under 5 watts is not much</strong> when you are working whatever antenna you can improvise at the far end.</li>
+  <li><strong>It has no speaker.</strong> Using it meant packing either headphones or a powered auxiliary speaker, which is exactly the sort of accessory creep that makes you leave the radio at home.</li>
+</ol>
+
+<p>So the mods are not cosmetic. Each one exists to remove a reason not to bring it.</p>
+
+<h2 id="more-power-the-8x-finals-mod">More power: the 8X finals mod</h2>
+
+<p><a href="https://www.w1nc.org">W1NC’s 8X Finals board</a> replaces the QMX+’s four BS170 finals with eight, on a small daughterboard that plugs into headers where the originals were, with copper shims and aluminum heat sinks bonded on with thermal tape. T501 gets rewound for the 9 V WTST method from the QRP Labs documentation.</p>
+
+<blockquote>
+  <p>The 8X finals board fitted to the QMX+, before the MOSFETs went in
+<img src="/hamradio/assets/images/qmx_plus_build/8x-finals-board-fitted.jpg" alt="The red 8X finals daughterboard fitted to the QMX+ main board, beside the low-pass filter toroids" /></p>
+</blockquote>
+
+<p>The instructions are careful about the order of operations in a way I appreciated after my probe incident — solder one pin of each header, fit the board to check it is square, reflow those single pins to relieve any stress, and only then solder the rest. On a board where you have already removed four transistors and a transformer from plated-through holes, that kind of sequencing is worth following exactly.</p>
+
+<p>The documented result is 9–11 W at 160 m at 12 V, falling to 4–5 W at 6 m, with system efficiency between about 60% at 160 m and 30% at 6 m.</p>
+
+<p><strong>I am seeing something like 8–10 watts, and I want to be careful about that number.</strong> It is an approximation, taken on 20 m into the QRP Labs 50 Ω dummy load. It is not a measurement campaign — I did not go band by band, multiple times, at a fixed supply voltage into a known load with a continuous carrier, the way I did for the original diagnostics. Given that I am the person who produced a 216-slide diagnostic document for a quiet band, I should hold the mod to the same standard, and I have not yet. That is the next job.</p>
+
+<h2 id="audio-two-speakers-and-a-power-supply-problem-i-created">Audio: two speakers, and a power supply problem I created</h2>
+
+<p>The second mod is a pair of small speakers stuck to the inside of the top of the case, driven by a small class-D amplifier module, so the radio makes its own noise and I can leave the headphones at home.</p>
+
+<p>The neat part is the packaging: the amplifier board is stuck to the back of one speaker and the voltage regulator board to the back of the other, so the whole audio subsystem rides on the lid and nothing extra takes up floor space inside.</p>
+
+<blockquote>
+  <p>The lid: two speakers, with the amplifier on one and the regulator on the other, and the 8X finals with its heat sink opposite
+<img src="/hamradio/assets/images/qmx_plus_build/mods-in-the-lid.jpg" alt="The QMX+ case lid carrying two speakers with an amplifier board and a regulator board mounted on their backs, beside the main board with the 8X finals fitted" /></p>
+</blockquote>
+
+<p>The voltage regulator is there because of a mistake worth describing.</p>
+
+<p>My first attempt powered the amplifier from one of the QMX+’s own voltage rails, which is the obvious thing to do — the rail is right there. It worked at low volume and <strong>browned out the transceiver whenever the amplifier drove hard</strong>. Loud audio is exactly when the amplifier draws the most current, so the failure arrives precisely when you are listening to something you care about.</p>
+
+<p>Those rails are sized for the radio, not for a second load that can swing hard and fast. So the amplifier gets its own supply: a standard 5 V regulator on a scrap of perfboard, fed straight from the barrel connector ahead of everything else.</p>
+
+<p>The blue trimpot on that same board has nothing to do with the regulator. It sets the audio level going into the speaker driver board, so that the QMX+’s external volume knob sweeps its whole range without the amplifier being driven into distortion at the top of it. Set it once, and the volume knob behaves like a volume knob.</p>
+
+<blockquote>
+  <p>The regulator board — a TO-220 5 V regulator, a couple of ceramics and a diode, plus the trimpot that sets the audio level into the amplifier
+<img src="/hamradio/assets/images/qmx_plus_build/regulator-board.jpg" alt="A small red perfboard carrying a TO-220 five volt regulator, two ceramic capacitors, a diode and a blue trimpot for setting the amplifier input level" /></p>
+</blockquote>
+
+<p>Adding a load to an existing rail is the kind of change that looks free and is not. It cost me nothing in parts to find out, and it would have been maddening to diagnose in the field.</p>
+
+<h2 id="where-it-stands">Where it stands</h2>
+
+<blockquote>
+  <p>The finished radio on 20 m, sitting on the NanoVNA
+<img src="/hamradio/assets/images/qmx_plus_build/qmx-plus-on-the-nanovna.jpg" alt="The assembled QMX+ tuned to 14.302 MHz, sitting on top of a NanoVNA" /></p>
+</blockquote>
+
+<p>The QMX+ now comes with me any time I want HF and do not want to risk the weight or the replacement cost of the FTX-1. It makes its own audio, it puts out something in the region of 8–10 watts, and it fits in a bag with a vertical and a handful of radials — which is how it ended up on the air from Key West the week after the mods were finished.</p>
+
+<blockquote>
+  <p>A vertical and a fan of radials in Key West, which is the whole point of the mods
+<img src="/hamradio/assets/images/qmx_plus_build/qmx-plus-travelling.jpg" alt="A vertical antenna with radials laid out on grass in a walled garden with palm trees in Key West at dusk" /></p>
+</blockquote>
+
+<h2 id="what-i-would-tell-someone-building-their-first-kit">What I would tell someone building their first kit</h2>
+
+<p><strong>Run every diagnostic and keep every screen</strong>, even when the radio seems to work. I could describe my fault precisely to people who had never seen my bench, and that is the only reason I got a useful answer on the first reply.</p>
+
+<p><strong>Measure the whole matrix, not the suspicious part.</strong> One reading tells you something is odd. A table of every diode in every state tells you which one is odd <em>in a way the others are not</em>, and that is a different and much better piece of information.</p>
+
+<p><strong>A component that measures wrong is not necessarily the broken component.</strong> Mine measured wrong because of a joint on the part next to it. I replaced two innocent diodes before I worked that out.</p>
+
+<p><strong>Post your failure with the data attached.</strong> The QRP Labs group answered a beginner’s question with a diagnosis, a protocol, and the note that one of my “faults” was a known firmware quirk. That is a good hobby.</p>
+
+<p><strong>And clip your meter leads on rather than holding them.</strong> I dropped a multimeter probe onto a powered board and paid for it in a driver IC and four transistors. That one is free to avoid.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>
