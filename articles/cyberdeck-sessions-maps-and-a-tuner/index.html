@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seven Features, and What the Panel Found | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Seven Features, and What the Panel Found</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: October 23, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>I added seven things to the <a href="/hamradio/articles/keyboard-to-keyboard-cyberdeck/">ham radio cyberdeck</a> in a day: a configurable function ring, a band plan reference, an antenna tuner that sweeps a band, a hotkey that logs the station you are working, a map for the WSPR spots, another for the contact log, and a way to get the files onto a phone. All of them had tests. The suite went from 3,146 checks to 3,994 and stayed green.</p>
+
+<p>Then I put it on the deck, and found eleven faults in four sessions at the panel.</p>
+
+<p>The features first, in the order an operating session actually uses them. The faults after.</p>
+
+<hr />
+
+<h2 id="setting-up">Setting up</h2>
+
+<h3 id="the-function-ring">The function ring</h3>
+
+<p><code class="language-plaintext highlighter-rouge">^O</code> and <code class="language-plaintext highlighter-rouge">^P</code> walk between the deck’s applications — deck &amp; rig, digimodes, logging, WSPR, band plan. Which ones are on that walk, and in what order, is now a screen rather than a constant in the source. Deck &amp; rig cannot be removed, because it holds the system menu, but it can be moved.</p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/function-ring-editor.jpg" alt="The function ring editor on the deck's panel. Five areas listed and numbered: Deck and rig marked 'always on the ring', then Digimodes, Logging, WSPR and Band plan. The footer reads Esc cancel, up-down move, Space in/out, 1-9 move, Enter save." /></p>
+
+<p>The reason to make it configurable is that a field session and a shack session want different rings. Operating WSPR for a weekend, the band plan and the logger are in the way. Working a contest, WSPR is.</p>
+
+<p>I specified two screens for this, copying the log schema editor: pick from a list, then order what you picked. I built one. Nineteen fields need two steps; five areas fit on one panel with room to spare. The key bindings are the schema editor’s, since those are already learned.</p>
+
+<h3 id="the-band-plan">The band plan</h3>
+
+<p>A stop on the ring that lists the band segments for a license class, with their mode privileges. It is a reference, and a reference is worth having one key away while operating rather than on a phone in a pocket.</p>
+
+<p>It carries US General and US Extra, with each band split into its CW/data and phone segments. I took the numbers from the regulation and followed what it said.</p>
+
+<h3 id="the-auto-tuner">The auto tuner</h3>
+
+<p>The FTX-1 drives an external mAT-30 tuner, which stores a match per frequency. The tuner walks a set of band segments, stopping at each point to key the radio and trigger a match, so the radio ends up with a memory on every 10 kHz step of the bands I use. After that, changing frequency during a session recalls a stored match instead of running a fresh tune cycle.</p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/auto-tuner.jpg" alt="The auto tuner screen. A list of band segments with checkboxes, 20m CW/Data selected. The header reads AUTO TUNER - US General with INH off at the right. The summary line reads: selected 1 segment, 14 memories, about 32 s." /></p>
+
+<p>The points sit 1 kHz inside each band edge and on 10 kHz multiples between. The segment list is the band plan’s, so the tuner never parks on a frequency the license class does not cover.</p>
+
+<p>Each point gets a dwell, because the radio cannot report that an external tuner has finished — the <code class="language-plaintext highlighter-rouge">RI</code> status bit never clears. <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">-</code> set the dwell in half-second steps, the same keys that set squelch on the digimode tune screen. The dwell starts when the radio reports itself on the new frequency, not when the command was sent.</p>
+
+<hr />
+
+<h2 id="operating">Operating</h2>
+
+<h3 id="wspr-sessions">WSPR sessions</h3>
+
+<p>A WSPR session has a name and a start time, and every spot the deck decodes is filed under the session that was running. Sessions resume, start, rename and forget, from the <code class="language-plaintext highlighter-rouge">F1</code> menu or <code class="language-plaintext highlighter-rouge">F2</code>, using the same keys as the contact log’s activities — a WSPR session and a log activity are the same idea, so they are the same workflow.</p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/wspr-menu-sessions.jpg" alt="The WSPR menu on the deck, showing 'e Sessions general' among the toggles, with 6190 heard and 131 sent against the export line." /></p>
+
+<p>They are listed by name and start time to the minute in UTC. The time matters as much as the name: three sessions called <code class="language-plaintext highlighter-rouge">general</code> are indistinguishable by date alone, and for propagation the hour is the useful resolution anyway.</p>
+
+<p>The point of naming a run is that it makes the log answerable afterward. “The 20 m spots from the Saturday night run” is a query only if the run had a name.</p>
+
+<h3 id="the-wspr-map">The WSPR map</h3>
+
+<p>One key from the WSPR screen draws the spots of the current session on a world coastline.</p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/wspr-map.png" alt="The WSPR map: a world coastline in green with spots marked as plus signs, KD3CCO at the center of North America marked with an X. The top row names the session and the spot count; the bottom row reads v view, Esc back." /></p>
+
+<p>Every spot is a <code class="language-plaintext highlighter-rouge">+</code> and this station is an <code class="language-plaintext highlighter-rouge">×</code>. One key changes the view between the focus projection and the globe, <code class="language-plaintext highlighter-rouge">Esc</code> leaves. That is the whole interface.</p>
+
+<p>It is scoped to the session, which is what makes it worth a key: the question in the field is what this antenna, in this spot, is hearing tonight. Not what the deck has decoded since June.</p>
+
+<p>The maps write pixels to <code class="language-plaintext highlighter-rouge">/dev/fb0</code> directly rather than handing the framebuffer to <code class="language-plaintext highlighter-rouge">fim</code> or <code class="language-plaintext highlighter-rouge">fbi</code>, because handing over the framebuffer means handing over the keyboard too, and the deck is a keyboard-driven machine.</p>
+
+<h3 id="g--log-the-station-you-are-working"><code class="language-plaintext highlighter-rouge">^G</code> — log the station you are working</h3>
+
+<p>On the digimode conversation screen, <code class="language-plaintext highlighter-rouge">^G</code> reads the callsign off the last received line and opens the log form with it filled in, along with the frequency, mode and time from the radio. Pressed again it steps back through earlier candidates.</p>
+
+<p>The last <em>received</em> line is the right one. I specified the last transmitted line, which proves somebody was called, not that anybody answered. On receive the line reads <code class="language-plaintext highlighter-rouge">KD3CCO DE K2ABC</code>, so the other station is the token after <code class="language-plaintext highlighter-rouge">DE</code>. It also checks that the call before <code class="language-plaintext highlighter-rouge">DE</code> is mine, or two other stations working each other on the same frequency end up in my log.</p>
+
+<h3 id="the-contact-map">The contact map</h3>
+
+<p>The same map, over the contact log, scoped to the current activity.</p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/contact-map.png" alt="The contact map: the continental United States in green outline, contacts marked with plus signs, KD3CCO marked with an X in central Pennsylvania. The header names the activity and reports how many contacts have no grid." /></p>
+
+<p>Contacts without a grid square are counted in the header rather than dropped, so a map showing eleven of forty contacts says so instead of looking like a quiet afternoon.</p>
+
+<hr />
+
+<h2 id="afterward">Afterward</h2>
+
+<h3 id="getting-the-files-off">Getting the files off</h3>
+
+<p>One key stands up a web page on the deck’s WiFi address and shows the URL. Type it into a phone and the log, the ADIF export, the WSPR spots, the transcript and the config file are downloadable.</p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/export-page-on-the-deck.jpg" alt="The deck showing an export page address: http://192.168.68.70:8080/irbe, with cyberdeck.local given underneath. Five files listed with sizes: qso.adi, qso.log, wspr.log, transcript.txt and cyberdeck.conf." /></p>
+
+<p><img src="/hamradio/assets/images/cyberdeck_sessions_maps_tuner/export-page-on-the-phone.png" alt="The same page open in a phone browser, headed 'KD3CCO files', listing the five downloadable files." /></p>
+
+<p>No account, no app, no credentials, and it works on a field hotspot with no uplink — which is the case that rules out anything cloud-shaped. The address carries four random characters and the server closes itself five minutes after the last download. The request names a position in a list the deck handed the server, never a filename, so there is no path in it to traverse, and <code class="language-plaintext highlighter-rouge">cyberdeck.secrets</code> is not on the list.</p>
+
+<hr />
+
+<h2 id="what-the-panel-found">What the panel found</h2>
+
+<p>That is how it works now. Most of those descriptions are the second version.</p>
+
+<p><strong>The auto tuner crashed the deck.</strong> One line passed <code class="language-plaintext highlighter-rouge">self.rig</code>, which does not exist — everywhere else uses <code class="language-plaintext highlighter-rouge">self._log_rig()</code>. Pressing <code class="language-plaintext highlighter-rouge">Enter</code> raised <code class="language-plaintext highlighter-rouge">AttributeError</code>, systemd restarted the terminal, and on the panel it looked like a pause and the screen escaping with the radio untouched.</p>
+
+<p>The tests drive the sweep engine against a fake rig, and the screen tests drive the renderer. Nothing called the method that connects them. Both halves were tested and the wire between them was not. If a key starts something, a test should press the key.</p>
+
+<p><strong>The tuner swept against nothing.</strong> The CAT helper ignored its own return value, so a refused frequency command read as a successful one and the sweep walked through its whole segment list while the radio sat where it was. It checks the answer now and stops on a refusal.</p>
+
+<p><strong>The dwell was timed from the wrong moment.</strong> The tuner waited a fixed 0.3 seconds after commanding the VFO, then triggered the match. That is a guess about how long a radio takes to get there. Too short and the tuner matches the previous frequency; too long and every step in a long sweep pays for the worst case. It reads the dial back now and starts the dwell on arrival. A radio whose frequency cannot be read falls back to the fixed settle.</p>
+
+<p><strong>The band plan data was wrong.</strong> I had it carrying Technician and four reference plans for other countries that I did not need, and the Extra plan listed each band as a single range marked “All Modes”, which is not how the band is divided. Stripped to General and Extra, split into CW/data and phone segments.</p>
+
+<p><strong>The map drew and then disappeared.</strong> The framebuffer and the text console are the same memory. The draw loop opens with <code class="language-plaintext highlighter-rouge">scr.erase()</code>, so the picture — written once on entry — was overwritten a frame later. What survived were the cells curses thought were unchanged, which looked like a map squeezed into the top of the screen with fragments left behind on exit.</p>
+
+<p>The blit runs after the refresh now, every frame, and covers only the rows between the header and the footer. Leaving a map blanks the framebuffer first, because the console is 66 columns of a 12-pixel font — 792 of the panel’s 800 — so the last eight pixels belong to no cell and <code class="language-plaintext highlighter-rouge">clearok</code> cannot reach them. A stripe of old map survived there on every exit.</p>
+
+<p>No test could have caught this. The suite has no framebuffer.</p>
+
+<p><strong>The map was showing the wrong spots.</strong> It plotted every spot the deck had ever decoded — six thousand of them, from every night since I built it. Scoping it to the session fixed that, and then two things I had built for it were no longer worth their keys.</p>
+
+<p>The band toggles went: within one session every band answers the same question, and which band a spot arrived on is a column in the spot list. The heard / heard-by filter went too, because the deck does not have that data. Its log holds what it decoded and what it transmitted; who heard the deck is on wsprnet, which needs a network a field deck often does not have. One of that filter’s two positions was always empty. I had taken the idea from my WSPR analysis work, which uses downloaded wsprnet data where both directions exist.</p>
+
+<p><strong>And then it was still showing the wrong spots.</strong> Scoping the map to the session was not enough, because the canvas cache keyed on the file’s size and modification time and not on which session was current. Start a fresh session, open the map, and the previous session’s several thousand spots came back out of the cache. The session name and start time are part of the cache key now.</p>
+
+<p><strong>The transmit interlock refused everywhere.</strong> <code class="language-plaintext highlighter-rouge">^B</code> would not arm transmit unless the radio was in a data mode. That is right for digimodes and WSPR and wrong for the tuner, which keys the radio to match an antenna and does not care about the mode. The refusal was also written to the transcript, which the tuner screen does not draw, so the key looked dead rather than refusing. It applies to the two applications it belongs to now, and refusals report on the screen that raised them.</p>
+
+<p><strong>The transcript was full of housekeeping.</strong> Joining WiFi, pairing a keyboard, cycling the band plan’s license class, saving a ring order, the tuner starting and stopping — all of it went into the keyboard-to-keyboard transcript, which is meant to be a record of what went over the air. Each one goes to its own screen now.</p>
+
+<p><strong>An aborted over leaked into the next one.</strong> <code class="language-plaintext highlighter-rouge">Ctrl-C</code> drops the carrier through fldigi’s <code class="language-plaintext highlighter-rouge">main.abort</code>, but the text that had not gone out yet stays in fldigi’s transmit widget, and the deck adds each new over with <code class="language-plaintext highlighter-rouge">text.add_tx</code>, which appends. Abort halfway through a message, type something different, press <code class="language-plaintext highlighter-rouge">Ctrl-T</code>, and the remainder of the abandoned message goes out ahead of the new one. <code class="language-plaintext highlighter-rouge">clear_tx</code> existed in the client and had never been called. Abort stops the transmitter and then discards the text.</p>
+
+<p><strong>The callbook’s grid was being thrown away.</strong> The deck looks up name, QTH and grid for every callsign logged. The grid arrived and vanished, because the answer was written into the form and the <code class="language-plaintext highlighter-rouge">general</code> schema has no grid field. Every contact logged under that schema reached the file without a grid, which is why the contact map had nothing to plot. The log format has always carried <code class="language-plaintext highlighter-rouge">grid</code> and exports it as <code class="language-plaintext highlighter-rouge">GRIDSQUARE</code>; only the route from the lookup to the record was missing.</p>
+
+<p>For contacts already in the log, the danger zone gained a line that looks up every callsign missing a grid, name or QTH and fills the gaps. One query per callsign, not per contact. It fills blanks and does not overwrite anything already typed.</p>
+
+<p><strong>The session picker was not where anyone would look for it.</strong> A WSPR session could be named and never returned to. The deck would come up on <code class="language-plaintext highlighter-rouge">general</code>, report six thousand heard in its header, and show an empty spot list, because the list only held what the current run had decoded. I put a session picker on <code class="language-plaintext highlighter-rouge">F2</code> and considered it done. The <code class="language-plaintext highlighter-rouge">F1</code> menu’s Session line still went to the name editor, which only starts a session. I looked in the menu for it myself and it was not there.</p>
+
+<hr />
+
+<h2 id="what-i-take-from-it">What I take from it</h2>
+
+<p>The eleven faults fall into three groups.</p>
+
+<p>Some were things no test could reach: the framebuffer against curses, the transmit buffer surviving an abort, the VFO settle being a guess. The suite has no panel, no radio and no fldigi transmit widget to inspect.</p>
+
+<p>Some were gaps between tested parts. The tuner crash is the clearest: both halves tested, the connection between them not. The cache key is the same shape of mistake — the scoping was tested, the cache was tested, and the fact that one invalidated the other was nobody’s test.</p>
+
+<p>The rest were decisions I got wrong in the specification, which only showed up when I used the thing. A map of everything instead of a map of tonight. A filter for data the deck does not have. A session list reachable from a key but not from the menu. The code did what I asked it to.</p>
+
+<p>Most of the improvement came from removing things.</p>
+
+<hr />
+
+<p>Code, design documents, deployment runbook and operating tutorials: <a href="https://github.com/hatandspecs/ham-radio-cyberdeck">github.com/hatandspecs/ham-radio-cyberdeck</a></p>
+
+<p>73 de KD3CCO</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

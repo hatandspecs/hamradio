@@ -1,0 +1,18 @@
+W5d. Desense matrix
+# Record degradation as a POSITIVE number of dB: 12 means the floor rose by 12 dB when that transmitter keyed. The improvement column assumes that convention.
+"# Use your own callsign and keep each transmission brief. This is a test, not a broadcast."
+"Transmitter (freq, power)",Victim receiver,Floor change (dB),Weak-signal change (dB),Fix applied,After fix (dB),Improvement (dB) (compute)
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,

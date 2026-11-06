@@ -1,0 +1,18 @@
+W2b. Noise above floor
+"# Read antenna, then load, then antenna again, so drift shows up as a discrepancy instead of hiding in the result."
+"# Receiver-limited is ambiguous: it means a quiet site OR a deaf antenna. If signals are weak too, suspect the antenna."
+Antenna,Band,Freq,Antenna (dBm),Dummy load (dBm),Delta (dB) (compute),Bandwidth (Hz) (compute),Antenna (dBm/Hz) (compute),P.372 category it resembles,Verdict (compute),Time / weather
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,

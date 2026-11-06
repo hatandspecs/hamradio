@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WSPR Results Analysis on DIY 75-10m EFHW — Three-Day Capture | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>WSPR Results Analysis on DIY 75-10m EFHW — Three-Day Capture</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: October 19, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>In June I put up a <a href="/hamradio/articles/wideband-unun/">DIY 75-10m EFHW</a> and ran <a href="/hamradio/articles/7510-wspr-results-analysis/">a WSPR analysis on it</a> from a three-hour evening capture. The antenna has not moved since. What has changed is that the <a href="/hamradio/articles/cyberdeck-wspr/">cyberdeck</a> now runs WSPR by itself — it hops bands on a rotation and will sit unattended for days — so I was able to point the same ten analyses at the same antenna with <strong>18,315 spots over 57 hours</strong> instead of 5,000 over three.</p>
+
+<p>The original notebook was put together with GitHub Copilot back in June. This re-run, and the two additions to the analysis pipeline described in section 2, were done with Claude Code.</p>
+
+<p>This article stands on its own. Each analysis below explains what it does, how to read it, and what this dataset said, so there is no need to go back to the June article first. Where the two captures disagree I say so at the end of each section under <strong>Compared with June</strong>, and section 4 collects those differences.</p>
+
+<p>Everything here comes from one file: <strong><code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code></strong>, 18,315 spots, 17–19 October 2026, transmitting at 5 W. Every figure in this article is plotted from that file and nothing else.</p>
+
+<p><strong>A note on the data.</strong> Spots come from <a href="https://wspr.live">wspr.live</a>, the same database behind wspr.rocks. Two filters run before anything is counted. First, callsigns beginning with Q, 0 or 1, which cannot exist — Q is reserved for Q-codes and 0 and 1 are unallocated. Second, and more useful: <strong>stations no other receiver on the network has ever heard.</strong> A real beacon is received by dozens of stations; a corrupt decode is heard once, by one receiver, and never again. Of the 463 stations in this capture, 454 were heard by five or more receivers and nine by exactly one. There was nothing in between, so the cut is unambiguous.</p>
+
+<h2 id="what-wspr-can-and-cannot-tell-you">What WSPR can and cannot tell you</h2>
+
+<p>WSPR is excellent for investigating real-world propagation and the performance of a <strong>complete transmitting station</strong> — the antenna, the feedline, the ground or counterpoise, the local noise floor and the band conditions all at once, judged by hundreds of independent receivers with no stake in the answer.</p>
+
+<p><strong>It does not independently establish antenna efficiency or gain.</strong> Raw spot counts and distances cannot do that, and nothing below should be read as though they could.</p>
+
+<p>Whether a given transmission becomes a spot depends on many variables beyond the transmitting antenna:</p>
+
+<ul>
+  <li><strong>The state of propagation</strong> at the time of that transmission.</li>
+  <li><strong>The receiving station</strong> — its antenna, its local noise, its receiver sensitivity, and where in the world it happens to sit.</li>
+  <li><strong>The number and distribution of participating receivers.</strong> A band monitored by more WSPR stations yields more spots from the same antenna, and the map of who is listening is not evenly spread over the earth.</li>
+  <li><strong>Transmit power, antenna height, polarization, and radiation pattern</strong> — four properties of the station that WSPR reports as a single number.</li>
+  <li><strong>Selection effects: which signals are strong enough to be decoded and reported at all.</strong> Only successes appear in the data. Every path that failed to decode is silently absent, so any band or station that only gets through under good conditions will look better than it is.</li>
+</ul>
+
+<p>None of that separates the antenna from the station around it. Feedline loss, a marginal ground, a noisy receive environment and a mediocre antenna all land in the same numbers, and WSPR cannot pull them apart on its own.</p>
+
+<p>What a capture like this <em>can</em> do is compare — same time, same band, same power, one thing changed — and describe what a whole station actually achieved on the air. Where this article compares bands or antennas, that is the claim being made and the only one intended. A gain figure would need a modeled pattern or a calibrated range, and neither is in here.</p>
+
+<hr />
+
+<h2 id="1-notebook-based-detailed-analysis">1. Notebook-based Detailed Analysis</h2>
+
+<p>The notebook and its ten analyses are in <a href="https://github.com/hatandspecs/wspr_7510_analysis">this repository</a>. The script that produced everything below is <code class="language-plaintext highlighter-rouge">run_7510m_cyberdeck_2026-10.py</code>.</p>
+
+<h3 id="analysis-1-band-openings-and-closures">Analysis 1: Band Openings and Closures</h3>
+
+<p>This analysis tracks spot counts and mean SNR across 15-minute time bins for each band.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Show when individual amateur bands are most active, and whether propagation is strengthening or weakening over time.</li>
+  <li>Highlight changes in the Maximum Usable Frequency (MUF) by comparing multiple bands in the same time window.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>A rising spot count means the band is opening and more stations are being heard.</li>
+  <li>An increasing mean SNR indicates better signal strength and propagation quality.</li>
+  <li>Bands that drop sharply suggest closures or fading conditions.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Identify the best operating times for each band.</li>
+  <li>Determine whether the dataset captures a transition from lower-frequency to higher-frequency propagation.</li>
+  <li>Spot any bands that remain weak despite others opening.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+<ul>
+  <li>Data covers 2026-10-17 05:22 UTC through 2026-10-19 14:08 UTC — 57 hours, across three nights and two full days.</li>
+  <li>Active bands and spot counts:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">20m</code>: 5,107 spots, 124 bins, mean SNR ≈ -14.7 dB, max 364 spots in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">40m</code>: 3,935 spots, 168 bins, mean SNR ≈ -11.5 dB, max 246 in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">30m</code>: 3,711 spots, 162 bins, mean SNR ≈ -13.6 dB, max 214 in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">80m</code>: 2,002 spots, 133 bins, mean SNR ≈ -11.5 dB, max 157 in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">17m</code>: 1,593 spots, 54 bins, mean SNR ≈ -15.2 dB, max 207 in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">15m</code>: 1,410 spots, 55 bins, mean SNR ≈ -15.0 dB, max 149 in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">10m</code>: 298 spots, 24 bins, mean SNR ≈ -16.1 dB, max 80 in one bin.</li>
+      <li><code class="language-plaintext highlighter-rouge">12m</code>: 259 spots, 33 bins, mean SNR ≈ -16.8 dB, max 54 in one bin.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>20m carries the most spots but in the <strong>fewest time bins of the four busiest bands</strong> — 124, against 168 for 40m and 162 for 30m. It is intense while it is open and absent otherwise.</li>
+  <li>40m and 30m are the endurance bands here. They are present in nearly every bin of the capture, which is what a rotation running through the night produces and a daytime capture cannot show.</li>
+  <li>Mean SNR runs opposite to frequency almost perfectly: -11.5 dB on 80m and 40m, down to -16.8 dB on 12m. The low bands deliver fewer but stronger paths.</li>
+  <li>10m is open in only 24 bins out of 57 hours. When it is open the paths are long, and the rest of the time there is nothing.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> the June capture ran 18:20–21:36 UTC on one afternoon and put <strong>44% of all spots on 20m</strong>. Here 20m is 28%, with 40m and 30m close behind. That difference is the time of day, not the antenna.</p>
+
+<blockquote>
+  <p>Band Openings and Closures — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis1_band_openings.png" alt="Band openings and closures across 57 hours, from the October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-2-distance-profiling">Analysis 2: Distance Profiling</h3>
+
+<p>This analysis summarizes the distance distribution of spots on each band.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Show how far each band is actually reaching, rather than how many spots it produces.</li>
+  <li>Separate bands that deliver a few long paths from bands that deliver many short ones.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>A high mean distance with a high standard deviation means a band is carrying a mix of short and long paths.</li>
+  <li>A high mean with a low standard deviation means the band is only reaching one kind of distance.</li>
+  <li>The maximum is a single best path and should not be read as typical.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>Identify which bands are the DX bands on this antenna as deployed.</li>
+  <li>Identify bands that are working but only locally.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>mean km</th>
+      <th>max km</th>
+      <th>std dev</th>
+      <th>spots</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>80m</td>
+      <td>832</td>
+      <td>6,060</td>
+      <td>790</td>
+      <td>2,002</td>
+    </tr>
+    <tr>
+      <td>40m</td>
+      <td>2,044</td>
+      <td>16,803</td>
+      <td>2,299</td>
+      <td>3,935</td>
+    </tr>
+    <tr>
+      <td>30m</td>
+      <td>2,952</td>
+      <td>18,453</td>
+      <td>2,640</td>
+      <td>3,711</td>
+    </tr>
+    <tr>
+      <td>20m</td>
+      <td>3,242</td>
+      <td>18,671</td>
+      <td>2,677</td>
+      <td>5,107</td>
+    </tr>
+    <tr>
+      <td>17m</td>
+      <td>3,629</td>
+      <td>16,744</td>
+      <td>2,419</td>
+      <td>1,593</td>
+    </tr>
+    <tr>
+      <td>15m</td>
+      <td>3,970</td>
+      <td>16,744</td>
+      <td>2,341</td>
+      <td>1,410</td>
+    </tr>
+    <tr>
+      <td>12m</td>
+      <td>3,471</td>
+      <td>15,176</td>
+      <td>2,484</td>
+      <td>259</td>
+    </tr>
+    <tr>
+      <td>10m</td>
+      <td><strong>5,184</strong></td>
+      <td>12,037</td>
+      <td><strong>1,848</strong></td>
+      <td>298</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li><strong>Mean distance rises monotonically with frequency</strong> from 80m through 15m, then dips on 12m and jumps on 10m.</li>
+  <li>10m has the highest mean distance and by far the <strong>lowest standard deviation</strong>. Every path it produced was long. That is the signature of a band whose inner skip boundary is beyond anything local.</li>
+  <li>20m’s maximum of 18,671 km is the longest single path in the capture, but its mean of 3,242 km is mid-table. It reaches everywhere, including nearby.</li>
+  <li>80m is a regional band on this antenna: mean 832 km, and its best path of 6,060 km is a single outlier to Belgium.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> the ordering is the same, but June reported 20m with the highest mean distance of the well-sampled bands. With three days of data 15m and 10m both average further. <strong>20m produces the most spots; it does not reach the furthest.</strong></p>
+
+<blockquote>
+  <p>Distance Profiling — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis2_distance_profiling.png" alt="Distance profiling by band, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-3-geographical-spread">Analysis 3: Geographical Spread</h3>
+
+<p>This analysis counts the Maidenhead grid squares that reported hearing the station.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Show the geographic footprint of the antenna rather than its raw reach.</li>
+  <li>Reveal directions that are well covered and directions that are not.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>A grid square appearing many times means a reliable path, usually a well-equipped receiver nearby in propagation terms.</li>
+  <li>The spread of distinct grids matters more than the count in any one.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+<ul>
+  <li>The 20 most frequent reporting grids:</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Grid</th>
+      <th>Count</th>
+      <th> </th>
+      <th>Grid</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FN21</td>
+      <td>519</td>
+      <td> </td>
+      <td>JO33</td>
+      <td>188</td>
+    </tr>
+    <tr>
+      <td>FM18</td>
+      <td>347</td>
+      <td> </td>
+      <td>FN31</td>
+      <td>187</td>
+    </tr>
+    <tr>
+      <td>JN47</td>
+      <td>346</td>
+      <td> </td>
+      <td>CM88</td>
+      <td>172</td>
+    </tr>
+    <tr>
+      <td>CM87</td>
+      <td>278</td>
+      <td> </td>
+      <td>EN58</td>
+      <td>169</td>
+    </tr>
+    <tr>
+      <td>DN70</td>
+      <td>268</td>
+      <td> </td>
+      <td>FN13</td>
+      <td>163</td>
+    </tr>
+    <tr>
+      <td>FN20</td>
+      <td>240</td>
+      <td> </td>
+      <td>CN88</td>
+      <td>163</td>
+    </tr>
+    <tr>
+      <td>EN82</td>
+      <td>229</td>
+      <td> </td>
+      <td>IO90</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <td>IO91</td>
+      <td>201</td>
+      <td> </td>
+      <td>JN58</td>
+      <td>160</td>
+    </tr>
+    <tr>
+      <td>DN31</td>
+      <td>196</td>
+      <td> </td>
+      <td>JO21</td>
+      <td>189</td>
+    </tr>
+    <tr>
+      <td>FN42</td>
+      <td>193</td>
+      <td> </td>
+      <td>JO31</td>
+      <td>193</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>The top grids split cleanly into three groups: the <strong>US northeast</strong> (FN21, FM18, FN20, FN31, FN42, FN13), <strong>central Europe</strong> (JN47, IO91, JO33, JO31, JO21, IO90, JN58), and the <strong>US west coast</strong> (CM87, CM88, CN88, DN70, DN31).</li>
+  <li>There is no fourth group. South America, Africa and the Pacific appear in the capture but never in volume.</li>
+  <li>The European cluster is as strong as the domestic one, which for a wire at this height is the result worth having.</li>
+</ul>
+
+<blockquote>
+  <p>Geographical Spread — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis3_geographical_spread.png" alt="Geographical spread of reporting grids, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-4-snr-vs-distance-regression">Analysis 4: SNR vs Distance Regression</h3>
+
+<p>This analysis fits reported SNR against the logarithm of path distance.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Quantify how fast signal quality falls off with distance on this station.</li>
+  <li>Provide a baseline that can be compared between captures and between antennas.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>The slope is in dB per decade of distance — how much SNR is lost each time the path length multiplies by ten.</li>
+  <li>The correlation coefficient says how much of the variation distance actually explains. WSPR SNR depends on far more than distance, so a weak correlation is expected and is not a problem.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+<ul>
+  <li>Slope: <strong>-7.0 dB per decade of distance</strong>.</li>
+  <li>Correlation: <strong>r = -0.34</strong>, over 13,132 transmit-side spots.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>Each tenfold increase in distance costs about 7 dB.</li>
+  <li>The correlation is weak because time of day, band and the receiving station matter more than distance does. The slope is still the useful number.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> June gave <strong>-7.2 dB per decade with r = -0.35</strong>. Two captures four months apart, different season, different hours, different transmit power, 5,000 spots against 18,315 — and the slope agrees to within a rounding error. <strong>This is the most reassuring result in the article.</strong> It is what a real physical relationship looks like measured twice, and it sets the bar for how much to trust the things that did move.</p>
+
+<blockquote>
+  <p>SNR vs Distance Regression — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis4_snr_distance.png" alt="SNR versus distance regression, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-5-tx-vs-rx-asymmetry-local-noise-floor-test">Analysis 5: TX vs RX Asymmetry (Local Noise Floor Test)</h3>
+
+<p>This comparison uses reciprocal paths involving KD3CCO as both transmitter and receiver. A <strong>matched pair</strong> is one remote station heard both ways, on the same band, within twenty minutes.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Compare how the transmit and receive paths perform for the same remote station and band.</li>
+  <li>Reveal whether one direction is consistently stronger, which can indicate local noise, feedline loss, or antenna imbalance.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">SNR_delta</code> is <code class="language-plaintext highlighter-rouge">SNR_tx - SNR_rx</code>. Values above zero mean the remote station heard me better than I heard them.</li>
+  <li>A distribution centered near zero indicates roughly symmetric link performance.</li>
+  <li><strong>The raw delta is not enough.</strong> WSPR SNR scales dB for dB with transmit power, so a pair where I ran more power than the other station will show a positive delta for that reason alone. This is the trap the June analysis fell into.</li>
+</ul>
+
+<p><strong>Possible conclusions:</strong></p>
+<ul>
+  <li>A persistent positive delta with power held equal points at the receive path — local noise or receiver sensitivity — rather than at the antenna, since the antenna is the same in both directions.</li>
+  <li>A band-selective pattern points at a noise source, because an antenna or feedline problem would not skip a band.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+<ul>
+  <li><strong>143 matched pairs</strong> within a ±20 minute window.</li>
+  <li>Raw mean <code class="language-plaintext highlighter-rouge">SNR_delta</code> = <strong>+11.0 dB</strong>, median +11, with 125 positive and 15 negative.</li>
+  <li>Of those 143 pairs, <strong>60 were against stations running less power than my 5 W</strong> — some as low as 20 mW. The raw figure is inflated by that.</li>
+  <li>Normalizing each side to one watt gives +8.5 dB, but <strong>that correction is not trustworthy either</strong>, for two reasons given below.</li>
+  <li><strong>The clean measurement uses only the pairs where both ends ran the same 5 W</strong>, where nothing needs normalizing:</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>pairs</th>
+      <th>stations</th>
+      <th>mean delta</th>
+      <th>95% CI</th>
+      <th>positive / negative</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>both ends at 5 W</td>
+      <td><strong>66</strong></td>
+      <td><strong>19</strong></td>
+      <td><strong>+11.0 dB</strong></td>
+      <td>[+8.6, +13.3]</td>
+      <td>57 / 9</td>
+    </tr>
+    <tr>
+      <td>one median pair per station</td>
+      <td>19</td>
+      <td>19</td>
+      <td>+7.6 dB</td>
+      <td>[+3.6, +11.5]</td>
+      <td>14 / 5</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>By band, within that equal-power subset:</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>band</th>
+      <th>pairs</th>
+      <th>mean delta</th>
+      <th>95% CI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>40m</td>
+      <td>26</td>
+      <td><strong>+17.8 dB</strong></td>
+      <td>[+15.5, +20.2]</td>
+    </tr>
+    <tr>
+      <td>20m</td>
+      <td>23</td>
+      <td><strong>+10.5 dB</strong></td>
+      <td>[+7.0, +14.3]</td>
+    </tr>
+    <tr>
+      <td>80m</td>
+      <td>6</td>
+      <td>+5.7 dB</td>
+      <td>[+3.0, +8.5]</td>
+    </tr>
+    <tr>
+      <td>30m</td>
+      <td>8</td>
+      <td><strong>+0.9 dB</strong></td>
+      <td>[-2.9, +4.8] — spans zero</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li><strong>With transmit power identical in both directions, my transmit path beats my receive path by about 11 dB.</strong> Collapsing to one pair per station, so no single correspondent carries the result, it is +7.6 dB and still clear of zero.</li>
+  <li>If anything that understates it. I decode fewer of their transmissions than they decode of mine, so the ones I do decode are the better moments of each path, which biases my measured receive SNR upward.</li>
+  <li><strong>The deficit is band-selective: large on 40m and 20m, nothing on 30m.</strong> An antenna or feedline problem would not politely skip 30m. A local noise source would.</li>
+  <li><strong>Why normalizing is a repair and not a cure.</strong> Scaling a 20 mW station’s SNR up by 24 dB assumes a fair sample of that station, and there is none: a weak transmitter is only decoded when the path happens to be good, so its reported SNRs are censored from below. Separately, one station — HK4CZE in Colombia — claims 1000 W on every one of its spots, and normalized its twelve pairs carry +38 dB deltas and drag the whole mean. Over all 143 pairs the normalized mean is +8.5 dB; drop the kilowatt claims and it is +5.8 dB. Neither is clean, which is why the equal-power subset is the number to quote.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> June reported a mean <code class="language-plaintext highlighter-rouge">SNR_delta</code> of <strong>+6.3 dB over 38 pairs</strong> and read it as a receive deficit. That capture transmitted at <strong>10 W against a 5 W remote median</strong>, a 3 dB head start built into the transmit side of every pair. Normalized it is -0.9 dB with a confidence interval of [-4.6, +2.6] spanning zero, and it contains <strong>exactly one equal-power pair</strong>. The conclusion was right; that dataset did not establish it. The same problem runs through the three field-antenna articles, which compared their own un-normalized deltas against that +6.3 dB baseline — all are now corrected in place.</p>
+
+<blockquote>
+  <p>TX vs RX SNR Asymmetry — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>. The histogram is the raw delta over all 143 pairs; the whole distribution sits right of zero.
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis5_tx_rx_asymmetry.png" alt="TX versus RX SNR asymmetry histogram, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-6-azimuthal-pattern-mapping">Analysis 6: Azimuthal Pattern Mapping</h3>
+
+<p>This analysis bins the reports of my transmissions by bearing.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Infer the radiation pattern of the antenna as deployed, from where it is actually heard.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>This is a propagation-weighted picture, not an antenna model. Europe being east of me means east will look strong regardless of the antenna.</li>
+  <li>The useful signal is asymmetry that propagation does not explain.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+<ul>
+  <li>13,132 reports by bearing: <strong>east 5,393 (41.1%), west 5,126 (39.0%), south 1,705 (13.0%), north 908 (6.9%)</strong>.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>East and west are within two percentage points of each other. North is the quietest direction by a wide margin.</li>
+  <li>That is the shape of a wire run roughly east-west with its broadside lobes doing the work, which is how this EFHW is actually hung.</li>
+  <li>North being weak is partly the pattern and partly that there is very little north of here to hear me.</li>
+</ul>
+
+<blockquote>
+  <p>Azimuthal Pattern — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis6_azimuthal_pattern.png" alt="Azimuthal radiation pattern, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-7-band-by-band-efficiency-normalization">Analysis 7: Band-by-Band Efficiency Normalization</h3>
+
+<p>This analysis computes kilometers per watt (<code class="language-plaintext highlighter-rouge">k/W</code>) per band, restricted to remote stations that heard me on three or more different bands.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Compare bands on a basis that accounts for transmit power.</li>
+  <li>Restricting to multi-band stations controls for receiver quality: the same station is judging each band.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>Higher <code class="language-plaintext highlighter-rouge">k/W</code> means more distance for the same power.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">k/W</code> doubles when transmit power halves</strong>, for identical physical performance. It is comparable within a capture and not between captures at different power.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+<ul>
+  <li>341 remote stations heard me on three or more bands.</li>
+  <li>Median <code class="language-plaintext highlighter-rouge">k/W</code> by band: <strong>80m 74, 40m 207, 30m 572, 20m 689, 17m 721, 15m 763, 12m 623, 10m 1,209</strong>.</li>
+</ul>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>Efficiency climbs steadily with frequency through 15m.</li>
+  <li><strong>The apparent 10m win is a selection effect and I do not believe it.</strong> 10m produced 298 spots and almost all were long-haul — mean distance 5,184 km, the longest of any band — because the band only opens for DX. A band whose only paths are long paths posts a high distance-per-watt whether or not the antenna is good on it. The same inflates 12m.</li>
+  <li>Among the bands with enough data to argue about, <strong>15m, 17m and 20m sit within 20% of each other and well above 40m and 80m</strong>.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> June concluded the peak was on 20m, 17m and 15m. That holds. Every band’s raw <code class="language-plaintext highlighter-rouge">k/W</code> roughly doubled between the captures, which is <strong>entirely explained by halving the transmit power</strong> and means nothing on its own.</p>
+
+<blockquote>
+  <p>Normalized Path Efficiency — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis7_efficiency_normalization.png" alt="Normalized path efficiency in km per watt by band, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-8-take-off-angle-inference-via-minimum-skip-boundaries">Analysis 8: Take-Off Angle Inference via Minimum Skip Boundaries</h3>
+
+<p>This analysis looks at the short end of each band’s distance distribution.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Infer take-off angle indirectly. A high radiation angle fills in close-range paths; a low angle skips over them.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>The 10th-percentile distance is roughly the inner edge of the skip zone.</li>
+  <li>A distant inner edge means little high-angle radiation, so nothing nearby is being heard.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>10th pct</th>
+      <th>25th pct</th>
+      <th>median</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>20m</td>
+      <td>702 km</td>
+      <td>1,304 km</td>
+      <td>3,153 km</td>
+    </tr>
+    <tr>
+      <td>17m</td>
+      <td>372 km</td>
+      <td>1,561 km</td>
+      <td>3,660 km</td>
+    </tr>
+    <tr>
+      <td>15m</td>
+      <td>536 km</td>
+      <td>2,298 km</td>
+      <td>3,822 km</td>
+    </tr>
+    <tr>
+      <td>12m</td>
+      <td>252 km</td>
+      <td>2,024 km</td>
+      <td>3,215 km</td>
+    </tr>
+    <tr>
+      <td>10m</td>
+      <td><strong>2,563 km</strong></td>
+      <td><strong>3,669 km</strong></td>
+      <td>6,079 km</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li><strong>10m is the outlier by a factor of five.</strong> Its closest decile starts at 2,563 km where every other band starts under 800 km. Nothing within about 2,500 km hears me on 10m at all.</li>
+  <li>20m, 17m, 15m and 12m all fill in close range, so all four have usable high-angle content.</li>
+  <li>On an EFHW, 10m is a high harmonic of the 75m fundamental, where the pattern breaks into multiple lobes with nulls between them. A distant inner skip is what that looks like from the ground.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> June reached the same conclusion about 10m and 12m. With three days of data 12m no longer looks like 10m — its inner edge is 252 km, which is ordinary. <strong>The June pairing of “10m and 12m” was 29 spots of 12m data.</strong></p>
+
+<blockquote>
+  <p>Take-Off Angle Inference — <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>
+<img src="/hamradio/assets/images/7510_efhw_reanalysis_2026-10/analysis8_takeoff_angle.png" alt="Take-off angle inference via minimum skip boundaries, October 2026 three-day capture" /></p>
+</blockquote>
+
+<hr />
+
+<h3 id="analysis-9-ssb-qso-feasibility-and-minimum-power-mapping">Analysis 9: SSB QSO Feasibility and Minimum Power Mapping</h3>
+
+<p>This analysis asks, for each spot, what transmit power would have been needed to raise that path to an SNR workable for voice.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Turn a beacon capture into a practical answer about whether a voice contact was possible on that path.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>WSPR SNR is reported against a ~2500 Hz reference bandwidth, close to an SSB receive bandwidth, so SNR scales directly with power.</li>
+  <li><code class="language-plaintext highlighter-rouge">required_tx_power_w = Watts × 10^((3 − SNR)/10)</code>, taking +3 dB as the minimum workable SSB margin.</li>
+  <li>Feedline loss and antenna gain are station properties and cancel out of the ratio, so they are deliberately not modeled.</li>
+  <li>30m is excluded entirely: it has no phone allocation, so an SSB contact is not legal there regardless of power.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code></strong>, at a 100 W ceiling:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>spots</th>
+      <th>would make it</th>
+      <th>pass rate</th>
+      <th>median W needed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>80m</td>
+      <td>2,002</td>
+      <td>1,258</td>
+      <td><strong>62.8%</strong></td>
+      <td><strong>40 W</strong></td>
+    </tr>
+    <tr>
+      <td>40m</td>
+      <td>3,935</td>
+      <td>1,777</td>
+      <td>45.2%</td>
+      <td>126 W</td>
+    </tr>
+    <tr>
+      <td>20m</td>
+      <td>5,107</td>
+      <td>2,181</td>
+      <td>42.7%</td>
+      <td>126 W</td>
+    </tr>
+    <tr>
+      <td>15m</td>
+      <td>1,410</td>
+      <td>519</td>
+      <td>36.8%</td>
+      <td>251 W</td>
+    </tr>
+    <tr>
+      <td>17m</td>
+      <td>1,593</td>
+      <td>475</td>
+      <td>29.8%</td>
+      <td>316 W</td>
+    </tr>
+    <tr>
+      <td>10m</td>
+      <td>298</td>
+      <td>79</td>
+      <td>26.5%</td>
+      <td>501 W</td>
+    </tr>
+    <tr>
+      <td>12m</td>
+      <td>259</td>
+      <td>59</td>
+      <td>22.8%</td>
+      <td>631 W</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Overall, 6,348 of 14,604 phone-band spots clear the bar at 100 W.</p>
+
+<p>Interactive per-band maps, each path colored by the power it would need:
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_80m.html" target="_blank">80m</a> ·
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_40m.html" target="_blank">40m</a> ·
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_20m.html" target="_blank">20m</a> ·
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_17m.html" target="_blank">17m</a> ·
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_15m.html" target="_blank">15m</a> ·
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_12m.html" target="_blank">12m</a> ·
+<a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_ssb_10m.html" target="_blank">10m</a></p>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li><strong>80m is the clear best SSB prospect on this antenna</strong>, and the only band where a median path needs well under 100 W.</li>
+  <li><strong>20m and 40m are now equivalent</strong> — the same 126 W median, within three points of each other on pass rate. On a wire that is a genuinely useful thing to know before calling.</li>
+  <li>The high bands need multiples of 100 W at the median, but that is a statement about <em>median</em> paths. Each of them has a tail of workable ones, which is what the maps are for.</li>
+</ul>
+
+<p><strong>Compared with June:</strong> June concluded SSB was within reach on 40m and 80m and that <strong>“the higher bands need far more power.”</strong> The first half holds and 80m improved. The second was a statement about one afternoon’s worth of high-band paths, all of them long: 20m now matches 40m exactly, and 15m’s pass rate more than doubled from 16.2% to 36.8%.</p>
+
+<hr />
+
+<h3 id="analysis-10-interactive-path-mapping">Analysis 10: Interactive Path Mapping</h3>
+
+<p>This analysis draws every path as a great-circle line on an interactive map.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul>
+  <li>Put the statistical findings in geographic context, and show what the per-band numbers look like as coverage.</li>
+</ul>
+
+<p><strong>How to interpret:</strong></p>
+<ul>
+  <li>Lines are colored by band and separated into transmit and receive layers, each switchable.</li>
+  <li>Paths are drawn as true great circles, so they look curved on a Mercator projection. That is correct, not a rendering artifact.</li>
+</ul>
+
+<p><strong>Actual results for <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code>:</strong></p>
+
+<p><a href="/hamradio/assets/7510_efhw_reanalysis_2026-10_spots_map.html" target="_blank">Open the interactive map</a></p>
+
+<p><strong>Interpretation from the dataset:</strong></p>
+<ul>
+  <li>The dense lobes run east to Europe and west across North America, with the Pacific and South America thinner and Africa thinnest.</li>
+  <li>10m and 12m lines, where they exist, all terminate far out. The skip boundary from Analysis 8 is visible directly.</li>
+  <li>The map is drawn with one line per station pair per band rather than one per spot. Eighteen thousand individually drawn lines make a 46 MB file and a picture no denser in information than a 7.7 MB one.</li>
+</ul>
+
+<hr />
+
+<h2 id="2-how-to-run-and-reproduce">2. How to run and reproduce</h2>
+
+<p>The pipeline is in <a href="https://github.com/hatandspecs/wspr_7510_analysis">this repository</a>, unchanged in structure from the June analysis.</p>
+
+<ul>
+  <li>Dataset: <code class="language-plaintext highlighter-rouge">7510m_cyberdeck_2026-10_spots.tsv</code></li>
+  <li>Script: <code class="language-plaintext highlighter-rouge">run_7510m_cyberdeck_2026-10.py</code> — the same ten analyses in the same order, pointed at a different file</li>
+  <li>Figures: <code class="language-plaintext highlighter-rouge">analysis_images_7510m_cyberdeck_2026-10/</code></li>
+</ul>
+
+<p>Two things were added to the shared utilities for this analysis and are available to all four antenna datasets:</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">matched_pairs()</code></strong> — the TX/RX pairing from Analysis 5, now returning a power-normalized delta and a <strong><code class="language-plaintext highlighter-rouge">same_power</code></strong> flag alongside the raw one. The flag matters more than the normalization: it marks the pairs that need no correction at all.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">bootstrap_mean_ci()</code></strong> — a percentile bootstrap interval, so a mean over a few dozen pairs cannot be quietly over-read.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">create_spot_map()</code> also gained an opt-in <code class="language-plaintext highlighter-rouge">dedupe</code> argument for long captures. It defaults off, so the existing maps are unchanged.</p>
+
+<p>The notebook still loads a <code class="language-plaintext highlighter-rouge">.tsv</code> exported from WSPR.rocks. The API download path still does not work; use the TSV.</p>
+
+<hr />
+
+<h2 id="3-conclusions-from-this-dataset">3. Conclusions from this dataset</h2>
+
+<ol>
+  <li><strong>20m produces the most reports; it does not reach the furthest.</strong> It leads on spot count — 5,107 of 18,315 — because it is open to the most people for the most hours, but it is present in fewer time bins than 40m or 30m, and 15m (3,970 km) and 10m (5,184 km) both average longer paths than its 3,242 km.</li>
+  <li><strong>The receive path is about 11 dB worse than the transmit path, and the deficit is band-selective.</strong> Measured on the 66 pairs where both ends ran 5 W, so nothing is normalized: +11.0 dB, CI [+8.6, +13.3], and +7.6 dB when collapsed to one pair per station. Large on 40m (+17.8 dB) and 20m (+10.5 dB), absent on 30m. A noise source that skips a band is a noise source, not an antenna fault — and a band-selective hint is a far better lead to chase with a receiver than “receive is worse.”</li>
+  <li><strong>Normalized efficiency peaks on 15m, 17m and 20m</strong>, which cluster within 20% of each other and well above 40m and 80m. The apparent 10m and 12m advantage is a selection effect from bands that only open for DX.</li>
+  <li><strong>10m’s inner skip boundary is distant — 2,563 km at the 10th percentile</strong>, five times any other band. On a 75m EFHW, 10m is a high harmonic with a multi-lobe pattern, and this is what that looks like measured. <strong>12m does not behave this way</strong>, despite June pairing the two; its inner edge is an ordinary 252 km.</li>
+  <li><strong>SSB at 100 W is realistic on 80m, and 20m is now as good a prospect as 40m</strong> — the same 126 W median path. 80m needs 40 W at the median and clears 62.8% of its paths.</li>
+  <li><strong>The SNR-versus-distance slope is -7.0 dB per decade</strong>, against -7.2 in June. Four months, two seasons, two power levels and nearly four times the data, and it did not move.</li>
+</ol>
+
+<hr />
+
+<h2 id="4-what-three-days-changed-and-why">4. What three days changed, and why</h2>
+
+<p>Three of the five June conclusions needed revising, and all three failed the same way: <strong>a sample that could only have produced the answer it gave.</strong></p>
+
+<ul>
+  <li>The June capture ran <strong>3 hours 16 minutes on one afternoon</strong>. That is 20m’s best window and before 40m and 80m open, so “20m is the strongest band” was never in doubt — and never tested.</li>
+  <li>The June asymmetry figure was <strong>38 pairs with a 3 dB power advantage baked in</strong>, and exactly one pair with power equal on both ends. It could not have measured what it claimed to measure.</li>
+  <li>The June high-band conclusions rested on <strong>29 spots of 12m and 87 of 10m</strong>, all long-haul because that is the only kind of path those bands produced that afternoon.</li>
+</ul>
+
+<p>What did not need revising was the one thing that is a property of radio rather than of the sample — the distance slope, which came back identical.</p>
+
+<p>None of this was fixed by a better antenna or a cleverer analysis. It was fixed by leaving the radio running for three days, which is the one thing the cyberdeck made easy. The antenna is the same wire it was in June. I just know considerably more about it.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

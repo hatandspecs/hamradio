@@ -1,0 +1,17 @@
+W0. Repeatability
+# R is the spread of five readings with nothing changed. Copy the worst R into Setup!B8; every later difference is compared against 2R.
+Band,Antenna,Read 1,Read 2,Read 3,Read 4,Read 5,Spread R (dB) (compute),Time of day,Weather,Notes
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,

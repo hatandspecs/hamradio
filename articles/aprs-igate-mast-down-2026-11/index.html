@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>When Did the Mast Fall? Timing a Failure From the Station's Own Log | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>When Did the Mast Fall? Timing a Failure From the Station's Own Log</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: November 06, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>On the afternoon of November 5 the mast holding my 2 m iGate antenna was lying
+in the grass. I had no idea when it had happened. I had been inside all day and
+nothing had alarmed, because nothing was wired to notice.</p>
+
+<p>But the station had been writing down every packet it heard, with a timestamp,
+all day. The answer was already in the log, and it took about twenty minutes to
+read out. Working out what had started the failure took until the following
+afternoon, with the mast apart on the lawn.</p>
+
+<p>The station is a Raspberry Pi 3B+ running Dire Wolf, a mobile radio on 144.390,
+and a slim jim up a telescoping fiberglass mast. The build is in
+<a href="/hamradio/articles/aprs-igate-bidirectional-whitelist/">the original write-up</a>,
+and the mast went from fifteen feet to about twenty-eight in
+<a href="/hamradio/articles/aprs-igate-check-in-2026-10/">the October check-in</a>.</p>
+
+<h2 id="what-it-looked-like">What it looked like</h2>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-down-bent-stake-2026-11-05.jpg" alt="A black telescoping fiberglass mast lying flat in mown grass with slack bright green guy lines trailing away from it, and at its base a light-colored wooden ground stake bent into a pronounced curve and split along its grain at the knee of the bend, strapped to the mast with two bright green rubber straps" /></p>
+
+<p>The mast and all three guy lines were undamaged. The light-duty wooden ground
+stake at the base was bent into a pronounced curve and split along the grain at
+the knee of the bend, without ever coming apart.</p>
+
+<p>The base had obviously failed. What had put enough sideways load into it to do
+that was not clear until I had the mast apart the next day, and I will come back
+to it.</p>
+
+<h2 id="finding-the-edge">Finding the edge</h2>
+
+<p>The station keeps one CSV per UTC day, and each row carries a Unix timestamp,
+the source callsign, and which station it was heard through. The useful column
+is the last one.</p>
+
+<p><strong>Count only packets copied directly</strong>, with no digipeater hop. A digipeated
+packet reaching me tells me about the digipeater’s antenna and the path from it
+to my yard, which is a different measurement that happens to be mixed in with
+mine. A direct copy is the only one that is purely about my own antenna.
+Everything that follows is direct packets, binned by time.</p>
+
+<p>At thirty-minute bins the edge sat somewhere between the 14:30 and 15:00
+buckets. At five minutes it was inside 14:45 to 14:50:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Direct packets per 5 minutes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Normal, earlier that day</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <td>After the fall</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <td>Lowest bucket before the edge</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <td>Highest bucket after the edge</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The two populations do not overlap. The quietest five minutes of normal
+operation still beat the busiest five minutes of a grounded antenna, so no
+bucket is ambiguous. Interpolating linearly inside the edge bucket puts the fall
+at <strong>14:46:25 EST</strong>.</p>
+
+<p>A second edge exists in the same log and it is sharper. When I found the mast at
+about ten past five I switched the radio off and left the Pi running. That is my
+standing practice for any physical failure, and it is deliberate: a fault is a
+partial degradation with a fuzzy edge, while a radio being switched off is total
+and writes a clean step into the data at a time I know.</p>
+
+<h2 id="checking-the-method-against-the-second-edge">Checking the method against the second edge</h2>
+
+<p>Having two edges makes the method testable. I applied the same interpolation to
+the radio-off edge, and it predicted <strong>17:16</strong>.</p>
+
+<p>The log file’s modification time, which is the moment the last packet was
+actually written to the card, is <strong>17:12</strong>.</p>
+
+<p>Four minutes apart, from a number that played no part in building the estimate.
+That is roughly the best independent check a single-station log can give, and it
+is why I trust 14:46 to within a few minutes rather than to within an hour.</p>
+
+<h2 id="a-fallen-antenna-is-not-an-outage">A fallen antenna is not an outage</h2>
+
+<p>The shape of the failure turned out to matter as much as its timing, and it was
+not the shape I expected.</p>
+
+<p><strong>Receive did not go to zero.</strong> It fell about 89 percent and kept going:
+seventeen to twenty-eight packets per half hour, from one or two stations, for
+two and a half hours. Those are the nearest and strongest digipeaters, still
+perfectly audible from an antenna lying in the grass. If I had been watching a
+dashboard that showed “packets received,” it would have shown packets being
+received.</p>
+
+<p><strong>Transmit died outright.</strong> My beacon echoes, meaning my own beacons coming back
+to me after a digipeater repeated them, went to zero and stayed there for eight
+consecutive buckets. The longest run of zeros earlier that day was two.</p>
+
+<p>That asymmetry makes sense. An echo is a round trip, so it is the most
+height-sensitive thing the station measures. It is also the sparsest, at one or
+two beacons per bucket. <strong>Direct packets find the edge; echoes only confirm
+it.</strong> There were not enough echoes to time anything from.</p>
+
+<h2 id="the-accidental-experiment">The accidental experiment</h2>
+
+<p>Here is the part I did not expect to get out of a broken mast. The fall ran a
+clean antenna-height experiment that I would never have thought to set up
+deliberately: the same antenna, the same radio, the same feedline, at
+twenty-eight feet and then at ground level, with the transition timed to the
+minute and nothing else changed.</p>
+
+<p>Counting direct packets per station, in matched windows on either side, after
+screening each one for movement, since a station that simply drove out of range
+would look exactly like a path that height took away:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Station</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WO3T-1</td>
+      <td>35</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>17</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>W3TM-10</td>
+      <td>5</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>W3YA-1</td>
+      <td>11</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>W3TM-1</td>
+      <td>15</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>All non-moving stations</td>
+      <td>78</td>
+      <td>22</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Three stations lost everything. Two lost nothing I can measure. My first
+instinct was terrain, since some paths need the height to clear a ridge and some
+do not.</p>
+
+<p>The table does not support that. <strong>Two of those stations are at the same
+QTH</strong>, within a couple hundred feet of each other, and they went opposite
+ways: one unchanged, the other to zero. Same terrain, same distance, same
+everything a map knows about. What differs is the transmitter. One is a 50 W
+mobile, the other a small iGate that does most of its work over the internet and
+beacons on RF modestly.</p>
+
+<p>So it is link margin, not terrain. A path with 10 dB in hand does not notice
+losing a few, and a path that was marginal at twenty-eight feet is gone at zero.
+That says something useful about the height itself. It is buying me specific
+marginal paths rather than lifting every path a little, and those are the ones
+to watch the next time the mast changes.</p>
+
+<h2 id="somebody-elses-stations-did-the-measuring">Somebody else’s stations did the measuring</h2>
+
+<p>Every number in that table came off a radio I do not own and have never touched.
+WO3T-1 is a digipeater on a tower on Tussy Mountain, 25 W into an omni at 1280
+feet of terrain height. W3YA-1 is the NARC digipeater on Pine Grove Mountain,
+49 W at 640 feet. Both of them publish those figures in their own beacons, along
+with their positions, several times an hour, and both were doing it long before
+I put up a mast.</p>
+
+<p>A deliberate propagation test normally needs two operators, an agreed time, and
+somebody willing to sit and transmit while somebody else listens. This needed
+none of that. The local APRS infrastructure is a continuously running,
+uncoordinated reference signal: fixed transmitters at known sites, with
+published power and height, keying up all day whether or not anyone is paying
+attention. Point a receiver at 144.390 and the test range is already there.</p>
+
+<p>Nobody had to know I was measuring anything, and nobody had to change what they
+were doing. I got a timed, before-and-after, same-antenna height experiment out
+of a network that exists because people around this part of Pennsylvania thought
+it was worth putting a radio somewhere high and leaving it on. That is a
+genuinely useful thing about APRS that has nothing to do with sending position
+reports, and I do not think it gets said often enough.</p>
+
+<h2 id="the-cause-found-the-next-day">The cause, found the next day</h2>
+
+<p>When I took the mast apart to rebuild it, the stake turned out to be the end of
+the story rather than the start of it.</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-taped-joints-2026-11-06.jpg" alt="Looking up the side of a black telescoping fiberglass mast against a cloudy sky, showing two telescoping joints each wrapped in several turns of black tape, with a power line and a wooded ridge low in the background" /></p>
+
+<p>That is a telescoping fiberglass pole held at full extension by section friction
+and a wrap of tape at each joint. One of those joints let go.</p>
+
+<p>The guy lines are not a bystander in this. <strong>A guy line pulls down as well as
+sideways.</strong> Tension in a guy running from a point up the mast to an anchor in
+the lawn has a component straight down the mast axis, which is the direction a
+telescoping section slides. Tensioning the guys loads the joints in the
+direction they fail, which makes the sequence a loop:</p>
+
+<pre><code class="language-mermaid">flowchart TD
+  G["Guy tension pulls down&lt;br/&gt;along the mast axis"]
+  A["A taped joint slips in that same direction&lt;br/&gt;and the section telescopes down"]
+  B["The mast shortens,&lt;br/&gt;so the guys go slack"]
+  C["Slack guys leave the mast&lt;br/&gt;as an unguyed cantilever"]
+  D["Wind puts a bending moment&lt;br/&gt;into the base"]
+  E["The wooden stake bends&lt;br/&gt;and the mast comes down"]
+  G --&gt; A --&gt; B --&gt; C --&gt; D --&gt; E
+  B -. "re-tension, and it starts over" .-&gt; G
+</code></pre>
+
+<p>The stake was the last link in that chain, not the first, and the shape of the
+break says so. The knee of the bend sits exactly where the stake stops being
+strapped to the mast, which is where the bending moment on a cantilever is
+largest. The split runs lengthwise along the grain at that knee, which is what
+wood does when it fails in bending: the convex face goes into tension and gives
+way along the grain long before it breaks across it. Both of those say sideways
+load, and a mast with three tight guys on it should not be putting a sideways
+load into its base.</p>
+
+<p>I had already seen this failure once. On November 1 I found slack guys and one
+collapsed section, re-extended it, re-tensioned, and was back on the air in
+fifteen minutes. I logged it as a maintenance item rather than as the same
+problem. Re-tensioning afterward put the load straight back into the joints, in
+the direction they had just slipped.</p>
+
+<h2 id="was-it-windy">Was it windy?</h2>
+
+<p>I had no record of the conditions at my own site. The regional ASOS archive
+keeps them hourly, going back years. The nearest reporting station, on the
+afternoon in question:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Local time</th>
+      <th>Sustained</th>
+      <th>Gust</th>
+      <th>Direction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>13:53</td>
+      <td>10 kt</td>
+      <td>21 kt</td>
+      <td>220°</td>
+    </tr>
+    <tr>
+      <td><strong>14:46</strong></td>
+      <td><strong>the mast falls</strong></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>14:53</td>
+      <td>12 kt</td>
+      <td>18 kt</td>
+      <td>220°</td>
+    </tr>
+    <tr>
+      <td>15:53</td>
+      <td>11 kt</td>
+      <td>16 kt</td>
+      <td>200°</td>
+    </tr>
+    <tr>
+      <td>16:53</td>
+      <td>10 kt</td>
+      <td>none</td>
+      <td>220°</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Twelve knots sustained, gusting to twenty-one, call it 24 mph, out of the
+southwest on a 72 °F afternoon. Breezy, not a storm.</p>
+
+<p>A 24 mph gust should not take down a correctly guyed twenty-eight-foot
+fiberglass mast, and it is enough to topple an unguyed one. So the wind does not
+explain the failure, only why it finished when it did rather than on a windier
+day.</p>
+
+<h2 id="the-rebuild">The rebuild</h2>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-rebuilt-four-guys-2026-11-06.jpg" alt="The repaired telescoping mast standing upright at full height in a mown lawn under a heavily clouded sky, held by four thin bright green guy lines radiating to ground anchors, with a utility pole and power lines to the left and a wooded ridge across the horizon" /></p>
+
+<p>Back on the air at exactly 13:00 on November 6, which makes the station 22 hours
+and 14 minutes down from the moment of the fall.</p>
+
+<p>Two things changed. The wooden ground stake is now angle iron, lashed to the
+mast foot with Titanstraps:</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-angle-iron-base-2026-11-06.jpg" alt="Close-up of the base of the black fiberglass mast where it meets mown grass, lashed with two bright green rubber straps to a length of steel angle iron driven into the ground alongside it" /></p>
+
+<p>And there are four guys now instead of three. Three-way guying was never the
+fault, and I do not want to imply it was. Three guys at 120 degrees is standard
+and statically determinate, which four-way is not. What three-way is, is
+unforgiving of a slack guy: lose one and the remaining two form a hinge instead
+of a tripod. Since the failure mode here starts with a guy going slack, I will
+take forgiving over elegant.</p>
+
+<p>The tensioners are the small luxury in this build:</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/guy-line-tensioner-2026-11-06.jpg" alt="A red anodized aluminum three-hole multipurpose line tensioner threaded with bright green reflective cord, lying on mown grass, with the tail of the cord looped below it" /></p>
+
+<p>Reflective cord through a three-hole aluminum tensioner, the “Loop Alien” style
+of multipurpose rigging plate, in my case an inexpensive off-brand version from
+Amazon. The cord threads through the holes and holds on friction, so there is no
+knot to untie and nothing to work loose, and the same part will do a dozen other
+jobs around a portable station.</p>
+
+<p><strong>What has not changed is the tape.</strong> The angle iron hardens the last link in
+the chain. The first link is exactly as it was.</p>
+
+<h2 id="the-actual-fix">The actual fix</h2>
+
+<p>Padded hose clamps with finger keys at every load-bearing joint, ordered and not
+yet fitted. The orientation matters more than the clamp does, and it is
+counterintuitive enough to be worth spelling out.</p>
+
+<p>The instinct is to put the clamp around the <strong>top lip of the lower section</strong> and
+squeeze it onto the inner one. There are two problems with that. It is a
+friction grip, which is the mechanism that has already failed twice, and it puts
+hoop stress on a 0.7 to 1.4 mm fiberglass wall, where a split would ruin the
+section.</p>
+
+<p>Put the clamp on the <strong>inner section, snug against the rim of the outer one, as
+a stop collar.</strong> It cannot travel downward, because the inner section thickens
+downward, so any descent requires the clamp to open, and the rim blocks it
+anyway. The load path is compression into the rim, with no friction involved.</p>
+
+<p>A hand-tightened thumb screw is therefore enough. A stop collar only has to
+resist migrating <em>up</em> a one-to-three-degree taper, so it needs a few pounds of
+grip rather than torque, and on a 0.7 mm wall not being able to over-tighten by
+hand is useful.</p>
+
+<p>For anyone with the same pole, a Spiderbeam 10 m “mini” with 17 segments, 60 mm
+at the base and 6 mm at the tip, the taper interpolates to roughly this. The
+thirteen joints from 57 mm down to 16 mm are the ones carrying load:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Joint from base</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+      <th>13</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Approx. OD (mm)</td>
+      <td>57</td>
+      <td>53</td>
+      <td>50</td>
+      <td>47</td>
+      <td>43</td>
+      <td>40</td>
+      <td>36</td>
+      <td>33</td>
+      <td>30</td>
+      <td>26</td>
+      <td>23</td>
+      <td>20</td>
+      <td>16</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Measure before ordering. That is a linear interpolation between two published
+numbers, not a spec sheet.</p>
+
+<p>The collars get built on the bench rather than assembled in the yard: a strip of
+rubber inside the band, and heat shrink over the band to capture it. Each one
+comes out a single reusable part with no loose pad to drop in the grass, and the
+shrink covers the band edges so there is no steel touching fiberglass anywhere.
+Keep the shrink off the tail that feeds through the worm housing, or the clamp
+will not adjust.</p>
+
+<p>None of that is my invention; it is how Spiderbeam recommends the joints be
+secured. I had been using tape instead.</p>
+
+<p>Fitting them means lowering the pole, which takes a few minutes. Measuring,
+marking and fitting are all ground-level jobs with no ladder in them, and it
+means lowering the mast ahead of a forecast is practical rather than
+theoretical.</p>
+
+<h2 id="what-i-am-doing-differently">What I am doing differently</h2>
+
+<p><strong>Fit the stop collars first.</strong> Until they are on, tensioning a guy pushes the
+joints in the direction they have already slipped twice.</p>
+
+<p><strong>Witness marks on every section</strong>, at the rim of the one below it. A painted
+line makes “has a joint crept?” answerable from the ground, and both failures
+would probably have shown up days earlier.</p>
+
+<p><strong>Write the erected height down.</strong> The mast has gone up by hand twice without
+anyone counting segments, so twenty-eight feet is still an estimate. Worth
+measuring, since the reach comparisons use it.</p>
+
+<p><strong>Keep the radio-off habit.</strong> Switching the radio off and leaving the Pi running
+put a second, sharper edge in the log, which is what let me check the first
+one.</p>
+
+<hr />
+
+<p>The station spent twenty-two hours off the air and produced better data about
+its own antenna than any experiment I would have had the thought to run on
+purpose. This is why nothing beats a field test for figuring out what will go
+wrong. I would still rather it had stayed up.</p>
+
+<p>73, KD3CCO</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+  <!-- Mermaid diagrams: only on pages with "mermaid: true" in their front matter.
+       kramdown renders a ```mermaid fence as either <pre><code class="language-mermaid">
+       or, with Rouge highlighting, <div class="language-mermaid highlighter-rouge">.
+       Both are turned into <div class="mermaid"> before rendering. -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
+      var code = el.matches('code') ? el : el.querySelector('code');
+      var block = el.matches('code') ? el.parentElement : el;
+      if (!code || !block) return;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = code.textContent;
+      block.replaceWith(diagram);
+    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict' });
+    await mermaid.run({ querySelector: '.mermaid' });
+  </script>
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

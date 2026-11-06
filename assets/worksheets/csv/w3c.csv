@@ -1,0 +1,18 @@
+W3c. Common-mode current on transmit
+"# 5 W is enough. Slide the probe along the line in 1 to 2 foot steps and record the peak, not one spot -- common-mode current has standing-wave nulls that will tell you everything is fine."
+# A good choke install cuts the peak by 20 dB or more.
+Cable,Probe position,Attenuation (dB),Zt (ohm),Peak before (dBm),Peak after (dBm),Current before (mA) (compute),Current after (mA) (compute),Improvement (dB) (compute)
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
