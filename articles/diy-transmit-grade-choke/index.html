@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Making a Transmit-Grade Common-Mode Choke, and Measuring It Properly | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Making a Transmit-Grade Common-Mode Choke, and Measuring It Properly</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: November 08, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>A common-mode choke is a series impedance in the outside surface of a coax
+shield. The center conductor and the inside of the shield pass through it
+unaffected, so the transmission line is unchanged, while current on the outside
+surface meets several kilohms and mostly stops.</p>
+
+<p>That outside surface is the conductor that carries RF back into the house, puts
+voltage on equipment chassis, and conducts the house’s own electrical noise out
+to the antenna. A ground rod sits in parallel with that path rather than in
+series with it, so it cannot interrupt it, and neither can a bonding strap. Why
+chokes rather than grounds, and where they belong in a station, is the
+companion article:
+<a href="/hamradio/articles/diy-common-mode-chokes/">common-mode chokes, not grounds</a>.</p>
+
+<p>Winding one is straightforward. Measuring one is harder. At the top of HF a
+test fixture’s own stray capacitance can be a larger part of the reading than
+the choke is, and a magnitude alone cannot grade a choke, because several
+kilohms of reactance is a different component from several kilohms of
+resistance. A choke that measures well on a bad fixture, or that is graded on
+magnitude, can have little impedance on the band it was built for.</p>
+
+<p><strong>Two sections, each one Fair-Rite 2631828302 core wound with nine turns of
+RG400</strong>, wired in series and mounted with their ends far apart, measure
+<strong>6.5 to 9.0 kohm from 80 m through 12 m</strong>, resistance larger than reactance
+on every one of those bands, with a parallel loss resistance flat at 7.9 to
+9.5 kohm. That is the transmit-grade threshold set out under grading below.
+<strong>On 10 m it reads 6.0 kohm with the reactance just ahead of the
+resistance</strong>, which is band-limited rather than transmit grade. One section on
+its own is a receive and QRP choke at about 4 kohm.</p>
+
+<blockquote>
+  <p>Both sections, nine turns each, wound W1JR crossover, one continuous length
+of RG400 from end to end.
+<img src="/hamradio/assets/images/diy-common-mode-chokes/two-sections-built.webp" alt="Two large ferrite toroids, each wound with nine turns of copper-braided coax and held with white zip ties, joined by a short run of the same cable, lying on a black ribbed bench mat beside two pairs of red-handled flush cutters" /></p>
+</blockquote>
+
+<h2 id="the-core">The core</h2>
+
+<p><strong>Fair-Rite 2631828302</strong>, DigiKey <strong>1934-2631828302-ND</strong>. Mix 31, the same
+outside and inside diameter as the FT240-31, but <strong>20 mm thick
+instead of 12.7 mm</strong>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>2631828302</th>
+      <th>FT240-31</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OD / ID</td>
+      <td>61.00 / 35.55 mm</td>
+      <td>61.0 / 35.55 mm</td>
+    </tr>
+    <tr>
+      <td>Height</td>
+      <td><strong>20.00 mm</strong></td>
+      <td>12.7 mm</td>
+    </tr>
+    <tr>
+      <td>Weight</td>
+      <td>181 g</td>
+      <td>about 115 g</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Impedance per turn scales with cross-section over magnetic path length. The
+diameters match, so the path length is unchanged and the extra height goes
+straight into cross-section: <strong>one of these is worth 1.57 FT240-31</strong>. The
+datasheet confirms it independently, giving 63 ohm per turn at 10 MHz against
+roughly 40 for the FT240-31.</p>
+
+<p>Since impedance goes as the square of the turns, a published turn count
+converts as <code class="language-plaintext highlighter-rouge">N_here = N_published / sqrt(1.57)</code>, which is <strong>dividing by about
+1.25</strong> for the same number of cores:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Published advice</th>
+      <th>On these cores</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>11 turns on one FT240-31</td>
+      <td><strong>9 turns on one</strong></td>
+    </tr>
+    <tr>
+      <td>8 turns on three stacked FT240-31</td>
+      <td><strong>8 turns on two</strong></td>
+    </tr>
+    <tr>
+      <td>12 turns on two stacked FT240-31</td>
+      <td><strong>10 turns on two</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><strong>Watch out: the printed units are wrong, the digits are right.</strong>
+Fair-Rite’s page for this part lists <code class="language-plaintext highlighter-rouge">le = 1.44 cm</code>, <code class="language-plaintext highlighter-rouge">Ae = 0.248 cm2</code> and
+<code class="language-plaintext highlighter-rouge">Ve = 0.56 cm3</code>. The IEC 60205 effective values for this geometry are
+<strong>le = 144.5 mm</strong> and <strong>Ae = 248.4 mm2</strong>, which is the same digits with the
+decimal point moved one place. DigiKey and Element14 list <code class="language-plaintext highlighter-rouge">144 mm</code> and
+<code class="language-plaintext highlighter-rouge">248 mm2</code>, so the distributors have it right and only the unit on the
+Fair-Rite page is wrong.</p>
+
+  <p><strong>The volume is wrong by more than a decade.</strong> <code class="language-plaintext highlighter-rouge">Ae * le</code> is 35.9 cm3, not
+0.56, a factor of 64. The datasheet’s own 181 g settles it: 35.9 cm3 at the
+5.04 g/cm3 of mix 31 is 181 g exactly, while the printed 0.56 cm3 would
+weigh 2.8 g.</p>
+
+  <p>A mean-path-and-physical-area calculation gives 151.7 mm and 254.5 mm2,
+which is what a ruler yields and is 5% and 2% off the effective values.
+Either set gives the same 1.57 ratio against the FT240-31, because <code class="language-plaintext highlighter-rouge">le</code> is
+identical for the two cores and only the height differs.</p>
+</blockquote>
+
+<h2 id="winding">Winding</h2>
+
+<p><strong>Nine turns of RG400 per section, wound W1JR crossover.</strong> Four turns through
+the core, then a fifth turn that passes through the core and crosses the face
+to emerge on the opposite side, then four more. The crossing turn is a turn
+like any other, not a dead traverse between two groups: all nine pass through
+the core, and the two tails leave about 180 degrees apart. The style is Joe
+Reisert’s, from his 1978 <em>Ham Radio</em> article. The benefit is mechanical:
+connectors on opposite walls of an enclosure, and leads that start out
+separated. The claimed capacitance benefit is contested and not worth counting
+on.</p>
+
+<blockquote>
+  <p>The crossover itself. Four turns, then the fifth passing through the core
+and across its face to the far side, then four more.
+<img src="/hamradio/assets/images/diy-common-mode-chokes/winding-crossover.webp" alt="A hand holding a large ferrite toroid wound with nine turns of copper-braided coax, seen from above. Four turns sit in one half and four in the other, with the fifth turn passing through the core and crossing its face to the far side, and a tail leaving at each side; a second unwound core of the same size lies on the black bench mat below" /></p>
+</blockquote>
+
+<p><strong>Cut 34 inches of RG400 per section</strong>, which leaves about 2 inches of lead at
+each end for connectors. Ideal geometry says 29.5 inches:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>one turn, square corners   2 x 20.0 mm height + 2 x 12.7 mm wall  =  65.5 mm
+9 turns                                                           = 589 mm
+extra length of the crossing turn, which spans the face           =  61 mm
+two 50 mm leads                                                   = 100 mm
+                                                            total = 750 mm = 29.5 in
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>Watch out: the missing 4.5 inches is cable thickness, not bend radius.</strong>
+The arithmetic above traces the core’s surface. The cable’s centerline runs
+one cable radius outside it the whole way around, and the perimeter of a
+curve offset a distance <code class="language-plaintext highlighter-rouge">a</code> outside a convex shape is the original perimeter
+plus <code class="language-plaintext highlighter-rouge">2*pi*a</code>. For RG400 at 4.95 mm diameter that is <code class="language-plaintext highlighter-rouge">pi * 4.95</code> =
+<strong>15.6 mm per turn</strong>, whatever the core. Nine turns adds 140 mm, giving
+890 mm, or <strong>35.0 inches against the 34 actually cut</strong>.</p>
+
+  <p>It is a fixed amount per turn, so it does not convert to a percentage that
+travels. Here it is 24% of the turn path and lands near 15% of the total
+only because 161 mm of crossover and leads dilutes it. The same cable on an
+FT240-31 is 31% of the turn path, on an FT140-31 41%, and RG316 on this core
+12%. Rounding the corners works the other way and shortens the path
+slightly, which is why bend radius is the wrong explanation.</p>
+</blockquote>
+
+<p>The inner circumference is 112 mm and nine turns of
+RG400 use 45 mm of it, so there is room for twelve if a sweep asks for them.</p>
+
+<h2 id="building-the-pair">Building the pair</h2>
+
+<ol>
+  <li><strong>Wind both sections from one continuous cable.</strong> Nine turns on the first
+core, a short run across, nine turns on the second. No intermediate
+connectors.</li>
+  <li><strong>Mount the cores in line and far apart, with the connectors at opposite
+ends of the assembly.</strong> A length of PVC with a core near each end, not two
+cores side by side in a box. Stray capacitance from the input end to the
+output end shunts both sections at once, so this spacing is what sets the
+impedance at the top of HF.</li>
+  <li><strong>Do not crush the coax.</strong> A deformed turn moves the center conductor off
+center and changes the characteristic impedance of the line inside it.</li>
+  <li><strong>Support the weight mechanically.</strong> At a feedpoint the cores must not hang
+from the cable, and the connector should carry no load.</li>
+  <li><strong>Enclose it if it lives outdoors</strong>, with drain holes at the bottom.</li>
+  <li><strong>Label it with an ID, the core and the turn count</strong> before installing it.</li>
+</ol>
+
+<h2 id="measuring-it">Measuring it</h2>
+
+<p>Series-through, port 1 to the shield at one end of the winding, port 2 to the
+shield at the other, center conductor floating at both ends. For a series
+impedance between two 50 ohm ports:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Zcm = 2 x Z0 x (1 - S21) / S21        S21 complex and linear, not dB
+</code></pre></div></div>
+
+<p>Keep the real and imaginary parts separate. A magnitude alone cannot grade a
+choke, because a winding can show 6 kohm of mostly reactance, and reactance
+can series-resonate with the feedline’s own.</p>
+
+<blockquote>
+  <p>The choke in its measuring fixture. Coax from each port out to its own
+banana adapter, and the adapters carried apart so the choke’s two ends are
+about ten inches from each other.
+<img src="/hamradio/assets/images/diy-common-mode-chokes/choke-in-fixture.webp" alt="Two ferrite toroids each wound with nine turns of coax, lying end to end on a dark workbench, with thin wires running from each end of the winding to banana-post adapters on coax leads that head off in opposite directions" /></p>
+</blockquote>
+
+<p><strong>Spread the ends; do not merely shorten the leads.</strong> The series inductance of
+a lead is about 20 nH per inch, or 3.5 ohm at 28 MHz, which is nothing beside
+a choke of several kilohms. The capacitance from the input end to the output
+end is not nothing, and it is set by how far apart those ends are. Coax from
+each port to the connection point costs nothing once the calibration plane is
+moved to its far end, because a matched line is a delay rather than a
+parasitic.</p>
+
+<h3 id="calibrating-then-moving-the-zero-reference-out-to-the-clips">Calibrating, then moving the zero reference out to the clips</h3>
+
+<p>Set the span and point count first, then calibrate, because a calibration
+taken over a different span gets interpolated and the error shows as a step in
+the middle of a trace. The NanoVNA-F V2 offers OPEN, SHORT, LOAD and THROUGH
+and no isolation step. Put all four at the far end of the port 1 coax, with
+real standards and a barrel for the through, and save to a slot.</p>
+
+<p>That calibration puts the reference plane at the end of the port 1 coax, which
+is still short of where the choke connects. The adapters and clips past it are
+uncorrected.</p>
+
+<p><strong>So sweep the fixture with its clips shorted, and divide every later sweep by
+that file.</strong> That moves the zero-impedance reference the rest of the way out to
+the clips, de-embedding the adapters and clips in the process, which is what a
+series-through measurement requires. The normalization is a second step after
+calibration rather than a substitute for one. It does happen to survive a
+through calibration that is quietly wrong.</p>
+
+<h3 id="what-division-does-and-does-not-remove">What division does and does not remove</h3>
+
+<p>Dividing is exact for a delay and approximate for a lumped impedance, and the
+difference decides whether the method is sound on a given fixture.</p>
+
+<p>Write the fixture residual as a series impedance <code class="language-plaintext highlighter-rouge">Za</code>. The reference then
+reads <code class="language-plaintext highlighter-rouge">S21 = 2*Z0/(Za + 2*Z0)</code> and the choke sweep reads
+<code class="language-plaintext highlighter-rouge">2*Z0/(Z + Za + 2*Z0)</code>. Dividing the second by the first and running the
+result back through <code class="language-plaintext highlighter-rouge">Zcm = 2*Z0*(1 - S21)/S21</code> returns</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Z / (1 + Za / (2*Z0))
+</code></pre></div></div>
+
+<p>which is not <code class="language-plaintext highlighter-rouge">Z - Za</code>. The residual divides rather than subtracts. A length of
+matched line is a different case: it contributes phase with a magnitude of one,
+and dividing a complex number by a unit-magnitude phasor removes that phase
+exactly, leaving <code class="language-plaintext highlighter-rouge">Z</code> untouched.</p>
+
+<p><strong>This fixture’s reference is a delay.</strong> Its <code class="language-plaintext highlighter-rouge">|S21|</code> is 0.9989 and flat from
+14 to 28 MHz, and its phase slope is a constant 0.315 degree per MHz, which is
+0.87 ns of delay. A lumped reactance would drop <code class="language-plaintext highlighter-rouge">|S21|</code> as frequency rose; the
+inductance implied by the magnitude deficit instead reads 989, 197, 114, 64,
+48, 37, 30 and 27 nH across the sweep, which is to say it is not an
+inductance. So the division is the right operation here, and converting both
+sweeps to impedance and subtracting, which is what an actual lumped residual
+would need, moves R at 28.4 MHz by +15.6% in the wrong direction.</p>
+
+<p><strong>The long-wire check bounds what lumped residue is left.</strong> Its recovered
+resistance stays inside one ohm, which through <code class="language-plaintext highlighter-rouge">R = w*L_wire * (w*La/(2*Z0))</code>
+puts <code class="language-plaintext highlighter-rouge">La</code> between -8 and +14 nH, scattering around zero. At 10 nH the error on
+R at 28 MHz is under 2%, so the tables below stand. Run that check on any new
+fixture before trusting this method on it: a reference that is mostly lumped
+rather than mostly delay needs subtraction, not division.</p>
+
+<blockquote>
+  <p>The short reference: the two adapters brought together and bridged as
+briefly as the hardware allows.
+<img src="/hamradio/assets/images/diy-common-mode-chokes/short-reference.webp" alt="Two banana-post to BNC adapters brought together on a dark workbench and bridged by a short clip, with coax leads running away from each" /></p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Watch out: keep the shield bond a fixed part of the fixture.</strong> A
+series-through fixture carries two conductors between the ports, the signal
+path the DUT bridges and the shield bond that returns it. Collapsing the
+fixture to make the reference short shortens both, so the reference comes
+back without the return-path inductance the real measurement contains. Run
+one permanent bond wire between the shield terminals, long enough for the
+spread geometry, and leave it alone for every sweep including the reference,
+where it loops slack. Then reference and measurement differ only in
+the DUT. Left unfixed, the error is bounded above by the 356 nH that
+separates the two shorts, which is 63 ohm at 28 MHz. That is a genuine
+lumped inductance rather than a delay, so it divides rather than subtracts:
+<code class="language-plaintext highlighter-rouge">1 + j63/100</code> has a magnitude of 1.18 and an angle of 32 degrees, which
+<strong>cuts the magnitude by 15% and rotates the phase by 32 degrees</strong>. The
+rotation is what does the damage, because it lands almost entirely on the
+split between R and X. The true figure is smaller than that bound, because
+the 356 nH is the loop formed by both long wires together and only the
+return side survives into the choke measurement, and because that return is
+in parallel with the path back through the two cable shields and the
+instrument chassis.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Watch out: bring the two fixture ends together to make the reference
+short.</strong> The reference has to contain exactly what sits in series with the
+choke and nothing else, and on this fixture that is one adapter and clip at
+each end. The gap between them is spanned by the choke’s own leads in
+service, so no part of it belongs in the reference, however the fixture is
+arranged while the choke is being measured. Bridging the spread clips with a
+long wire instead puts that wire into the reference, and dividing it out
+removes an inductance the choke measurement never contained. Worked through
+on this choke’s 28.4 MHz figures, a 356 nH wire in the reference turns a
+true <code class="language-plaintext highlighter-rouge">4030 - j4422</code> into a reported <code class="language-plaintext highlighter-rouge">862 - j5028</code>: the magnitude falls 15%,
+from 5,983 to 5,102, while <strong>R collapses by 79%</strong>. The split into R and X is
+where the damage lands, and R is the half the grade depends on. A reading
+that says the choke is almost pure reactance, when the material says it
+should be mostly loss, is the symptom to watch for.</p>
+</blockquote>
+
+<h3 id="checking-the-calibration">Checking the calibration</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Check</th>
+      <th>Expect</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Through still connected</td>
+      <td>S21 = 0.00 dB, S11 below -20 dB</td>
+    </tr>
+    <tr>
+      <td>Leads separated and open</td>
+      <td>S21 below -60 dB, <strong>|S11| just under 1</strong></td>
+    </tr>
+    <tr>
+      <td>Load on port 1</td>
+      <td>S11 below -25 dB</td>
+    </tr>
+    <tr>
+      <td>Fixture shorted at the clips</td>
+      <td>S21 within a few tenths of 0.00 dB</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>A fifth check, needing no external standard.</strong> For a series impedance
+between two 50 ohm ports, <code class="language-plaintext highlighter-rouge">S11 = Z/(Z + 2*Z0)</code> and <code class="language-plaintext highlighter-rouge">S21 = 2*Z0/(Z + 2*Z0)</code>, so
+<strong>S11 + S21 = 1</strong> exactly.</p>
+
+<p><strong>That identity is complex, and it fails if it is read off the magnitudes.</strong>
+At 28.4 MHz this choke’s <code class="language-plaintext highlighter-rouge">4030 - j4422</code> gives <code class="language-plaintext highlighter-rouge">|S21|</code> = -35.6 dB and <code class="language-plaintext highlighter-rouge">|S11|</code> =
+<strong>-0.098 dB</strong>, not the -0.14 dB that <code class="language-plaintext highlighter-rouge">1 - |S21|</code> suggests, because S21 carries
+47 degrees of phase there and the two do not subtract as magnitudes. Compare
+the complex values, or do not run the check.</p>
+
+<p><strong>It is a coarse check even done correctly.</strong> Near a <code class="language-plaintext highlighter-rouge">|S11|</code> of one, a small
+error in dB is a large error in impedance: 0.01 dB low on <code class="language-plaintext highlighter-rouge">|S11|</code> is 9% off on
+<code class="language-plaintext highlighter-rouge">|Z|</code>, 0.03 dB is 23%, and 0.05 dB is 34%. On this fixture the complex
+residual <code class="language-plaintext highlighter-rouge">|S11 + S21 - 1|</code> runs 0.025 at 3.5 MHz, 0.048 at 14.3 and 0.089 at
+28.4, which the 0.043 pF of shunt across the fixture accounts for, since a
+shunt breaks the pure-series model the identity assumes. So the check catches
+a calibration that is grossly wrong and says nothing about the last 20% of a
+kilohm-scale reading. The long-wire test is the one that carries weight.</p>
+
+<blockquote>
+  <p><strong>Watch out.</strong> <code class="language-plaintext highlighter-rouge">|S11|</code> above 1 is impossible for a passive load. A
+series-through fixture puts kilohms between two 50 ohm ports, so both ports
+are nearly totally reflective and <code class="language-plaintext highlighter-rouge">|S11|</code> sits just under 1 for the whole
+sweep, which is where a small calibration error pushes it over. It
+catches a bad calibration before a single component has been connected.</p>
+</blockquote>
+
+<p><strong>Check the reference against a load whose answer is already known.</strong> Bridge
+the spread clips with a long wire and normalize that sweep by the short one. A
+plain wire is an inductor, so the result should be a flat inductance with a
+resistance near zero and nothing else. Mine returns <strong>356 nH, flat to 2% from
+3.5 to 28 MHz, with R inside one ohm</strong>. Residue that varies with frequency
+would mean the reference is wrong. (This wire is a test load only. It must not
+be used as the reference itself, for the reason in the note above.)</p>
+
+<p><strong>Then sweep the fixture open</strong>, clips parted and everything else exactly where
+it sits in service. That measures the two things a series reference cannot
+remove: the stray capacitance across the whole fixture, and the noise floor.</p>
+
+<blockquote>
+  <p>The fixture open, in the spread geometry: 0.043 pF, and a floor 27 dB below
+the choke at 28 MHz.
+<img src="/hamradio/assets/images/diy-common-mode-chokes/fixture-open.webp" alt="Two banana-post to BNC adapters on coax leads, spread apart on a dark workbench with their clips parted and nothing connecting them" /></p>
+</blockquote>
+
+<p>Mine reads <strong>0.043 pF median from 3 to 30 MHz</strong>, flat, which is <strong>5% of the
+choke’s own 0.82 pF</strong> of stray and sets the error bar on the capacitance
+figures below. Compare it against the fitted stray rather than against a Cp
+entry, because a Cp entry taken below self-resonance is net susceptance and
+reads low, which flatters the fixture.
+Raw S21 runs from -78.6 dB at 3.5 MHz to -62.7 dB at 28.4 MHz, against the
+choke’s -36.3 dB, so there is <strong>27 dB of margin at the worst frequency</strong> and
+nothing here is floor-limited.</p>
+
+<p><strong>Check the fixture at the impedance it will actually report.</strong> The long-wire
+test proves the reference at 63 ohm and the repeatability of two sweeps proves
+only that the instrument is consistent. Neither says anything about accuracy at
+several kilohms, which is the whole range of interest. Bridge the clips with a
+thin-film resistor of 5 to 10 kohm and read Rp: <strong>Rp is exactly immune to any
+capacitance in parallel with the DUT</strong>, because a shunt adds to the imaginary
+part of the admittance and Rp is one over the real part, so the fixture’s own
+stray cannot move it. Rp should return the resistor’s DC value. Run it on
+80 m as well as 10 m, since the resistor’s own series inductance does reach Rp
+and that error grows with frequency.</p>
+
+<p><a href="/hamradio/assets/code/choke_s2p.py"><code class="language-plaintext highlighter-rouge">choke_s2p.py</code></a> reads the
+Touchstone files, applies the normalization and the arithmetic, and prints R,
+X, magnitude, the parallel equivalent, the grade, both resonance figures and a
+fit for the real stray capacitance. It needs nothing but the Python standard
+library, and matplotlib only for <code class="language-plaintext highlighter-rouge">--plot</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 choke_s2p.py --ref fixture-short-reference.s2p --avg --plot out.png \
+    choke-two-sections-a.s2p choke-two-sections-b.s2p
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">--avg</code> averages the impedance across repeat sweeps of the same assembly and
+reports the spread between them, which is the repeatability figure. That
+command reproduces every number in the tables below.</p>
+
+<h2 id="what-the-columns-mean">What the columns mean</h2>
+
+<p>All five numbers come from the same complex <code class="language-plaintext highlighter-rouge">Zcm</code> at each frequency. R and X
+are its real and imaginary parts, the choke written as a resistance and a
+reactance in series. Rp and Cp are that same impedance written instead as a
+resistance and a capacitance in parallel. A ferrite choke is physically a
+lossy inductor with the winding’s own stray capacitance across it, and the
+parallel form reports those two separately.</p>
+
+<p>R and X behave differently once the choke is installed. The choke sits in
+series with the rest of the common-mode path, so the two impedances add:
+resistances add arithmetically and can only grow the total, while reactances
+add with their signs and cancel each other where the signs are opposite. At
+28.4 MHz this choke reads R = 4,030 and X = -4,422 ohm, for a magnitude of
+5,983. A feedline that presents +4,422 ohm of inductive reactance at that
+frequency cancels the choke’s reactance to zero, and what the choke
+contributes to the series total falls to its 4,030 ohm of resistance. Nothing
+in the installation can cancel that 4,030. This is why R larger than
+|X| is part of the grade and a large magnitude on its own is not.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>What it is</th>
+      <th>What to look for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>R</td>
+      <td>Series resistance, the real part of <code class="language-plaintext highlighter-rouge">Zcm</code>. Common-mode current through it becomes heat in the core.</td>
+      <td>High, and larger than |X|. Resistance is the part no reactance anywhere in the path can cancel.</td>
+    </tr>
+    <tr>
+      <td>X</td>
+      <td>Series reactance, the imaginary part. Positive below self-resonance (inductive), negative above it (capacitive).</td>
+      <td>Where the sign flips, because that locates self-resonance. Then |X| smaller than R on every band in use, so that most of the impedance is the part that cannot be canceled. A mostly reactive choke can also resonate with the line at some frequency other than its own.</td>
+    </tr>
+    <tr>
+      <td><strong>|Z|</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">sqrt(R^2 + X^2)</code>, the total series impedance. This is the <code class="language-plaintext highlighter-rouge">Zchoke</code> in <code class="language-plaintext highlighter-rouge">20 log10(1 + Zchoke/Zpath)</code>.</td>
+      <td>Above 5 kohm across every band the choke will serve. It is the number the suppression arithmetic uses, and R and X say how much of it to trust.</td>
+    </tr>
+    <tr>
+      <td>Rp</td>
+      <td>Parallel equivalent resistance, <code class="language-plaintext highlighter-rouge">(R^2 + X^2)/R</code>. The dissipative part with the stray capacitance separated out.</td>
+      <td>Flat with frequency, which is what a loss material does. Rp is also the figure that compares across fixtures and builds, because a shunt capacitance added by a fixture changes Cp and leaves Rp alone.</td>
+    </tr>
+    <tr>
+      <td>Cp</td>
+      <td>Parallel equivalent capacitance, <code class="language-plaintext highlighter-rouge">1/(2*pi*f*abs(Xp))</code> with <code class="language-plaintext highlighter-rouge">Xp = (R^2 + X^2)/X</code>.</td>
+      <td>Small, and <strong>rising toward a limit rather than flat</strong>. This column is net susceptance, not stray capacitance: the winding’s own inductive susceptance is still in it, so it reads low near self-resonance and approaches the true stray well above. Defined only where X is negative; below self-resonance the column reads “inductive”. Fit the real stray from the shape, as below.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Three relations tie the columns together. <code class="language-plaintext highlighter-rouge">|Z|</code> is never smaller than R, Rp
+is never smaller than <code class="language-plaintext highlighter-rouge">|Z|</code>, and all three are equal at the frequency where X
+crosses zero, which is self-resonance. The gap between R and <code class="language-plaintext highlighter-rouge">|Z|</code> is how reactive the choke is at that
+frequency, the gap between <code class="language-plaintext highlighter-rouge">|Z|</code> and Rp is how much the stray capacitance is
+shunting, and both widen with distance from self-resonance. So R falling at the top of HF while Rp stays flat
+is the stray capacitance diverting current around the loss resistance, not the
+core running out of loss.</p>
+
+<h2 id="what-the-two-core-pair-measures">What the two-core pair measures</h2>
+
+<p>Two sweeps of the same assembly, averaged, normalized to the short reference.
+Repeatability between them is better than 1.8% on every band, the worst
+case being 1.77% at 28.4 MHz.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>R</th>
+      <th>X</th>
+      <th><strong>|Z|</strong></th>
+      <th>Rp</th>
+      <th>Cp</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.9 MHz</td>
+      <td>2,860</td>
+      <td>+3,879</td>
+      <td><strong>4,819</strong></td>
+      <td>8,120</td>
+      <td>inductive</td>
+      <td>weak and reactive</td>
+    </tr>
+    <tr>
+      <td>3.5 MHz</td>
+      <td>5,310</td>
+      <td>+3,737</td>
+      <td><strong>6,493</strong></td>
+      <td>7,940</td>
+      <td>inductive</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>7.2 MHz</td>
+      <td>7,838</td>
+      <td>+2,071</td>
+      <td><strong>8,107</strong></td>
+      <td>8,385</td>
+      <td>inductive</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>10.1 MHz</td>
+      <td>8,836</td>
+      <td>+411</td>
+      <td><strong>8,846</strong></td>
+      <td>8,856</td>
+      <td>inductive</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>14.3 MHz</td>
+      <td>8,699</td>
+      <td>-2,440</td>
+      <td><strong>9,035</strong></td>
+      <td>9,383</td>
+      <td>0.33 pF</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>18.1 MHz</td>
+      <td>7,215</td>
+      <td>-4,009</td>
+      <td><strong>8,254</strong></td>
+      <td>9,442</td>
+      <td>0.52 pF</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>21.2 MHz</td>
+      <td>6,029</td>
+      <td>-4,452</td>
+      <td><strong>7,495</strong></td>
+      <td>9,317</td>
+      <td>0.59 pF</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>24.9 MHz</td>
+      <td>4,829</td>
+      <td>-4,541</td>
+      <td><strong>6,629</strong></td>
+      <td>9,100</td>
+      <td>0.66 pF</td>
+      <td>transmit</td>
+    </tr>
+    <tr>
+      <td>28.4 MHz</td>
+      <td>4,030</td>
+      <td>-4,422</td>
+      <td><strong>5,983</strong></td>
+      <td>8,883</td>
+      <td>0.69 pF</td>
+      <td>band-limited, X over R</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>Magnitude, resistance and reactance from 1 to 30 MHz. Self-resonance, where
+X crosses zero, at 10.7 MHz; the magnitude peaks later, at 12.3 MHz, and is
+still near 6 kohm at 30 MHz.
+<img src="/hamradio/assets/images/diy-common-mode-chokes/choke-impedance-sweep.png" alt="A line chart of common-mode choking impedance from 1 to 30 MHz showing magnitude, resistance and reactance. A dotted vertical line marks the reactance crossing zero at 10.7 MHz. The magnitude rises above 5 kohm by 3 MHz, peaks near 9.2 kohm at 12.3 MHz, and falls gently to about 6 kohm at 30 MHz, staying above the 5 kohm transmit-grade line across the whole range" /></p>
+</blockquote>
+
+<p>The parallel loss resistance <strong>Rp is flat at
+7.9 to 9.5 kohm</strong>, varying by a factor of 1.21 over an eight-to-one frequency
+range, which is mix 31 behaving the way a loss material should.</p>
+
+<p><strong>Self-resonance is at 10.7 MHz, where X crosses zero. The magnitude peaks
+later, at 12.3 MHz and 9,173 ohm.</strong> The two are the same frequency only in a
+lossless parallel resonator. Here Rp climbs with frequency, and that climb
+carries the magnitude on past the point where the reactance cancels. Both
+numbers are worth having and they answer different questions: the X crossing
+is the component’s resonance, the magnitude peak is where it chokes hardest.</p>
+
+<p><strong>The stray capacitance is 0.82 pF, not the 0.33 to 0.69 pF the Cp column
+shows.</strong> Those entries are net susceptance and still carry the winding’s
+inductance. Fitting <code class="language-plaintext highlighter-rouge">B = w*C - 1/(w*L)</code> over the capacitive region returns
+C = 0.82 pF with L = 253 uH, reproducing every Cp entry from 14.3 to 28.4 MHz
+to within 0.018 pF, and that pair resonates at 11.0 MHz, which is the measured
+crossing. The fixture’s own 0.043 pF is <strong>5% of that 0.82 pF</strong>, so it is not
+what limits the figure. The 0.82 pF caps the magnitude at 28.4 MHz to
+6,884 ohm, or 4,868 ohm under the R at least <code class="language-plaintext highlighter-rouge">|X|</code> rule, and the choke
+measures 5,983 ohm with R just under <code class="language-plaintext highlighter-rouge">|X|</code>: it is sitting on its own stray,
+exactly where the budget says it should be.</p>
+
+<p>The choke clears 5 kohm from 3 MHz to beyond 30. R exceeds <code class="language-plaintext highlighter-rouge">|X|</code> on every band
+from 80 m through 12 m. On 10 m the magnitude still passes at 5,983 ohm while
+the reactance edges past the resistance, which is the one band where it is
+band-limited rather than fully transmit grade. On 160 m it is <strong>below 5 kohm
+and reactance-dominated at once</strong>, 2,860 ohm of resistance against 3,879 of
+reactance, which is neither transmit grade nor the mostly-resistive receive
+grade; nine turns per section is not enough that low.</p>
+
+<h2 id="what-a-single-core-choke-measures">What a single-core choke measures</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>R</th>
+      <th>X</th>
+      <th>|Z|</th>
+      <th>Rp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>3.5 MHz</td>
+      <td>3,143</td>
+      <td>+1,651</td>
+      <td>3,550</td>
+      <td>4,010</td>
+    </tr>
+    <tr>
+      <td>7.2 MHz</td>
+      <td>3,918</td>
+      <td>+345</td>
+      <td>3,934</td>
+      <td>3,949</td>
+    </tr>
+    <tr>
+      <td>14.3 MHz</td>
+      <td>3,612</td>
+      <td>-1,273</td>
+      <td>3,830</td>
+      <td>4,061</td>
+    </tr>
+    <tr>
+      <td>21.2 MHz</td>
+      <td>2,710</td>
+      <td>-1,916</td>
+      <td>3,319</td>
+      <td>4,065</td>
+    </tr>
+    <tr>
+      <td>28.4 MHz</td>
+      <td>2,319</td>
+      <td>-2,188</td>
+      <td>3,188</td>
+      <td>4,384</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A flat, broadband receive-and-QRP choke of about 3.2 to 3.9 kohm, resistive
+everywhere, and <strong>Rp flat at 3.9 to 4.4 kohm</strong>. Band by band, the pair’s Rp is
+<strong>2.0 to 2.3 times</strong> this one’s: 1.98 at 3.5 MHz, 2.12 at 7.2, 2.31 at 14.3,
+2.29 at 21.2 and 2.03 at 28.4. Two equal resistances in series give exactly
+two, and the spread above that is the difference between the two fixtures these
+were measured on.</p>
+
+<blockquote>
+  <p><strong>Watch out.</strong> This single-section table was taken on an earlier, more
+compact fixture whose own stray capacitance is in the result, so its figures
+above 14 MHz are a floor rather than the component’s limit. Rp is the number
+that travels, because a shunt capacitance added by a fixture changes the
+parallel capacitance and leaves the parallel resistance alone.</p>
+</blockquote>
+
+<h2 id="grading-how-much-impedance-a-choke-needs">Grading: how much impedance a choke needs</h2>
+
+<p>A choke’s impedance means nothing on its own. What matters is how it compares
+to the common-mode path it interrupts, and that path impedance changes with
+frequency, ground, and everything else in the installation, so it is not
+knowable in practice. The thresholds below are the working compromise: what
+the measured impedance has to be, across every band the choke will serve, for
+it to be worth installing. They are the grades named in the tables above.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Measured across every band it will serve</th>
+      <th>Grade</th>
+      <th>Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Above 5 kohm, mostly resistive</td>
+      <td>Transmit grade</td>
+      <td>Anywhere; keep the best as a reference choke</td>
+    </tr>
+    <tr>
+      <td>1 to 5 kohm, mostly resistive</td>
+      <td>Receive or QRP</td>
+      <td>Receive chokes, DC cords, low-power stations</td>
+    </tr>
+    <tr>
+      <td>Above 5 kohm but X larger than R</td>
+      <td>Band-limited</td>
+      <td>Use where R dominates; it can resonate with the line elsewhere</td>
+    </tr>
+    <tr>
+      <td>1 to 5 kohm and X larger than R</td>
+      <td>Weak and reactive</td>
+      <td>The worst of both. Treat the band as uncovered</td>
+    </tr>
+    <tr>
+      <td>Below 1 kohm anywhere in range</td>
+      <td>Not a choke there</td>
+      <td>More turns, another section, or restrict it to one band</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The 5 kohm line comes from the suppression a choke buys against the impedance
+of the path it interrupts:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>suppression in dB = 20 log10(1 + Zchoke / Zpath)
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Common-mode path impedance</th>
+      <th>1 kohm choke</th>
+      <th>5 kohm choke</th>
+      <th>10 kohm choke</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>100 ohm (near a current maximum)</td>
+      <td>21 dB</td>
+      <td>34 dB</td>
+      <td>40 dB</td>
+    </tr>
+    <tr>
+      <td>500 ohm</td>
+      <td>10 dB</td>
+      <td>21 dB</td>
+      <td>26 dB</td>
+    </tr>
+    <tr>
+      <td>2 kohm</td>
+      <td>3 dB</td>
+      <td>11 dB</td>
+      <td>16 dB</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Real impedances are complex and do not add arithmetically, so treat those as
+orders of magnitude. The spread across each row does not narrow as the choke
+grows, so a bigger choke does not make the unknown path impedance matter less.
+What changes is the worst case: against a 2 kohm path, 1 kohm buys 3.5 dB and
+5 kohm buys 11 dB. The 5 kohm line is where the worst case is still worth
+having, not where the uncertainty goes away.</p>
+
+<h2 id="why-two-sections-rather-than-two-cores">Why two sections rather than two cores</h2>
+
+<p>Stacking a second core under one winding raises the resistance and leaves the
+stray capacitance alone, so it helps only on bands where resistance is the
+limit. Putting two complete chokes in series raises the resistance the same
+way and gives the capacitance somewhere to divide, <strong>provided the two ends of
+the assembly are kept apart.</strong></p>
+
+<p>A capacitance from the input connector to the output connector sits in
+parallel with everything between and divides by nothing, so a sectioned choke
+built as two cores side by side in a box performs like a single one at the top
+of HF. The arithmetic says what the geometry has to buy: holding a 15 kohm
+assembly within 10 percent of its resistance at 28.4 MHz takes an end-to-end
+reactance above 31 kohm, which is <strong>0.18 pF from one connector to the other</strong>.
+The fixture measured above, with its two ends about ten inches apart, reads
+0.043 pF, so ten inches of separation covers that budget four times over. The
+sections supply the resistance; the length supplies the small capacitance.</p>
+
+<p>So the design order is geometry, then turns, then sections:</p>
+
+<ol>
+  <li><strong>Fix the geometry.</strong> Input connector far from output connector, a long
+thin body rather than a box.</li>
+  <li><strong>Pick the highest band that has to work</strong> and read the stray it allows,
+from the budget below.</li>
+  <li><strong>Choose turns per section</strong> to meet that figure, which usually means fewer
+turns than published low-band advice gives: 9 here against the 11 to 12 that
+an FT240-31 recipe would scale to.</li>
+  <li><strong>Choose the number of sections</strong> for the resistance the lowest band needs.</li>
+</ol>
+
+<p>A stray <code class="language-plaintext highlighter-rouge">C</code> across the winding sets <code class="language-plaintext highlighter-rouge">Xc = 1/(2*pi*f*C)</code>, and that is the
+ceiling on the magnitude only if the choke is allowed to be pure reactance.
+Holding R at least <code class="language-plaintext highlighter-rouge">|X|</code>, which is the grade used here, costs another factor
+of root two: <code class="language-plaintext highlighter-rouge">R = |X|</code> happens exactly when <code class="language-plaintext highlighter-rouge">Rp = Xc</code>, and at that point
+<code class="language-plaintext highlighter-rouge">|Z| = Rp/sqrt(2)</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stray across the winding</th>
+      <th>Ceiling on |Z| at 28.4 MHz</th>
+      <th>Ceiling with R at least |X|</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0.5 pF</td>
+      <td>11,208 ohm</td>
+      <td><strong>7,925 ohm</strong></td>
+    </tr>
+    <tr>
+      <td>1.0 pF</td>
+      <td>5,604 ohm</td>
+      <td><strong>3,963 ohm</strong></td>
+    </tr>
+    <tr>
+      <td>2.0 pF</td>
+      <td>2,802 ohm</td>
+      <td><strong>1,981 ohm</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>No amount of ferrite raises a resistance above the reactance it sits in
+parallel with. The 0.82 pF measured here allows 4,868 ohm under that rule, and
+the choke reads 5,983 ohm with R just under <code class="language-plaintext highlighter-rouge">|X|</code>, which is the budget being
+spent rather than beaten.</p>
+
+<blockquote>
+  <p><strong>Watch out: bend radius is not what separates these cables.</strong> Every toroid
+choke bends coax tighter than the datasheet allows. This core’s inner radius is
+17.8 mm, against a minimum bend radius of 25.4 mm for RG400 and 61 mm for
+RG8X. What separates the cables is not how tight a bend they take but
+whether the deformation is elastic. RG8X winds <em>more</em> easily than RG400,
+because its gas-injected foam dielectric is mostly air and yields without
+resisting, and that same compliance is what lets the center conductor
+migrate toward the shield and stay there. RG400’s solid PTFE is dense and
+dimensionally stable, so it resists the deformation and the winding holds its
+geometry.
+At HF the perturbed section is short enough not to matter much on its own:
+34 inches is 8% of a wavelength at 28 MHz. <strong>The objection to RG8X is
+temperature, not bending.</strong> It is rated to 80 degrees C against PTFE’s 200,
+and a choke is a cable pressed against a core that is dissipating. For a
+receive or QRP choke, RG8X is fine and pleasanter to wind.</p>
+</blockquote>
+
+<h2 id="cable-and-power">Cable and power</h2>
+
+<p>Only SSB approaches 100 W here and digital runs about 25 W, which makes RG316
+tempting for its easier winding, and at 100 W it is fine.</p>
+
+<p><strong>RG316 is the wrong cable at 1500 W, on heat rather than voltage.</strong> Its
+rating is commonly given around 1,200 V RMS, against 274 V at 1500 W into a
+match and about 474 V into a 3:1 mismatch, so voltage has margin. Belden’s
+RG316 is 2.7 dB/100 ft at 10 MHz and 5.6 at 50 MHz, which scales as root
+frequency to about <strong>4.5 dB/100 ft at 30 MHz</strong>, and RG400’s 4.1 at 100 MHz
+scales to about <strong>2.25</strong>. Over the 1.2 m inside a choke that is
+<strong>60 W dissipated key-down against RG400’s 30 W</strong>, in a tight bundle with no
+airflow, pressed against a core that is dissipating as well. SSB and CW duty cycle brings the average down to something survivable;
+a tuning carrier or RTTY would not.</p>
+
+<p>For a legal-limit club choke the answer is more sections rather than more cores
+under one winding: sections spread the same dissipation over more cable and
+more ferrite surface while cutting capacitance at the same time. Keep the turns
+spread rather than bunched, because the other high-power failure mode is
+flashover between adjacent turns.</p>
+
+<h2 id="where-this-goes-next">Where this goes next</h2>
+
+<p>Twelve cores on hand makes six of these pairs. Still to measure: the single
+section on the present fixture, two cores stacked under one winding as a
+control on the sectioning argument, and three sections, which the flat Rp now
+predicts will buy little at the top of HF. The sweeps behind every number here
+are published beside the script:
+<a href="/hamradio/assets/data/diy-common-mode-chokes/fixture-short-reference.s2p">the short reference</a>,
+<a href="/hamradio/assets/data/diy-common-mode-chokes/fixture-short-long-wire.s2p">the long-wire check</a>,
+and the choke
+<a href="/hamradio/assets/data/diy-common-mode-chokes/choke-two-sections-a.s2p">a</a>
+and
+<a href="/hamradio/assets/data/diy-common-mode-chokes/choke-two-sections-b.s2p">b</a>.</p>
+
+<p>73, KD3CCO</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+  <!-- Mermaid diagrams: only on pages with "mermaid: true" in their front matter.
+       kramdown renders a ```mermaid fence as either <pre><code class="language-mermaid">
+       or, with Rouge highlighting, <div class="language-mermaid highlighter-rouge">.
+       Both are turned into <div class="mermaid"> before rendering. -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
+      var code = el.matches('code') ? el : el.querySelector('code');
+      var block = el.matches('code') ? el.parentElement : el;
+      if (!code || !block) return;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = code.textContent;
+      block.replaceWith(diagram);
+    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict' });
+    await mermaid.run({ querySelector: '.mermaid' });
+  </script>
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

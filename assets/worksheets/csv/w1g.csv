@@ -1,0 +1,18 @@
+W1g. tinySA level calibration and floor
+"# The terminated floor is this instrument's own noise floor: 50 ohm on the input, LNA and pad as you intend to use them. Any ambient reading within a few dB of it is a measurement of the analyzer, not the site."
+"# Run the self-test and the low-input level calibration before trusting a reading, and again after a firmware update."
+Date / time,Firmware / self-test,Level cal source,Source level (dBm),tinySA reads (dBm),Error (dB) (compute),Terminated floor (dBm),RBW (Hz),Floor (dBm/Hz) (compute),Verdict (compute)
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,

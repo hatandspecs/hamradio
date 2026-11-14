@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Common-Mode Chokes, Not Grounds: Why a Shield Has To Be Interrupted | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Common-Mode Chokes, Not Grounds: Why a Shield Has To Be Interrupted</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: October 31, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>A coax feedline has three conductors, not two. There is the center conductor,
+there is the inside surface of the shield, and there is the outside surface of
+the shield, and the third one is not part of the transmission line.</p>
+
+<p>At HF, skin depth in copper is a few thousandths of an inch, far thinner than
+the braid, so current on the inside surface and current on the outside surface
+are electrically independent. The inside surface carries the return current of
+the transmission line, and that pair carries power to the antenna. The outside
+surface carries whatever else it happens to carry, and whatever it carries it
+radiates and receives, because it is a wire running from the antenna into the
+house.</p>
+
+<p>Common-mode current is the current on that third conductor. A choke is the
+only practical way to control it. The two things usually reached for instead, a
+ground rod and a bonding strap, do not address it.</p>
+
+<p>Building and measuring one is a separate article:
+<a href="/hamradio/articles/diy-transmit-grade-choke/">making a transmit-grade common-mode choke</a>.</p>
+
+<h2 id="where-the-current-comes-from">Where the current comes from</h2>
+
+<p><strong>Asymmetry at the antenna.</strong> A dipole is a balanced load and coax is an
+unbalanced line. Connect one to the other directly and the return current
+arrives at the feedpoint and divides between the far half of the dipole and the
+outside of the shield, because those are two conductors in parallel and the
+current has no reason to prefer one. How it divides depends on height, ground,
+nearby objects and feedline length. None of that is controlled by bonding the
+other end.</p>
+
+<p>The same thing happens at an end-fed half-wave. The antenna wire is one
+conductor, the unun’s cold terminal needs a return path, and if no return has
+been provided deliberately then the return is the shield’s outer surface. The
+feedline becomes the counterpoise by default.</p>
+
+<p><strong>Field pickup along the run.</strong> Even with a perfectly symmetric feedpoint, the
+outer surface is a conductor sitting in the antenna’s near field, and in
+everyone else’s. It picks up from the antenna, from co-located transmitters,
+and, the one that matters most on receive, from every noisy device in the
+building whose field it passes through on the way to the operating position.</p>
+
+<p>Both mechanisms produce the same symptoms: RF in the shack, hot microphone
+casings, control gear that resets on transmit, an SWR reading that changes when
+the feedline moves, a pattern that does not match the model, and a noise floor
+that includes the building.</p>
+
+<h2 id="why-grounding-does-not-fix-it">Why grounding does not fix it</h2>
+
+<p>“Ground it” is the standard advice for almost every other electrical problem.
+Two things make it the wrong advice here.</p>
+
+<p><strong>At RF there is no ground nearby.</strong> Ten feet of #6 wire to a rod is about
+4.4 microhenries, and its impedance is almost entirely inductive reactance:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>Reactance of a 10 ft #6 ground wire</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>160 m</td>
+      <td>about 50 ohms</td>
+    </tr>
+    <tr>
+      <td>80 m</td>
+      <td>about 100 ohms</td>
+    </tr>
+    <tr>
+      <td>40 m</td>
+      <td>about 200 ohms</td>
+    </tr>
+    <tr>
+      <td>20 m</td>
+      <td>about 390 ohms</td>
+    </tr>
+    <tr>
+      <td>10 m</td>
+      <td>about 790 ohms</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Flat strap instead of round wire reduces that by tens of percent, not by orders
+of magnitude. Ten feet is also a quarter wavelength at about 24 MHz, and a
+quarter-wave conductor grounded at the far end presents a high impedance
+at the near end, so on 12 m that ground wire is closer to an open circuit than
+to a ground, and it is a quarter-wave radiator fed at its base by the
+common-mode current it was installed to drain.</p>
+
+<p><strong>The common-mode current is not trying to get to ground.</strong> It is flowing on a
+conductor that has become part of an antenna. A ground connection is a shunt
+path, and a shunt only diverts current if it offers a much lower impedance than
+the alternative. A choke is a series impedance inserted in the unwanted path
+itself, and a series impedance reduces the current in that path no matter where
+the current was trying to go. <strong>A current whose path has not been interrupted
+cannot be shunted away, and a ground rod does not interrupt the shield.</strong></p>
+
+<p>None of this argues against bonding, which is mandatory and does a different,
+essential job:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Job</th>
+      <th>Done by</th>
+      <th>Not done by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Carrying fault current so a breaker trips</td>
+      <td>AC safety ground</td>
+      <td>A choke</td>
+    </tr>
+    <tr>
+      <td>Diverting lightning energy to earth</td>
+      <td>Arrestors bonded to a single-point entry panel and a rod</td>
+      <td>A choke</td>
+    </tr>
+    <tr>
+      <td>Holding enclosures at the same potential</td>
+      <td>Bonding</td>
+      <td>A choke</td>
+    </tr>
+    <tr>
+      <td>Keeping RF current off the outside of a coax shield</td>
+      <td>A choke</td>
+      <td>A ground rod, a bonding strap, or a counterpoise alone</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A station with correct grounding still has its full common-mode problem.</p>
+
+<h2 id="high-rf-sites-noise-floor-receiver-overload-and-feedline-coupling">High-RF sites: noise floor, receiver overload, and feedline coupling</h2>
+
+<p>Everything above applies in a quiet backyard. A site with high field strength,
+meaning a hilltop, a shared tower, a dense suburb near broadcast or paging
+transmitters, or a second radio on the same roof, adds three consequences on
+top of it.</p>
+
+<p><strong>On receive, the shield’s outer surface is an antenna galvanically connected
+to the receiver’s input.</strong> In a building full of switching supplies that
+conductor passes through every one of their fields on its way to the rig. This
+is why the receive test in a site survey is to insert a choke and read the
+noise floor again: if the number drops, the shield was the path, and no amount
+of work on the antenna would have found it.</p>
+
+<p><strong>At a strong-signal site, common-mode pickup adds to the total power at the
+front end.</strong> A direct-sampling receiver has a finite input range, and
+out-of-band carriers arriving along the shield count against it as the
+wanted signal does. Choking can reduce overload and intermod even when it does
+nothing audible to the noise floor.</p>
+
+<p><strong>On transmit, common-mode current couples one feedline to another.</strong> Two runs
+on the same tower or through the same entry panel form a coupled pair. That is
+a desense path between two radios that no filtering at either rig will fix,
+because the coupling happens outside both of them.</p>
+
+<p>The current that produces a buzz at 5 W produces
+burns on a microphone at 100 W and shuts down a rotator controller at 500 W.</p>
+
+<h2 id="where-chokes-go">Where chokes go</h2>
+
+<p>A choke belongs wherever the common-mode path crosses a boundary that matters:
+the feedpoint, the building entry, and the rig. More than one is normal,
+because a choke only controls the current that passes through it, so one at the
+shack does nothing about a feedline radiating in the backyard.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Location</th>
+      <th>Why there</th>
+      <th>Watch out for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Shack side of the lightning arrestor at the entry panel</td>
+      <td>The panel is where the shield is deliberately bonded, and everything past it runs through the house</td>
+      <td><strong>Put the entry-panel choke on the shack side.</strong> A choke ahead of the arrestor is an inductor in series with the surge path, so it raises the impedance of the route to the diverter and takes the voltage itself</td>
+    </tr>
+    <tr>
+      <td>At the rig, tuner or amplifier input</td>
+      <td>Catches current picked up inside the shack, on jumpers and in the cable bundle</td>
+      <td>The easiest to add and the least effective on its own</td>
+    </tr>
+    <tr>
+      <td>Dipole, doublet or loop feedpoint</td>
+      <td>The asymmetry originates at the feedpoint, and without choking an impedance measurement means little</td>
+      <td>Weight and weatherproofing</td>
+    </tr>
+    <tr>
+      <td>Vertical feedpoint, above the radial plate</td>
+      <td>Keeps the shield from becoming an unintended extra radial</td>
+      <td>Does not substitute for radials</td>
+    </tr>
+    <tr>
+      <td>End-fed half-wave, at the unun with a counterpoise on its ground terminal</td>
+      <td>The counterpoise carries the return current, so the feedline no longer has to</td>
+      <td><strong>Provide the return before isolating the feedline</strong></td>
+    </tr>
+    <tr>
+      <td>Rig DC cord, rotator cable, control and network cables</td>
+      <td>They are conductors in the same field and they carry current too</td>
+      <td>Snap-ons are fine; measure before and after</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>That preference does not extend to the feedpoint chokes below.</strong> Every
+choke at an antenna is on the antenna side of the entry panel, because the
+entry panel is at the house. A dipole, vertical or EFHW choke is unavoidably
+in the surge path and there is no alternative position for it. What follows is
+that those chokes are surge-exposed hardware: wind them on a core that will
+not shatter, keep the turns spread so a flashover has somewhere not to go, and
+expect to inspect them after a close strike. The rule is about not adding a
+second, avoidable inductance immediately in front of the arrestor, not about
+the surge path being choke-free.</p>
+
+<p><strong>The end-fed half-wave case</strong> needs stating plainly. A choke right at the unun
+and nothing else is the arrangement that looks most careful, and it is the one
+that fails. An EFHW is fed at a high-impedance point through a
+49:1 or 56:1 unun. The feedpoint current is small but not zero and it needs
+somewhere to go. Two arrangements handle it deliberately: a choke at the unun
+plus a dedicated counterpoise on the unun’s ground terminal, or a choke placed
+a deliberate distance down the feedline with that length of shield serving as
+the counterpoise. Either way the counterpoise runs around 0.05 wavelength at
+the lowest band, roughly 14 feet for 80 m and 7 feet for 40 m, and it is worth
+trimming and recording. My own
+<a href="/hamradio/articles/wideband-unun/">75-10 m EFHW</a> uses the first,
+with a 12-turn FT240-43 choke at the unun and a counterpoise that settled at
+8.75 feet.</p>
+
+<p><strong>A choke at the unun with no counterpoise starves the antenna of a return
+path.</strong> The choke’s impedance is then in series with the return current the
+feedpoint requires, so the match degrades, the tuning moves, and power that
+should have been radiated is dissipated in the choke. Provide the return, then
+isolate the feedline.</p>
+
+<h2 id="how-the-feedline-changes-how-much-choking-is-needed">How the feedline changes how much choking is needed</h2>
+
+<p>How much common-mode current exists is a property of the whole conductive
+assembly, not of the antenna alone.</p>
+
+<p><strong>Very short coax runs are not automatically safe.</strong> The common-mode conductor
+is the coax <em>plus everything bonded to it</em>. A three-foot jumper from an EFHW to
+a handheld is one of the worst cases there is, because the counterpoise it
+finds is the radio, the operator’s hand, and the operator. The coax is
+electrically short; the assembly is not. Portable and QRP setups frequently
+need a choke <em>and</em> a defined counterpoise more urgently than a home station
+with 100 feet of buried coax.</p>
+
+<p><strong>Long runs</strong> raise the need for three reasons. A 100-foot run is several
+quarter-wavelengths somewhere in HF, so on some band the common-mode path is
+near resonance, which is the condition that produces the largest current. It
+has far more surface exposed to building noise. And it usually passes near
+other cables. Long runs also want more than one choke, because common-mode
+current forms a standing wave with maxima roughly every half wavelength and a
+choke at a current null does little.</p>
+
+<p><strong>Twin lead and open-wire line</strong> change the geometry but not the problem. There
+is no third surface, but common-mode current still exists as a net in-phase
+current on the two conductors together, created by asymmetry: unequal coupling
+to nearby metal, an unbalanced source, or a line routed along a wall. Three
+consequences follow. The critical interface moves to the station end, where an
+unbalanced rig meets a balanced line, and that junction needs a genuine current
+balun or a link-coupled balanced tuner rather than a voltage balun. Routing
+matters more than it does with coax. And high SWR means high common-mode
+voltage at the station end, which is hard on ferrite: core heating and, in bad
+cases, flashover between turns. That last is the one case where a balanced
+tuner beats a bigger choke.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feedline</th>
+      <th>Effect</th>
+      <th>What to do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Short coax, fixed station, return provided</td>
+      <td>Usually less current</td>
+      <td>One choke at the feedpoint; measure before adding more</td>
+    </tr>
+    <tr>
+      <td>Short coax, portable or handheld</td>
+      <td>Often severe; the radio and operator become the counterpoise</td>
+      <td>Choke plus a deliberate counterpoise, at the antenna</td>
+    </tr>
+    <tr>
+      <td>Medium run, under a wavelength</td>
+      <td>Depends on antenna symmetry</td>
+      <td>Feedpoint and entry</td>
+    </tr>
+    <tr>
+      <td>Long run, several wavelengths</td>
+      <td>Higher; resonance somewhere in HF is near-certain</td>
+      <td>Both ends, and sweep for a current maximum between</td>
+    </tr>
+    <tr>
+      <td>Twin lead or open-wire</td>
+      <td>No shield current, but asymmetry still radiates</td>
+      <td>Current balun or balanced tuner at the station end</td>
+    </tr>
+    <tr>
+      <td>Twin lead at high SWR</td>
+      <td>High common-mode voltage stresses ferrite</td>
+      <td>Balanced tuner or link coupling in preference to a large choke</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="what-a-choke-has-to-be">What a choke has to be</h2>
+
+<p>A choke is a high impedance in series with the shield’s outer surface, and it
+has to be large, <strong>resistive</strong>, and present on every band the station uses.</p>
+
+<p>Resistive rather than reactive, because an inductive choke stores energy and
+gives it back. In series with a common-mode path that has its own reactance, a
+purely inductive choke can series-resonate with it, and at that frequency the
+total impedance <em>falls</em> and the current goes up. A resistive choke dissipates
+the energy instead and cannot resonate with the line. This is why ferrite mixes
+are chosen for their loss rather than their permeability, and why a measurement
+reporting only a magnitude cannot grade one.</p>
+
+<p>Mix 31 is the usual choice for HF: its complex permeability is strongly
+resistive across the low and middle HF bands. Mix 43 is less lossy at the
+bottom of HF and better at the top and into VHF. Mix 61 is a VHF material with
+little useful loss at HF.</p>
+
+<p><strong>Dissipation is worst when the choke’s impedance is comparable to the path
+impedance</strong>, so a mediocre choke runs hotter than either a bad one or a good
+one. The fixes are to make the choke much larger than the path, or to reduce
+the current at its source by fixing the asymmetry. A choke that gets hot is
+reporting common-mode current that was already there.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Style</th>
+      <th>Good for</th>
+      <th>Watch out</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Coax on a ferrite toroid</td>
+      <td>The default HF transmit choke</td>
+      <td>Turn count trades low-band impedance against self-resonance</td>
+    </tr>
+    <tr>
+      <td>Two such chokes in series</td>
+      <td>More resistance, and more impedance at the top of HF than one winding gives</td>
+      <td>Gains nothing at the top of HF unless the two ends are kept well apart</td>
+    </tr>
+    <tr>
+      <td>Stacked toroids under one winding</td>
+      <td>More impedance and thermal mass at the same turn count</td>
+      <td>Heavy, and it helps only where resistance is the limit</td>
+    </tr>
+    <tr>
+      <td>Snap-on clamps or a bead string</td>
+      <td>Receive chokes, DC cords, control cables, quick tests</td>
+      <td>Impedance adds per bead, so one clamp is rarely enough</td>
+    </tr>
+    <tr>
+      <td>Bifilar-wound 1:1 current balun</td>
+      <td>Balanced feedpoints and tuner outputs</td>
+      <td>Must be transmission-line wound, not an autotransformer</td>
+    </tr>
+    <tr>
+      <td>Coax coil with no ferrite</td>
+      <td>Very little</td>
+      <td>Narrow and highly reactive; its impedance collapses off resonance</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Jim Brown K9YC’s published notes on ferrites and common-mode chokes are the
+standard reference for specific recipes.</p>
+
+<h2 id="confirming-a-choke-works-in-the-station">Confirming a choke works in the station</h2>
+
+<p>A choke’s bench impedance is necessary and not sufficient. The bench measures
+the component, not the circuit. A 5 kohm choke in a path whose common-mode
+impedance happens to be 2 kohm buys about 11 dB, not 34, and that path
+impedance cannot be measured with any instrument likely to be in a home
+station. Placement matters as much: a perfect choke at a current null does
+nothing.</p>
+
+<p>So confirm the install with two measurements:</p>
+
+<ul>
+  <li><strong>On transmit,</strong> with a
+<a href="/hamradio/articles/diy-rf-current-probe/">clamp-on RF current probe</a>:
+sweep along the line, record the peak, install the choke, sweep again. A good
+install cuts the peak by 20 dB or more.</li>
+  <li><strong>On receive,</strong> with the noise-floor test in
+<a href="/hamradio/articles/diy-rf-site-survey/">Phase 3 of the site survey</a>:
+read the floor, insert the choke at the entry, read it again. A drop of 3 dB
+or more means the shield was conducting building noise into the receiver.</li>
+</ul>
+
+<p>Both are differences, and both should be compared against the measurement
+repeatability before being believed. A 2 dB improvement measured with a 3 dB
+spread between repeat readings has not been shown to be an improvement.</p>
+
+<p>73, KD3CCO</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

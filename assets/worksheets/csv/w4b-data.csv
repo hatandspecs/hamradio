@@ -1,0 +1,17 @@
+W4b data. Paired A/B data
+"# One row per station decoded on BOTH antennas. Use one copy of this sheet per band, or sort by band and narrow the summary ranges."
+Band,Station,SNR A (dB),SNR B (dB),Difference (dB) (compute)
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,

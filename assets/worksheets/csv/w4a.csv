@@ -1,0 +1,18 @@
+"W4a. Impedance, feedpoint vs shack"
+# Transform the feedpoint impedance through the line using the Phase 3 loss and velocity factor to get the predicted columns.
+"# If the trace moves when you handle the feedline, the measurement includes the feedline and none of these numbers are the antenna's."
+Antenna,Freq (MHz),Feedpoint R,Feedpoint X,Feedpoint SWR,Shack R,Shack X,Shack SWR,Predicted shack R,Predicted shack X,Delta R (compute),Delta X (compute),Moves when handled?
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,

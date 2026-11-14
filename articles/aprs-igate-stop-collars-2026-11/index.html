@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stop Collars Fitted, and a Digipeater Operator Who Agrees Something Is Wrong | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Stop Collars Fitted, and a Digipeater Operator Who Agrees Something Is Wrong</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: November 13, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>The padded stop collars are on the iGate mast. They are the fix named at the
+end of
+<a href="/hamradio/articles/aprs-igate-mast-down-2026-11/">the write-up of the fall</a>,
+ordered and not yet fitted at the time, and they address the first link in the
+chain that dropped the mast twice in November. The angle iron fitted on
+November 6 had hardened the last link; the taped joints were still exactly as
+they were.</p>
+
+<p>Two things came out of the day besides the hardware. The 2 m sweep on the
+way back up reads <strong>1.68 to 1.75 across the bottom of the band, and the limit is
+resistive rather than reactive</strong>, which is a different problem from the one a
+rising SWR number usually means. And the operator of W3YA-1, the digipeater that
+repeats this station’s beacons and none of its longer frames, now knows about
+it, finds it unexpected, and is looking at it from the site end.</p>
+
+<h2 id="the-work">The work</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Local time, November 13</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Radio off, Pi left running</td>
+      <td>12:31 pm</td>
+    </tr>
+    <tr>
+      <td>Mast lowered, rubber wrapped and cut, collars fabricated and fitted, mast raised, swept</td>
+      <td>12:31 to 1:23 pm</td>
+    </tr>
+    <tr>
+      <td>Radio back on</td>
+      <td>1:23 pm</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Fifty-two minutes off the air, and that covered the whole job.</strong> No parts were
+made up beforehand. The rubber was wrapped and cut on the lowered mast, the
+collars were assembled on the spot, fitted, and the mast went back up and got
+swept, all inside the window.</p>
+
+<p>The time came from planning each move before the radio went off rather than from
+doing part of the work earlier. That is worth separating out, because the
+instinct with a station outage is to shrink it by moving work outside the
+window, and here there was nothing to move: the pole has to be down to wrap a
+pad at its own position. What the planning bought was not deciding anything
+while the pole was down.</p>
+
+<p>The radio goes off and the Pi stays running for any physical work on the mast.
+That habit is what put a clean, sharp second edge in the log during the
+November 5 failure, and it is what made the timing of that failure checkable
+against something the estimate had not used. It costs nothing here. At one
+beacon every thirty minutes, 52 minutes of radio-off time queues about two
+beacons that never leave the antenna, which is below the point where it moves
+any rate the station computes.</p>
+
+<h2 id="the-collars">The collars</h2>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-stop-collars-built-2026-11-13.jpg" alt="A set of padded hose-clamp stop collars laid out on a grey interlocking foam mat in a mown lawn, each one a black rubber-lined band with a chrome worm housing and a colored thumb key marked with a number in black ink, with the collapsed black telescoping mast lying in the grass alongside" /></p>
+
+<p><strong>Thirteen of them, one per load-bearing joint.</strong> Each is a worm-drive hose
+clamp with a strip of rubber inside the band and heat shrink over the band to
+capture the rubber, so the result is a single reusable part with no loose pad to
+lose in the grass and no steel edge against fiberglass anywhere. The thumb key
+replaces the screwdriver slot. Two band sizes cover the taper, blue keys on the
+wide low joints and yellow on the narrow high ones, and each collar is numbered
+in marker to its joint.</p>
+
+<p>Thirteen is a count. The pole ships as a seventeen-segment Spiderbeam 10 m
+“mini”; the three thinnest are not in it, which leaves fourteen segments, and
+fourteen segments meet at thirteen joints. One collar per joint.</p>
+
+<p>November 13 finished the set rather than starting it. Some collars went on
+during the week after the rebuild, so the mast through that stretch was neither
+the taped one that failed nor the fully collared one standing now.</p>
+
+<p>The pads were sized by wrapping the rubber around the mast at each position and
+cutting it there, rather than by measuring the joints, which is the method
+described in
+<a href="/hamradio/articles/aprs-igate-mast-down-2026-11/">the write-up of the fall</a>.
+Keep the heat shrink off the tail that feeds through the worm housing, or the
+clamp will not adjust.</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-stop-collars-fitted-2026-11-13.jpg" alt="Looking along the telescoping mast lying extended in mown grass, with padded stop collars fitted at the joints along its length, their yellow and blue thumb keys projecting, bright green guy lines trailing across the grass and the coax running alongside" /></p>
+
+<p>They go <strong>on the inner section, snug against the rim of the outer one</strong>, which
+is where Spiderbeam’s own documentation puts the stop collars it sells for
+these poles. That is a stop collar rather than a clamp squeezing the lower
+section’s lip onto the inner one. The rim takes the load, and the collar’s own
+grip on the section only has to keep it from migrating up the taper. The
+reasoning is in
+<a href="/hamradio/articles/aprs-igate-mast-down-2026-11/">the previous article</a>.</p>
+
+<h2 id="back-up">Back up</h2>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-raised-collars-looking-up-2026-11-13.jpg" alt="Looking straight up the raised black telescoping mast against a heavily clouded sky, with two stop collars visible at joints near the top, guy lines radiating from the upper section, and a utility pole with power lines low in the frame" /></p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-raised-full-2026-11-13.jpg" alt="The telescoping mast standing at full height in a mown lawn under a grey overcast sky, held by four bright green guy lines running to ground anchors, with a utility pole and power lines to the left and a wooded ridge across the horizon" /></p>
+
+<p>Same height, same antenna, same four-way guying, same angle-iron base. The only
+change is at the joints.</p>
+
+<h2 id="the-sweep">The sweep</h2>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/nanovna-2m-swr-2026-11-13.jpg" alt="A NanoVNA in a black case on a wooden desk, its screen showing a 144 to 148 MHz sweep with SWR, resistance and reactance traces and four markers, with coaxial jumpers screwed to both ports" /></p>
+
+<p>Four markers, 144 to 148 MHz, 301 points:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Marker</th>
+      <th>Frequency</th>
+      <th>R</th>
+      <th>X</th>
+      <th>SWR</th>
+      <th>Return loss</th>
+      <th>Power reflected</th>
+      <th>Mismatch loss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>144.000 MHz</td>
+      <td>36.1 Ω</td>
+      <td>−17.4 Ω</td>
+      <td>1.68</td>
+      <td>11.9 dB</td>
+      <td>6.4%</td>
+      <td>0.29 dB</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>145.413 MHz</td>
+      <td>28.6 Ω</td>
+      <td>−2.2 Ω</td>
+      <td>1.75</td>
+      <td>11.3 dB</td>
+      <td>7.5%</td>
+      <td>0.34 dB</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>146.787 MHz</td>
+      <td>32.1 Ω</td>
+      <td>+19.9 Ω</td>
+      <td>1.93</td>
+      <td>10.0 dB</td>
+      <td>10.0%</td>
+      <td>0.46 dB</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>148.000 MHz</td>
+      <td>58.4 Ω</td>
+      <td>+44.2 Ω</td>
+      <td>2.25</td>
+      <td>8.3 dB</td>
+      <td>14.8%</td>
+      <td>0.69 dB</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The SWR column is the instrument’s, and the three to its right are computed from
+the R and X the same instrument reported. <strong>All four of the displayed SWR values
+reproduce from R and X to the last digit shown</strong>, which is the cheap check worth
+doing on any VNA screenshot before any conclusion is drawn from it: 1.679,
+1.753, 1.928 and 2.248 against 1.68, 1.75, 1.93 and 2.25. The screen is
+internally consistent, so whatever else is true, it is not misreporting its own
+reflection coefficient.</p>
+
+<p>Interpolating between markers 1 and 2 puts 144.390 MHz, which is the only
+frequency this station cares about, at <strong>R 34 Ω, X −13 Ω, SWR 1.64</strong>. Call the
+operating figure 1.65 to 1.70.</p>
+
+<h3 id="the-limit-is-resistive">The limit is resistive</h3>
+
+<p>The reactance crosses zero at <strong>145.55 MHz</strong>, and the resistance there is
+<strong>28.9 Ω</strong>. That is the whole story of the curve. An antenna whose reactance
+reaches zero inside the band is resonant in the band, and <strong>at resonance this
+one still reads 1.73, because 28.9 Ω into 50 Ω is a 1.73 mismatch by itself.</strong></p>
+
+<p>The distinction matters because it decides what work would change the number.
+Trimming or extending an element moves the frequency where X crosses zero. It
+does not move R at that crossing by much, so a retune would slide the minimum
+around the band and leave its depth where it is. Getting below about 1.7 on this
+antenna is a matching question, at the tap on the slim jim’s stub, rather than a
+length question.</p>
+
+<p>It also explains the shape across the band. SWR here rises monotonically from
+144 to 148 rather than dipping at a design center, because the resistive floor
+sits under the whole sweep and the reactance climbs through it from −17 Ω to
++44 Ω. APRS at 144.390 lands at the low-frequency end, which is the best part of
+this particular curve. That is luck rather than design.</p>
+
+<h3 id="why-170-does-not-matter-operationally">Why 1.70 does not matter operationally</h3>
+
+<p>At 1.70, the station reflects 6.7% of its forward power and loses 0.30 dB.
+At 30 watts that is two watts turned around at the feedpoint. Against the 3.5 dB
+the feedline swap recovered in October, and the roughly 5 dB the mast height is
+worth over the fifteen-foot mount, a third of a decibel is not worth chasing.</p>
+
+<p>The practical risk at a mismatch like this is not loss but protection foldback
+in the radio, and a mobile FM rig does not start reducing output anywhere near
+1.7.</p>
+
+<h2 id="the-number-went-up-and-that-part-is-not-settled">The number went up, and that part is not settled</h2>
+
+<p>The October check-in, at the same height on the same antenna and the same
+RG-8X, recorded SWR “under 1.3.” This reads 1.70. That is a real difference
+between two recorded numbers and it has at least three candidate explanations,
+which the single sweep cannot separate.</p>
+
+<p><strong>The reference plane.</strong> Line loss always flatters a mismatch, because the
+reflection traverses the run twice and comes back down by twice the one-way
+loss. Fifty feet of RG-8X at 146 MHz is about 1.8 dB one way, so 3.6 dB on the
+reflection, and that is a factor of 0.66 on the reflection coefficient:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Reading</th>
+      <th>If it was taken at the shack, the antenna is</th>
+      <th>If it was taken at the feedpoint, the shack would read</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.30, October</td>
+      <td>1.49</td>
+      <td>1.19</td>
+    </tr>
+    <tr>
+      <td>1.70, November</td>
+      <td>2.29</td>
+      <td>1.41</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A reading taken at a different point in the run is a different number for an
+unchanged antenna, and the two readings are 0.40 apart at either plane rather
+than being reconciled by one. The NanoVNA screen shows calibration slot 4
+loaded and a jumper on each port, and nothing on the screen says where that
+calibration’s reference plane sits.</p>
+
+<p><strong>The instrument.</strong> “Under 1.3” is not sourced to a VNA in the October notes,
+and a mobile radio’s bar-graph meter and a calibrated VNA are not the same
+measurement.</p>
+
+<p><strong>The collars.</strong> This is the interesting one, and it is new as of this week.
+The slim jim is taped along the mast, so the upper collars are steel bands
+sitting within a few millimeters of a radiating element.</p>
+
+<p>The obvious worry, that a closed band of steel acts as a parasitic element, does
+not survive arithmetic. A wavelength at 146 MHz is 2,053 mm, and a resonant
+one-wavelength loop would need to be 654 mm across. The largest collar on this
+mast is 57 mm, a circumference of 179 mm, which is one eleventh of a
+wavelength, and the collars nearest the antenna are between one twenty-second
+and one fortieth. A shorted loop that small has almost no radiation resistance
+and cannot reradiate anything worth measuring.</p>
+
+<p>What a conductor a few millimeters from an element does do is add local
+capacitance, and capacitive loading lowers a resonant frequency. A reactance
+crossing at 145.55 MHz, below the middle of the band, is consistent with that.
+It is also consistent with half a dozen other things, and one measurement with
+no control cannot tell them apart.</p>
+
+<p><strong>The test is cheap and has not been run.</strong> Lower the mast, sweep the antenna
+without touching it, remove the top three or four collars, sweep again, refit
+and sweep a third time. Ten minutes, all of it at ground level, no ladder, and
+it either moves the crossing frequency or it does not. If the collars are doing
+something, the top joints carry almost no load and can simply go without.</p>
+
+<p>Worth being plain about the stakes: this is a question about knowing the
+station, not about fixing it. Taking the widest reading of the table above, the
+antenna is somewhere between 1.30 and 2.29, which is 0.07 dB to 0.73 dB of
+mismatch loss. The worst case is three quarters of a decibel, and this station
+cannot resolve three quarters of a decibel in its packet counts.</p>
+
+<h2 id="what-the-collars-have-not-done-yet">What the collars have not done yet</h2>
+
+<p>They have not seen wind. The failure on November 5 took a 24 mph gust and two
+prior joint slips to finish, and the thing that would have shown it coming is a
+painted witness mark at each rim, which is still not done. A collar that is
+holding and a collar that is slowly migrating up a two-degree taper look
+identical from the lawn.</p>
+
+<p>The erected height is also still an estimate. The mast has gone up and down by
+hand several times now without anyone counting segments, and “about twenty-eight
+feet” is carrying weight in every reach comparison the station publishes.</p>
+
+<h2 id="the-digipeater-operator-knows">The digipeater operator knows</h2>
+
+<p>The other half of the day was not hardware. I met the administrator of
+W3YA-1 and told him that my beacons get repeated and my frames over about 75
+bytes do not.</p>
+
+<p><strong>He finds it unexpected and is going to look at it from the digipeater end.</strong></p>
+
+<p>That is the useful outcome, because of where the investigation had stalled.
+<a href="/hamradio/articles/aprs-downlink-paths-2026-11/">The length test</a>
+ruled out everything that could be ruled out from this side. A configured length
+limit is impossible in a KPC-3, which reads no part of the information field and
+has no length parameter that touches digipeating. The APRS data type is not the
+variable, since eleven types cleared 82 bytes at that digipeater in a single
+day’s archive, including both of the ones that matter here. A fault in this
+station’s transmitter cannot select one receiver out of four. K3DNA, running the
+same model on the same ROM, repeated the same long frames the same day.</p>
+
+<p>What was left were three explanations that all sit at the far end of the path:
+the receive audio level into that TNC, co-channel traffic and noise at a 2,065
+foot ridge site, and a marginal signal from this station at that receiver in
+particular. <strong>Two of the three are not observable from outside the site.</strong> No
+amount of further measurement from this yard was going to separate them, and
+that is where the article had to leave it.</p>
+
+<p>One correction to carry forward. The published figure for how often W3YA-1
+repeats this station’s 75-byte beacons was 29% in the October archive and 32%
+in November. Both are measurements of the mast rather than of the path. The
+November figure covers a month in which a joint was slipping for a week, the
+mast spent two and a half hours on the ground, and the radio was switched off
+for the best part of a day. Every beacon queued with no antenna under it lands
+in the denominator. Over the clean stretch the rate is <strong>55%</strong>, which agrees
+with the 56% the length test’s own controls measured in a 15-minute window with
+the mast up. Two measurements that close together, taken by different methods
+in the same conditions, are worth more than either alone.</p>
+
+<p>It does not change the conclusion; it sharpens it. Against a 55% control rate,
+23 consecutive misses on long frames has a probability of about one in a hundred
+million. Worth noting which way that cuts: a higher rate at 75 bytes makes the
+absence above 82 bytes harder to explain by bad luck, not easier.</p>
+
+<p>Two notes on how this was raised, because the context deserves it. W3YA-1 is
+volunteer infrastructure on a mountaintop, put there and kept running by people
+who owe nobody a working path to my yard, and it has been carrying more than two
+thousand frames a day from other stations throughout. And every number in the
+article about the November 5 failure came off W3YA-1 and WO3T-1, radios I do not
+own and have never touched. A network like that is the reason a single-station
+measurement is possible at all. Reporting a specific, reproducible oddity to the
+person who can see the other end of it is the only part of this that was ever
+going to resolve it.</p>
+
+<h2 id="next">Next</h2>
+
+<p><strong>Wind.</strong> The collars are a hypothesis until a gusty day tests them.</p>
+
+<p><strong>Witness marks</strong>, which are the only cheap way to catch a joint creeping before
+it drops the mast.</p>
+
+<p><strong>The collar sweep</strong>, three measurements with the mast down, to settle whether
+the steel bands near the antenna moved the resonance or whether October and
+November were never the same measurement.</p>
+
+<p><strong>Whatever comes back from the site.</strong> If the receive audio level into that TNC
+turns out to be the answer, it will rhyme with this station’s own history. The
+USB codec here shipped with a transmit level that over-deviated and a capture
+gain far too low, and both were audible and wrong long before either was
+measured.</p>
+
+<hr />
+
+<p>73, KD3CCO</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

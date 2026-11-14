@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>An APRS Downlink Measured Around State College | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>An APRS Downlink Measured Around State College</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: November 07, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>My APRS uplink worked from everywhere I tried. My downlink reached the radio
+four times out of ten.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Direction</th>
+      <th>Messages</th>
+      <th>Reached the radio</th>
+      <th>Acknowledged</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Handheld to phone</td>
+      <td>4</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>Phone to handheld</td>
+      <td>10</td>
+      <td>4</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The cause is frame length at the one digipeater my handheld reliably reaches.
+W3YA-1 repeats my 75-byte beacons and none of my 120-byte gated messages, so
+the mountaintop that carries my uplink cannot carry my downlink. The limit is
+in my signal at that digipeater rather than in its configuration, which
+repeats other stations’ frames up to 97 bytes.</p>
+
+<p>On the morning of November 7 I drove around State College sending APRS messages
+in both directions between a Yaesu FT5D handheld (KD3CCO-7) and my phone, with
+my own iGate (KD3CCO-10) as the bridge. The phone side goes through the APRS SMS
+gateway, so a text becomes an APRS message addressed to the handheld and the
+replies come back as texts.</p>
+
+<p>Every frame is in my logs. Whether a message arrived is a separate question the
+logs cannot answer, and I got that by reading the message list on the radio
+afterward. My first pass skipped that step and undercounted the downlink by
+half.</p>
+
+<h2 id="test-sites-and-equipment">Test sites and equipment</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Where</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>sheetz</td>
+      <td>Sheetz on South Atherton Street</td>
+    </tr>
+    <tr>
+      <td>westerly</td>
+      <td>Westerly Parkway at South Atherton</td>
+    </tr>
+    <tr>
+      <td>nittany</td>
+      <td>Nittany Avenue at South Atherton</td>
+    </tr>
+    <tr>
+      <td>luna</td>
+      <td>Luna de Luna restaurant, South Atherton</td>
+    </tr>
+    <tr>
+      <td>alpha</td>
+      <td>South Atherton, in front of Alpha Fire Company</td>
+    </tr>
+    <tr>
+      <td>elixer</td>
+      <td>Inside Elixer Cafe, Beaver Avenue</td>
+    </tr>
+    <tr>
+      <td>elixer outside</td>
+      <td>Outside the same cafe</td>
+    </tr>
+    <tr>
+      <td>fraser garage</td>
+      <td>Fraser Street garage, fifth floor</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The handheld ran its stock rubber duck for every message. No mag mount, no
+external antenna. The South Atherton sites were from inside a moving vehicle.
+The Fraser Street garage was from inside the vehicle too, parked, on the fifth
+floor. The two Elixer Cafe sites were on foot, one inside the building and one
+on the sidewalk outside.</p>
+
+<p>A rubber duck inside a car body is a poor receive antenna sitting in the car’s
+electrical noise. My iGate has an antenna 28 ft up feeding a dedicated
+receiver. The radio path
+itself is reciprocal, so the difference sits at the receiving ends, and the
+handheld’s end is the worse of the two.</p>
+
+<p>Being in a moving car also means a message sent at one corner could be received
+at the next. The gateway retries over several minutes and the car did not wait.</p>
+
+<h2 id="how-the-logs-answer-this">How the logs answer this</h2>
+
+<p>Two files do two jobs. The dated CSV log carries a <code class="language-plaintext highlighter-rouge">utime</code> per frame, so it
+answers when. It has a <code class="language-plaintext highlighter-rouge">heard</code> column holding the station a frame was copied
+from, which identifies a direct copy but not the whole path. Direwolf’s text log
+carries the full path with the used-entry marker, so it answers how, but it has
+no timestamps. Matching the two by frame count and ordering gives both.</p>
+
+<p>Neither file knows whether a message arrived. The SMS gateway resends up to
+three times until an ack comes back, which is tempting to read as a delivery
+signal. It measures the round trip instead. Two messages in this set reached the
+handheld and were retried the full three times anyway, because no ack came back.</p>
+
+<p>So the retry count sets a lower bound on failure. Delivery came from reading the
+radio’s own message list, which held four of the ten. My first pass at this
+analysis undercounted the downlink by half because I skipped that step.</p>
+
+<h2 id="the-uplink-message-by-message">The uplink, message by message</h2>
+
+<p>Four messages from the handheld, all four delivered.</p>
+
+<p><strong>{15}, “qth ht to my phone!”, 09:22:17.</strong> One copy, heard direct:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>KD3CCO-7&gt;APY05D,WIDE1-1,WIDE2-1
+</code></pre></div></div>
+
+<p>No <code class="language-plaintext highlighter-rouge">*</code> anywhere in the path, so nothing had repeated it when the iGate copied
+it.</p>
+
+<p><strong>{16}, “sheetz ht to my phone!”, 09:27:27 to 09:27:47.</strong> One transmission,
+copied four times:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>09:27:27  KD3CCO-7&gt;APY05D,WIDE1-1,WIDE2-1                  direct
+09:27:28  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1*,WIDE2-1            W3YA-1, hop 1
+09:27:32  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1,WO3T-1,WIDE2*       then WO3T-1
+09:27:47  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1,KE4MHE-10,WIDE2*    then KE4MHE-10
+</code></pre></div></div>
+
+<p>Path entries are consumed left to right, so <code class="language-plaintext highlighter-rouge">WIDE1-1</code> became <code class="language-plaintext highlighter-rouge">W3YA-1,WIDE1</code> and
+<code class="language-plaintext highlighter-rouge">WIDE2-1</code> became <code class="language-plaintext highlighter-rouge">WO3T-1,WIDE2</code>. The <code class="language-plaintext highlighter-rouge">*</code> marks the last entry used. Four copies
+of one transmission over 20 seconds.</p>
+
+<p><strong>{17}, content unknown.</strong> The gateway acknowledged a message numbered 17 that
+appears nowhere in my logs. Some other gateway heard the handheld and carried
+it, which is covered below.</p>
+
+<p><strong>{18}, “elixer ht to my phone!”, 09:54:35 to 09:56:54.</strong> Two transmissions, six
+copies:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>09:54:35  KD3CCO-7&gt;APY05D,WIDE1-1,WIDE2-1                  direct
+09:54:36  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1*,WIDE2-1
+09:54:51  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1,KE4MHE-10,WIDE2*
+
+09:56:42  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1*,WIDE2-1
+09:56:43  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1,WO3T-1,WIDE2*
+09:56:54  KD3CCO-7&gt;APY05D,W3YA-1,WIDE1,KE4MHE-10,WIDE2*
+</code></pre></div></div>
+
+<p>The second transmission produced no direct copy. I sent this one from inside the
+cafe and it was delivered anyway.</p>
+
+<p>The handheld’s acknowledgements travel the same way, and both were heard direct:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>09:32:10  KD3CCO-7&gt;APY05D,WIDE1-1,WIDE2-1::SMS :ack2920
+10:48:01  KD3CCO-7&gt;APY05D,WIDE1-1,WIDE2-1::SMS :ack2939
+</code></pre></div></div>
+
+<p>Every digipeated copy of the handheld begins <code class="language-plaintext highlighter-rouge">W3YA-1,WIDE1</code>. W3YA-1 is the NARC
+digipeater on Pine Grove Mountain, PHG7680, which decodes as 49 W at 640 ft HAAT
+into an 8 dBi omni. WO3T-1 and KE4MHE-10 never heard the handheld. They heard
+W3YA-1 repeating it.</p>
+
+<pre><code class="language-mermaid">flowchart LR
+  HT["KD3CCO-7&lt;br/&gt;FT5D, 5 W"]
+  W3YA["W3YA-1&lt;br/&gt;Pine Grove Mountain&lt;br/&gt;PHG7680"]
+  WO3T["WO3T-1&lt;br/&gt;Tussy Mountain"]
+  KE4["KE4MHE-10&lt;br/&gt;local fill-in"]
+  IG["KD3CCO-10&lt;br/&gt;my iGate"]
+  OTHER["another gateway&lt;br/&gt;carried msg 17"]
+  IS(("APRS-IS"))
+  HT --&gt;|direct, when close| IG
+  HT --&gt;|every digipeated copy| W3YA
+  W3YA --&gt; WO3T
+  W3YA --&gt; KE4
+  WO3T --&gt; IG
+  KE4 --&gt; IG
+  W3YA --&gt; OTHER
+  IG --&gt; IS
+  OTHER --&gt; IS
+</code></pre>
+
+<h2 id="the-downlink-message-by-message">The downlink, message by message</h2>
+
+<p>The path analysis here is short, because there is only one path. Every message
+the iGate gated to RF went out identically:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>KD3CCO-10&gt;APDW17,WIDE1-1,WIDE2-2:}SMS&gt;APOSMS,TCPIP,KD3CCO-10*::KD3CCO-7 :...
+</code></pre></div></div>
+
+<p>Ten messages, 28 transmissions, one path on all of them. Every arrival from
+APRS-IS has a matching transmission, so the gateway did its job each time.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Message</th>
+      <th>Location</th>
+      <th>Transmissions</th>
+      <th>Reached the radio</th>
+      <th>Ack seen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{2915}</td>
+      <td>luna</td>
+      <td>3</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2917}</td>
+      <td>westerly</td>
+      <td>3</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2919}</td>
+      <td>nittany</td>
+      <td>3</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2920}</td>
+      <td>alpha</td>
+      <td>2</td>
+      <td>yes</td>
+      <td>yes, 09:32:10</td>
+    </tr>
+    <tr>
+      <td>{2925}</td>
+      <td>elixer</td>
+      <td>3</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2926}</td>
+      <td>elixer</td>
+      <td>3</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2927}</td>
+      <td>elixer</td>
+      <td>3</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2928}</td>
+      <td>elixer</td>
+      <td>3</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2933}</td>
+      <td>elixer outside</td>
+      <td>3</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>{2939}</td>
+      <td>fraser garage</td>
+      <td>1</td>
+      <td>yes</td>
+      <td>yes, 10:48:01</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>An earlier message, {2870} labeled “qth”, also went three times without an ack
+and is not in the radio’s list. Its number sits 45 below the morning’s block and
+the text log has no timestamps, so it may belong to an earlier session.</p>
+
+<p>Grouped by where each message was sent from:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Where sent</th>
+      <th>Radio</th>
+      <th>Sent</th>
+      <th>Reached it</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>South Atherton corridor</td>
+      <td>in a moving car</td>
+      <td>4</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Downtown, inside Elixer Cafe</td>
+      <td>on foot</td>
+      <td>4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Downtown, sidewalk outside Elixer</td>
+      <td>on foot</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Downtown, Fraser garage fifth floor</td>
+      <td>parked in the car</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Luna de Luna, Nittany Avenue and Alpha Fire Company are all on South Atherton
+and all three arrived. Westerly Parkway, also on South Atherton, did not. Six
+consecutive failures came from one address downtown, four from inside the
+building and two from the sidewalk. The one sent from five floors up in the same
+neighborhood arrived and was acknowledged in 7 seconds. The cafe and the garage
+are a few blocks apart, so distance does not separate those groups.</p>
+
+<p>A rubber duck inside a car is the worst receive setup of the morning, and that
+is the setup that worked, three times out of four. The six failures
+came with the radio out of the car, two of them from a downtown sidewalk with no
+vehicle shell and no building in the way. Taking the handheld out of the car
+improved its antenna situation and the downlink stopped working.</p>
+
+<p>Mobility does not explain it either. The appealing story for the corridor result
+is that a moving car samples new ground between retries while a stationary
+operator gets three attempts at the same spot. The Fraser garage message does
+not fit that: the car was parked, the message went out once, and the ack came
+back in 7 seconds.</p>
+
+<p>One weakness stands. The South Atherton messages were sent to a moving car, so
+the three that arrived could have been received anywhere along that stretch
+rather than at the named corner. The corridor result is about the corridor, not
+about four intersections.</p>
+
+<h2 id="two-acknowledgements-that-never-came-back">Two acknowledgements that never came back</h2>
+
+<p>Luna and Nittany reached the radio and the gateway kept resending them, so no
+ack completed the trip. Neither <code class="language-plaintext highlighter-rouge">ack2915</code> nor <code class="language-plaintext highlighter-rouge">ack2919</code> appears in my logs in
+any form, and the gateway’s continued retries suggest no other gateway saw them.</p>
+
+<p>I do not know why. The handheld’s own messages got out from harder places that
+same morning, including a direct copy from inside the cafe, so a blanket uplink
+failure does not fit. The radio may have received a later retry somewhere else
+along the route and not acknowledged it, or the acks may have been transmitted
+and lost by everyone. Nothing in these logs separates those.</p>
+
+<p>The practical result is that the gateway and I disagreed about four messages out
+of ten. Two it treated as failed had arrived, and I had no way to know.</p>
+
+<h2 id="elevation">Elevation</h2>
+
+<p>Terrain was the next thing I checked. Downtown State College sits in a valley,
+my station is uphill from it, and the digipeater that matters is on a mountain.
+Ground elevations from USGS 10 m data:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Place</th>
+      <th>Elevation</th>
+      <th>km from my station</th>
+      <th>Phone to handheld</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>W3YA-1, Pine Grove Mountain</td>
+      <td>2065 ft</td>
+      <td>10.3</td>
+      <td>digipeater</td>
+    </tr>
+    <tr>
+      <td>My station</td>
+      <td>1240 ft</td>
+      <td>0</td>
+      <td>gateway</td>
+    </tr>
+    <tr>
+      <td>nittany, Nittany Ave at S Atherton</td>
+      <td>1167 ft</td>
+      <td>6.2</td>
+      <td>delivered</td>
+    </tr>
+    <tr>
+      <td>elixer, 123 W Beaver Ave</td>
+      <td>1149 ft</td>
+      <td>6.3</td>
+      <td>0 of 6</td>
+    </tr>
+    <tr>
+      <td>alpha, Beaver at S Atherton</td>
+      <td>1141 ft</td>
+      <td>6.5</td>
+      <td>delivered</td>
+    </tr>
+    <tr>
+      <td>fraser garage, ground</td>
+      <td>1137 ft</td>
+      <td>6.4</td>
+      <td>see below</td>
+    </tr>
+    <tr>
+      <td>luna, S Atherton</td>
+      <td>1127 ft</td>
+      <td>4.9</td>
+      <td>delivered</td>
+    </tr>
+    <tr>
+      <td>westerly, Westerly Pkwy at S Atherton</td>
+      <td>1080 ft</td>
+      <td>5.3</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>sheetz, S Atherton</td>
+      <td>1074 ft</td>
+      <td>3.7</td>
+      <td>handheld to phone only</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Ground elevation does not correlate with success. The two sites that failed are
+Elixer at 1149 ft and Westerly Parkway at 1080 ft, which are the second highest
+and the lowest of the six. The four that delivered span 1127 to 1167 ft, and
+include the highest site of the morning, Nittany Avenue. The whole spread is
+93 ft over paths of 4 to 6 km.</p>
+
+<p>Distance does not explain it either. Nittany at 6.2 km delivered, Elixer at
+6.3 km failed six times, and Alpha at 6.5 km delivered. Westerly failed at
+5.3 km while Luna delivered at 4.9 km and Nittany at 6.2 km.</p>
+
+<p>A path blocked by terrain would be blocked both ways. The handheld’s own message
+from inside Elixer Cafe was copied direct by my station at 09:54:35, no
+digipeater, street level, 6.3 km through downtown. That one carried 5 W uphill
+while six transmissions in the other direction arrived nowhere.</p>
+
+<h3 id="the-one-real-height-difference">The one real height difference</h3>
+
+<p>Elixer Cafe and the Fraser Street garage geocode 43 m apart. The cafe’s sidewalk
+is 3.6 m higher than the garage’s ground level. Five floors up, the garage deck
+stands roughly 8 m above that sidewalk, and above the rooflines of the block.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Same block, 43 m apart</th>
+      <th>Sent</th>
+      <th>Delivered</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Elixer, street level, on foot</td>
+      <td>6</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Fraser garage, fifth floor, parked in the car</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>That tracks the outcome, and it is one success against six failures, so it is
+suggestive rather than measured.</p>
+
+<h3 id="what-is-left">What is left</h3>
+
+<p>All six failures happened at a single address, so they are six samples of one
+place rather than six samples of a condition. That limits everything here.</p>
+
+<p>Within that limit, Elixer differs from the sites that worked in two ways: I was
+on foot rather than in a vehicle, and it was at ground level in a downtown block
+rather than five floors up or out on the corridor. Mobility is out, because the
+Fraser garage was parked. Ground elevation is out, because Nittany Avenue is
+18 ft higher than Elixer and delivered.</p>
+
+<p>Of the two that remain, height fits the direction of the result and being out
+of the vehicle does not. A rubber duck inside a car body, in the car’s noise, is
+a worse receive setup than the same antenna in open air on a sidewalk, so if
+that were the cause the on-foot site should have done better rather than going 0
+for 6. A parking deck five floors up clears the rooflines of a block that a
+sidewalk sits inside.</p>
+
+<p>The cheap next test is three messages from the Fraser garage ground floor and
+three from its fifth floor, same morning, parked in the car both times. That
+holds location, posture, mobility and the antenna’s surroundings fixed and moves
+only height, and it compares against a condition already known to work.</p>
+
+<h2 id="which-digipeaters-repeat-my-gated-traffic">Which digipeaters repeat my gated traffic</h2>
+
+<p>A digipeater that repeats one of my packets usually puts its own callsign in the
+path and transmits it where I can hear it, so the logs can be counted.</p>
+
+<p><code class="language-plaintext highlighter-rouge">BEACON_VIA = WIDE1-1</code> is one hop and <code class="language-plaintext highlighter-rouge">TX_VIA = WIDE1-1,WIDE2-2</code> is three, which
+makes the two classes separable: an echo whose path contains <code class="language-plaintext highlighter-rouge">WIDE2</code> is gated
+traffic, and an echo with only <code class="language-plaintext highlighter-rouge">WIDE1*</code> is a beacon.</p>
+
+<p><strong>Gated traffic, first hop taken by:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Digipeater</th>
+      <th>Echoes</th>
+      <th>What it is</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WO3T-1</td>
+      <td>26</td>
+      <td>Tussy Mountain, PHG5730</td>
+    </tr>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>15</td>
+      <td>WX3in1Plus2.0 fill-in, PHG5650</td>
+    </tr>
+    <tr>
+      <td>W3VO-1</td>
+      <td>2</td>
+      <td>Wopsy Mountain, Altoona, PHG7520</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Second hops went to KE4MHE-10, WO3T-1, N3SNN-3, and in one case N3TJJ-7 followed
+by KC2ANT-1, which is Cortland Hill, New York. That one came back to me through
+APRS-IS, gated by KB2LUV-1 in Cortland, so a local SMS message crossed a state
+line on a 2 m handheld network.</p>
+
+<p><strong>Beacons, one hop, repeated by:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Digipeater</th>
+      <th>Echoes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WO3T-1</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <td>W3YA-1</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <td>W3VO-1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>W3YA-1 repeated 18 of my beacons and zero of my gated messages, across 28 gated
+transmissions whose first path element is the same <code class="language-plaintext highlighter-rouge">WIDE1-1</code> the beacons use.
+Three ordinary explanations do not fit. It is not a hearing problem at my end,
+because I copy W3YA-1 direct 90 times in the same log. It is not sample size, at
+28 transmissions against a beacon rate comparable to the other two. It is not
+log suppression, because where two digipeaters repeat the same gated packet my
+log holds both copies with their different paths.</p>
+
+<p>The same split shows up in an older capture. A day of frames from October 30, on
+the 15 ft mast, holds 306 echoes of my beacons, 113 of them from W3YA-1,
+alongside 13 echoes of my gated traffic and none from W3YA-1.</p>
+
+<h3 id="two-explanations-the-logs-rule-out">Two explanations the logs rule out</h3>
+
+<p>My first guess was the <code class="language-plaintext highlighter-rouge">TCPIP</code> in the payload. Two things argue against it.</p>
+
+<p>On the protocol, <code class="language-plaintext highlighter-rouge">TCPIP</code> never appears in the digipeater path of a frame on the
+air. A gated message is wrapped as a third-party packet, so the string sits in
+the information field after the <code class="language-plaintext highlighter-rouge">:}</code>. The AX.25 address fields a digipeater acts
+on read <code class="language-plaintext highlighter-rouge">WIDE1-1,WIDE2-2</code> and nothing else. Filtering on payload content is a
+different capability, and a Kantronics KPC-3 does not appear to have it.</p>
+
+<p>On the measurement, W3YA-1 repeated 39 third-party frames in that October day,
+other gateways’ downlink traffic, all of them carrying <code class="language-plaintext highlighter-rouge">TCPIP</code> in the payload:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>N3TJJ-13&gt;APMI06,W3YA-1,WIDE1*
+KC3ZLD-10&gt;APDW17,NJ3T-4,W3YA-1,WIDE2*
+KD3BAA-2&gt;APDW18,NJ3T-4,W3YA-1,WIDE2*
+</code></pre></div></div>
+
+<p>My second guess was a refusal of three-hop paths. In the same archive, W3YA-1
+repeated a <code class="language-plaintext highlighter-rouge">WIDE1-1,WIDE2-2</code> path from a mobile tracker:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>KG4DQH&gt;APT311,W3YA-1,WIDE1*,WIDE2-2:!4052.49N/07746.52W&gt;234/052
+</code></pre></div></div>
+
+<p>The station asked for three hops and W3YA-1 took the first one, so a hard
+hop-count ceiling does not look like the rule.</p>
+
+<h3 id="frame-length">Frame length</h3>
+
+<p>W3YA-1 accepts third-party packets, accepts three-hop paths, and accepts my
+beacons, while refusing my gated traffic, which is the first two combined. The
+remaining difference I could see is length. My gated messages are the longest
+frames I transmit: a third-party wrapper, an embedded header and an SMS body,
+roughly twice a beacon. KG4DQH’s three-hop frame that W3YA-1 did repeat is a
+bare position report.</p>
+
+<p>This one is also cheap to measure, which the other two were not.</p>
+
+<pre><code class="language-mermaid">flowchart LR
+  IS(("APRS-IS")) --&gt; IG["KD3CCO-10&lt;br/&gt;transmits WIDE1-1,WIDE2-2"]
+  IG --&gt;|26 repeats| WO3T["WO3T-1"]
+  IG --&gt;|15 repeats| KE4["KE4MHE-10"]
+  IG --&gt;|2 repeats| W3VO["W3VO-1"]
+  IG -.-&gt;|zero repeats| W3YA["W3YA-1&lt;br/&gt;the one the handheld reaches"]
+  IG --&gt;|direct| HT["KD3CCO-7"]
+  WO3T -.-&gt;|audible there?| HT
+  KE4 -.-&gt;|audible there?| HT
+  W3YA -.-&gt;|would be, if it repeated| HT
+</code></pre>
+
+<h2 id="the-length-test">The length test</h2>
+
+<p>The test transmits pairs of frames that are identical except for padding. Each
+cycle sends a 75-byte control, the length of my ordinary beacon, then a test
+frame at the length under examination. The control says whether the path to the
+digipeater was working in that cycle, so a missing test echo is not confused
+with a dead minute. Lengths are visited round-robin rather than as a rising
+staircase, because a monotonic sweep confounds length with time: if conditions
+sag over the run, the longest frames are the ones sent last and a false cliff
+appears.</p>
+
+<p>I stopped the run by hand after 14.7 minutes, 30 cycles, 60 frames. The reason
+is in the channel courtesy section below.</p>
+
+<p>Echoes of the test frames, per length and per digipeater, with the control row
+for reference:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>On-air bytes</th>
+      <th>KE4MHE-10</th>
+      <th>W3YA-1</th>
+      <th>WO3T-1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>91</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>107</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>115</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>123</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>131</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>75 (controls)</td>
+      <td>19</td>
+      <td>17</td>
+      <td>13</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Thirty cycles is too few to decide any single length, so I pooled them:</p>
+
+<ul>
+  <li>At 75 bytes, W3YA-1 repeated 19 of 34 frames, 56%.</li>
+  <li>At 83 bytes and above, W3YA-1 repeated 0 of 26.</li>
+</ul>
+
+<p>At the 56% rate the controls establish, 26 consecutive misses has a probability
+of roughly one in two billion. Over the same 26 long frames, KE4MHE-10 repeated
+13 and WO3T-1 repeated 7. So W3YA-1 appears to stop somewhere between 75 and 83
+bytes on the air, and the other two carry lengths it will not.</p>
+
+<p><strong>A transmit fault cannot produce this pattern.</strong> That was the worry a
+single-frame smoke test raised earlier, and it does not survive the table.
+Anything wrong on my side, audio level, deviation, power, distortion, reaches
+every receiver identically, so it cannot single out one digipeater.</p>
+
+<p>What it would do is cost each receiver the same margin, and a corruption-type
+fault would cost every receiver the same frames. Neither shows up. KE4MHE-10
+repeated 21 of 34 frames at 75 bytes and 13 of 26 at 83 through 131, 62% against
+50%, which is nearly flat with length on a sample too small to call the
+difference real. WO3T-1 went from 15 of 34 to 7 of 26, 44% against 27%, a drop
+in the range that frame duration alone predicts from collisions. My long frames
+leave the station intact.</p>
+
+<p>Deviation is also measured rather than assumed: 2.8 kHz by Carson’s rule on
+2026-10-03, against a 2.5 to 3.0 kHz target, good to about 50 Hz.</p>
+
+<p><strong>My receiver looks fine too.</strong> A W3YA-1 repeat of an 83-byte frame is 90 bytes,
+because a digipeater inserts its own callsign. W3YA-1’s own beacons run about 86
+bytes bare, 93 carrying an unused <code class="language-plaintext highlighter-rouge">WIDE2-2</code>, and 100 after a hop, and I decode
+all three shapes dozens of times in the same window.</p>
+
+<p><strong>It fits the original observation.</strong> My beacon is 75 bytes, just under, so
+W3YA-1 repeats it. My gated traffic runs 91 to 150 bytes, depending on the
+message text, and W3YA-1 has never repeated any of it.</p>
+
+<p><strong>A configured length limit at W3YA-1 is ruled out.</strong> Counting only the
+October 30 archive’s frames where W3YA-1 was the first hop, so it heard them off
+the air directly, it repeated 2,269 frames at a median length of 84 bytes,
+1,139 of them over 82 and 600 over 90.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Station</th>
+      <th>Longest frame W3YA-1 repeated</th>
+      <th>Frames over 82 bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NJ3T-4</td>
+      <td><strong>97</strong></td>
+      <td>622</td>
+    </tr>
+    <tr>
+      <td>WV8MT-4</td>
+      <td>94</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <td>K3DNA</td>
+      <td>91</td>
+      <td>188</td>
+    </tr>
+    <tr>
+      <td>WO3T-1</td>
+      <td>88</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <td>N3SNN-3</td>
+      <td>84</td>
+      <td>396</td>
+    </tr>
+    <tr>
+      <td><strong>KD3CCO-10</strong></td>
+      <td><strong>75</strong></td>
+      <td><strong>0 of 113</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>These are the lengths W3YA-1 had to decode, which is the retransmitted length
+less the 7 bytes of its own callsign where it inserted one. A digipeater holding
+an 82-byte ceiling cannot repeat 622 NJ3T-4 frames at 97 bytes. Every station in
+the table that clears 82 bytes is a fixed digipeater site, which is what a
+margin explanation predicts and a configured limit does not.</p>
+
+<p>The November archive, taken with the mast up rather than on the 15 ft mount,
+gives the same shape: 2,657 first-hop frames at a median of 84 bytes, 728 of
+them over 90, maximum 97.</p>
+
+<p>Nor is the APRS data type the variable. Eleven types cleared 82 bytes at W3YA-1
+that day, including both of the types that matter here:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data type</th>
+      <th>Frames</th>
+      <th>Longest</th>
+      <th>Over 82 bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Position</td>
+      <td>1,532</td>
+      <td>96</td>
+      <td>927</td>
+    </tr>
+    <tr>
+      <td>Mic-E</td>
+      <td>2,308</td>
+      <td>94</td>
+      <td>72</td>
+    </tr>
+    <tr>
+      <td>Position with timestamp</td>
+      <td>1,078</td>
+      <td>95</td>
+      <td>83</td>
+    </tr>
+    <tr>
+      <td><strong>Status report</strong>, which the sweep sends</td>
+      <td>632</td>
+      <td>96</td>
+      <td>320</td>
+    </tr>
+    <tr>
+      <td>Object</td>
+      <td>187</td>
+      <td><strong>97</strong></td>
+      <td>187</td>
+    </tr>
+    <tr>
+      <td>Telemetry</td>
+      <td>478</td>
+      <td>89</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>Message</td>
+      <td>184</td>
+      <td>85</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td><strong>Third party</strong>, which a gated message is</td>
+      <td>39</td>
+      <td>90</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <td>Capabilities</td>
+      <td>43</td>
+      <td>85</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <td>Weather</td>
+      <td>15</td>
+      <td>84</td>
+      <td>15</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>One of those third-party frames is another gateway’s SMS downlink at 90 bytes,
+structurally the same thing my gateway sends.</p>
+
+<p><strong>The cliff is steeper than a bit-error model predicts.</strong> Fitting a per-bit
+error rate to the 56% control rate at 75 bytes predicts 53% at 83 bytes, and 0
+of 26 is about as improbable against that as against the control rate itself.
+Independent bit errors are the wrong model for a decoder that recovers its bit
+clock in hardware and corrects nothing, which is what the next section
+establishes W3YA-1 to be.</p>
+
+<h3 id="what-that-digipeater-can-be-configured-to-do">What that digipeater can be configured to do</h3>
+
+<p>W3YA-1 and K3DNA both transmit with the tocall <code class="language-plaintext highlighter-rouge">APN391</code>. The APRS tocall
+registry maps the whole <code class="language-plaintext highlighter-rouge">APN3xx</code> range to Kantronics KPC-3 ROM versions, and
+aprs.fi lists W3YA-1’s device as a Kantronics KPC-3. The identical tocall means
+the same model running the same ROM.</p>
+
+<p>The KPC-3 Plus user guide gives six parameters that bear on repeating a UI
+frame: <code class="language-plaintext highlighter-rouge">DIGIPEAT</code>, <code class="language-plaintext highlighter-rouge">MYCALL</code>, <code class="language-plaintext highlighter-rouge">MYALIAS</code>, <code class="language-plaintext highlighter-rouge">UIDIGI</code>, <code class="language-plaintext highlighter-rouge">UIFLOOD</code> and <code class="language-plaintext highlighter-rouge">UITRACE</code>, with
+<code class="language-plaintext highlighter-rouge">UIDWAIT</code> controlling only whether a delay is inserted before transmission.
+Every one matches on a call sign or an alias in the AX.25 address field.
+<code class="language-plaintext highlighter-rouge">UIDIGI</code> “may be used to set up to four additional aliases/call signs for
+‘special’ digipeating service,” and the match is on the address.</p>
+
+<p><code class="language-plaintext highlighter-rouge">PACLEN</code> is the only length parameter in the TNC. It takes 0 to 255 and governs
+how data arriving from the serial port is cut into packets, not what the TNC
+repeats. <code class="language-plaintext highlighter-rouge">BUDLIST</code> and <code class="language-plaintext highlighter-rouge">SUPLIST</code> choose which received packets are reported to
+the terminal and do not touch digipeating.</p>
+
+<p>So nothing in the TNC reads the information field, which means it cannot know a
+frame’s APRS data type, and nothing accepts or rejects a frame by length. A
+KPC-3 cannot be configured to repeat short frames and drop long ones, whatever
+their type.</p>
+
+<p><strong>K3DNA is the control, and it is as close to matched as this gets.</strong> Same
+tocall, so the same model and ROM, and it repeated 12 of the same 50 gated
+frames at 91 bytes that W3YA-1 took none of. Identical hardware, opposite
+result, same day, same transmitter.</p>
+
+<h3 id="what-is-left-1">What is left</h3>
+
+<p>Three explanations survive, and all of them sit at the far end:</p>
+
+<ul>
+  <li><strong>The receive audio level into that TNC.</strong> A KPC-3 recovers its bit clock with
+a hardware modem and has no error correction. Fed too much or too little audio
+from its receiver, its error rate per bit rises while short frames still get
+through, and a 91-byte frame has 21% more bits to lose than a 75-byte one.
+Nobody outside the site can read that setting.</li>
+  <li><strong>Site noise and co-channel traffic.</strong> A 2065 ft ridge hears a horizon a
+valley station does not, so its receiver meets interference that leaves no
+trace in my log. That cost rises with how long a frame holds the channel.</li>
+  <li><strong>A marginal signal from me at that receiver in particular.</strong> W3YA-1 repeats
+29% of my 75-byte beacons in the October log and 32% in November. Over 5.4
+miles to a mountaintop that is a poor rate in absolute terms, whatever it
+looks like next to the other digipeaters, and a decoder without error
+correction falls off steeply from a base that low.</li>
+</ul>
+
+<p>None of the three is separable from this end, and that is the finding rather
+than a gap in it. Every explanation that my own station could fix has been
+eliminated: a transmit fault is common to all receivers and the other two show
+no length penalty worth the name, deviation measures in band, and height changed
+nothing across two captures at two antenna heights. What is left needs either
+more power, which is a margin question and not a fault, or the operator at the
+other end.</p>
+
+<p><strong>My own traffic measures the cliff without the sweep.</strong> Every frame KD3CCO-10
+transmitted in the November archive, against the ones W3YA-1 repeated:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>On-air bytes</th>
+      <th>Sent</th>
+      <th>Repeated</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75</td>
+      <td>493</td>
+      <td>160</td>
+      <td>32%</td>
+    </tr>
+    <tr>
+      <td>79</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td>91</td>
+      <td>63</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td>99 to 150</td>
+      <td>61</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>At the 32% rate the 75-byte beacons establish, 0 of the 128 frames over 82 bytes
+has a probability near 1e-22. The sweep contributes 105 of those 128, so the
+figure is not independent of it. Dropping every frame at a length the sweep
+used, and adding October’s 50 gated frames at 91 bytes from a week before the
+sweep ran, leaves <strong>0 of 73 ordinary transmissions over 82 bytes</strong> against a
+pooled beacon rate of 31%, at 2e-12.</p>
+
+<p>The 79-byte row is the one I would like more of. Ten frames with no repeats is a
+probability of 0.02 at the base rate, which puts the cliff below 83 bytes rather
+than at it. Ten frames do not settle a rate, so that stays a hint.</p>
+
+<p><strong>Same length, same digipeater, same day.</strong> On October 30, at exactly 91 bytes
+on the air, W3YA-1 repeated 96 frames from K3DNA and one from K3ARL-6, and none
+of the 50 that KD3CCO-10 sent. The October beacon rate was 113 of 394, 29%, so
+0 of 50 has a probability near 5e-8. Nothing in the frames distinguishes the two
+stations. The signal arriving at the digipeater does.</p>
+
+<p><strong>The sweep was not needed.</strong> It put 60 frames on a shared channel to measure
+what two archived days already held, because my gated traffic varies in length
+on its own. The station’s own log was the cheaper instrument and I reached for
+it second.</p>
+
+<p>W3YA-1 does not carry my messaging at the power and antenna of that run. The
+third-party wrapper alone is about 41 bytes, so even a one-character gated
+message runs about 75 bytes on a one-hop path and 82 on two. Shortening
+<code class="language-plaintext highlighter-rouge">TX_VIA</code> from three hops to two buys 7 bytes.</p>
+
+<p>The handheld’s uplink rides a 49 W mountaintop digipeater at 640 ft. Its
+downlink does not, because that digipeater does not repeat my frames at message
+length. What is left for the downlink is my own
+signal, WO3T-1 and KE4MHE-10, and the handheld heard none of the three from a
+downtown sidewalk.</p>
+
+<h2 id="still-untested-power">Still untested: power</h2>
+
+<p>There is one more experiment, and my station already runs the probe for it.
+<code class="language-plaintext highlighter-rouge">igate-selftest.timer</code> fires every four hours and puts one gated frame on the
+air each time, at the real length. Setting the radio from its low power step to
+high and waiting a day gives about six probes a day at the length that matters,
+with no added traffic. If <code class="language-plaintext highlighter-rouge">W3YA-1,WIDE1*,WIDE2-2</code> starts appearing in my log,
+power moves the cliff. If it stays absent while WO3T-1 and KE4MHE-10 keep
+showing up, the margin at W3YA-1 is short of what power alone recovers.</p>
+
+<p>Raising power costs nothing on the channel. A 120-byte frame occupies the same
+slot at 5 W as at 75 W.</p>
+
+<p>The archive check is done, and raising power is the one lever left at this end.
+It does not test a fault, since there is no evidence of one. It tests whether
+W3YA-1’s margin on my signal is thin enough that 10 dB moves the cliff. Both
+captures put every one of my frames over 82 bytes at zero repeats, 178 frames
+across the two, while W3YA-1 carried other stations past 90 bytes in both. The
+15 ft mount and the mast give the same answer, so height is not the knob either.</p>
+
+<p>My own radio notes carry an earlier attempt at this, concluding that “power is
+not the knob; antenna height is.” That was measured on an indoor antenna, with
+W3YA-1 repeating 2 of 8 beacons where it now repeats most of them, and the
+metric was a success rate at one frame length, which cannot see a cliff move. I
+am treating it as stale rather than settled.</p>
+
+<h2 id="what-this-does-not-establish">What this does not establish</h2>
+
+<ul>
+  <li><strong>Which copy the handheld decoded.</strong> The FT5D knows and does not report it.
+Every delivered message is equally consistent with my direct signal or a
+repeat.</li>
+  <li><strong>That the handheld can hear W3YA-1.</strong> Digipeating is one-way evidence.
+W3YA-1 hears the handheld; the reverse is untested, and the proposed fix rests
+on it.</li>
+  <li><strong>Any rate for anything seen once.</strong> The Cortland path and W3VO-1’s two
+repeats are existence proofs.</li>
+  <li><strong>Which digipeaters heard me and declined.</strong> One suppressing a duplicate looks
+like one that never heard the packet.</li>
+  <li><strong>What makes the cliff sharp.</strong> A bit-error-rate rolloff predicts a gradual
+decline and the sweep shows none. Sync-threshold failure and a
+length-dependent fault in my own transmitter both fit, and these logs do not
+choose between them.</li>
+  <li><strong>Why the cafe failed.</strong> The handheld’s own message from inside it was heard
+direct, so its transmitter reached me from there. Coverage, the handheld’s
+receiver and the downtown noise floor are not separable in these logs.</li>
+  <li><strong>Where the radio was when a message arrived.</strong> Each message was sent up to
+three times over several minutes while the car was moving. The site labels name
+where a message was sent from, not where it was received.</li>
+  <li><strong>How much a better antenna would help.</strong> The rubber duck was constant, so it
+cannot explain the difference between groups, but it could be holding the whole
+downlink down. A mag mount and a rerun would say.</li>
+</ul>
+
+<h2 id="the-blind-spot">The blind spot</h2>
+
+<p>Message {17} was acknowledged by the gateway and appears in none of my logs.
+Another gateway heard the handheld and carried it, and reading my own logs would
+never show that. The same hole runs the other way: a digipeater that repeats my
+traffic from outside my receive range leaves no trace.</p>
+
+<p>The Cortland chain got through that hole by accident. I learned that KE4MHE-10,
+N3TJJ-7 and KC2ANT-1 had repeated one of my messages because the packet came
+back from APRS-IS, gated in New York, with the whole path attached. I never heard
+that echo on the air.</p>
+
+<p>It arrived with two bit errors: <code class="language-plaintext highlighter-rouge">TCPYP</code> for <code class="language-plaintext highlighter-rouge">TCPIP</code>, and <code class="language-plaintext highlighter-rouge">KD3CCO-1p*</code> for
+<code class="language-plaintext highlighter-rouge">KD3CCO-10*</code>. Loop detection drops a third-party packet whose inner path carries
+the station’s own callsign, and the corruption put that callsign past
+recognition, so the packet was gated straight back to RF inside a second layer
+of encapsulation. The whitelist then passed it, correctly: <code class="language-plaintext highlighter-rouge">g/</code> matches a
+message’s addressee, and the message inside was addressed to <code class="language-plaintext highlighter-rouge">KD3CCO-7</code>, which
+is on the whitelist and has to be for the downlink to exist at all. An earlier
+version of this paragraph said the term matched the outer source. It does not,
+and narrowing the whitelist to explicit SSIDs would not have stopped this. The
+control that failed was the loop check.</p>
+
+<p>It happened once and went no further. Each pass adds a layer, so a sustained
+loop would show as growing brace nesting in the transmit lines, which is now
+something I check. Two guards would close it properly. The outer source of the
+returning packet was <code class="language-plaintext highlighter-rouge">KD3CCO-10</code>, uncorrupted, and this station never needs to
+retransmit a frame it sourced itself, so <code class="language-plaintext highlighter-rouge">FILTER IG 0 ! b/KD3CCO-10</code> rejects the
+loop on a field the bit errors did not touch. Nesting depth is the other: a
+gated message carries one layer of encapsulation, so refusing anything with two
+is a check no corrupted callsign can defeat.</p>
+
+<h2 id="on-channel-courtesy">On channel courtesy</h2>
+
+<p>144.390 is one shared FM channel for the whole of North America, and nobody
+allocates slots on it. My goal is simple enough to state: stay below the median
+of whatever the local norm is. I wanted to know what other digipeaters and
+iGates are around me and whether I could keep my own traffic under theirs.</p>
+
+<p>My own receiver can answer that. It has been logging every frame it can decode
+for months. From the 8.2-day October archive:</p>
+
+<ul>
+  <li>29,800 frames decoded, of which only 4,785 were originals. 84% of what I hear
+is digipeater repeats of other people’s packets.</li>
+  <li>3,634 frames a day, about 151 an hour, arriving at my antenna.</li>
+  <li>22 stations heard directly.</li>
+</ul>
+
+<p>Most of those 22 are mobiles and handhelds passing through, sitting at a median
+of 0.9 packets a day, which makes the all-stations median of 1.3 useless as a
+yardstick. The stations I actually want to compare against are the permanent
+ones. I picked them out by asking which callsigns show up as a used digipeater
+somewhere in the window, which is a rough proxy and the best one the log offers:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Resident station</th>
+      <th>Tocall</th>
+      <th>Packets/day</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WO3T-1</td>
+      <td>APNU3B</td>
+      <td>355.9</td>
+    </tr>
+    <tr>
+      <td>W3YA-1</td>
+      <td>APN391</td>
+      <td>84.3</td>
+    </tr>
+    <tr>
+      <td>K3DNA</td>
+      <td>APN391</td>
+      <td>49.1</td>
+    </tr>
+    <tr>
+      <td>W3TM-10</td>
+      <td>APSN01</td>
+      <td>36.6</td>
+    </tr>
+    <tr>
+      <td>N3DXC-2</td>
+      <td>APN001</td>
+      <td>19.5</td>
+    </tr>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>APMI06</td>
+      <td>1.2</td>
+    </tr>
+    <tr>
+      <td>N3TJJ-13</td>
+      <td>APMI06</td>
+      <td>1.1</td>
+    </tr>
+    <tr>
+      <td>NJ3T-4</td>
+      <td>APN382</td>
+      <td>0.2</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Median 28.0 a day, mean 68.5. The set splits in two: five sites carry the
+channel and three beacon barely at all.</p>
+
+<h3 id="where-i-sit">Where I sit</h3>
+
+<p>Counting my own transmissions plus the repeats my paths provoke, measured at
+0.78 repeats per one-hop beacon and 0.26 per three-hop gated frame in the same
+window:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Beacon interval</th>
+      <th>Own TX/day</th>
+      <th>With repeats</th>
+      <th>Share of frames heard</th>
+      <th>Against the resident median of 28</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>30 minutes</td>
+      <td>54</td>
+      <td>~93</td>
+      <td>2.6%</td>
+      <td>1.9x, 75th percentile</td>
+    </tr>
+    <tr>
+      <td>2 hours</td>
+      <td>18</td>
+      <td>~29</td>
+      <td>0.8%</td>
+      <td>0.6x, 38th percentile</td>
+    </tr>
+    <tr>
+      <td>4 hours</td>
+      <td>12</td>
+      <td>~18</td>
+      <td>0.5%</td>
+      <td>0.4x, 38th percentile</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>I moved the beacon to two hours on the day of these measurements. At 30 minutes
+I was transmitting nearly twice as often as the median resident digipeater, which
+is hard to justify for a fixed site whose position has never changed. At two
+hours I sit below that median, fourth quietest of the nine resident stations
+counting myself.</p>
+
+<p>I considered four hours and left it alone. The resident distribution has a gap
+between 1.2 and 19.5 packets a day, so 18 and 12 land on the same percentile,
+and the trade is 0.3 points of channel occupancy against half the remaining
+sample in every measurement I make of my own station.</p>
+
+<p>Eight stations is a small population and the digipeating proxy misses any
+receive-only gateway. The ordering seems clear enough regardless: I went from
+above the median to below it.</p>
+
+<h3 id="what-the-length-test-cost">What the length test cost</h3>
+
+<p>The sweep put 2 frames on the air every 30 seconds. That is 240 originals an
+hour, and at the measured one-hop repeat rate it provokes about 187 more.
+Against a local channel carrying roughly 151 frames an hour, I would have been
+around three quarters of everything on the air for the duration of the run.</p>
+
+<p>That is why I cut it off at 14.7 minutes instead of the hour I had budgeted. The
+pooled numbers were already decisive, and I had not thought hard enough about
+what 4 frames a minute meant before starting.</p>
+
+<p>The remaining power question needs no new frames at all, since a timer already
+puts six gated probes a day on the air. Running the baseline measurement first
+would have told me all of this before I wrote the test.</p>
+
+<h2 id="what-the-morning-was-worth">What the morning was worth</h2>
+
+<p>An uplink that never failed and a downlink that reached the radio four times in
+ten, same radio, same morning, roughly the same few square miles. The asymmetry
+was already in my notes as a prediction. What was missing was the reason, and
+the logs narrow it: the one digipeater the handheld reliably reaches is the one
+that will not repeat what my gateway sends, apparently because the frames are
+too long. The downtown block of six failures is the part still open. The South
+Atherton corridor already works.</p>
+
+<p>The result I did not expect is which setup worked. The messages that arrived
+went to a rubber duck shielded inside a car. The ones that failed went to the
+same radio held in open air.</p>
+
+<p>One other thing came out of this that has nothing to do with radio. My logs gave
+a confident answer about which messages were delivered and it was wrong by a
+factor of two, because it was answering a different question. Reading the radio
+took a minute and changed the result.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+  <!-- Mermaid diagrams: only on pages with "mermaid: true" in their front matter.
+       kramdown renders a ```mermaid fence as either <pre><code class="language-mermaid">
+       or, with Rouge highlighting, <div class="language-mermaid highlighter-rouge">.
+       Both are turned into <div class="mermaid"> before rendering. -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
+      var code = el.matches('code') ? el : el.querySelector('code');
+      var block = el.matches('code') ? el.parentElement : el;
+      if (!code || !block) return;
+      var diagram = document.createElement('div');
+      diagram.className = 'mermaid';
+      diagram.textContent = code.textContent;
+      block.replaceWith(diagram);
+    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'strict' });
+    await mermaid.run({ querySelector: '.mermaid' });
+  </script>
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

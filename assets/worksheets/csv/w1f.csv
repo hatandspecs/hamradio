@@ -1,0 +1,19 @@
+W1f. tinySA stack correction table
+"# A spectrum analyzer has no reference plane, so nothing in the stack is calibrated out. Every component is a loss you add back by hand, and this is where you write it down."
+"# Measure the fixed stack loss once, as S21 on the VNA, with the pad set to zero. Enter it as a POSITIVE number of dB: an S21 of -1.4 dB is a fixed stack loss of 1.4."
+"# The pad is separate because you will change it. Total correction is the two added, and the corrected level is the reading plus that."
+Band / purpose,Freq (MHz),Fixed stack loss (dB),Pad setting (dB),Total correction (dB) (compute),Reading (dBm),Corrected level (dBm) (compute)
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Designing a Basic 49:1 Unun | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Designing a Basic 49:1 Unun</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: April 26, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>Every end-fed half-wave I have built needed a 49:1 unun in front of it, and for a while I wound them by copying somebody else’s turns count and hoping. This is the set of notes I wish I’d had then: what the core material actually does, where the turns count comes from, and which numbers you can choose freely versus which ones the physics chooses for you.</p>
+
+<h2 id="1-core-material-and-permeability">1. Core Material and Permeability</h2>
+<p>The selection of the ferrite toroid is based on its initial permeability ($\mu_i$). This value determines how much inductance is generated per turn of wire.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Material Mix</th>
+      <th style="text-align: left">Permeability ($\mu_i$)</th>
+      <th style="text-align: left">Typical Use Case</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Mix 43</strong></td>
+      <td style="text-align: left">850</td>
+      <td style="text-align: left">Standard for 80m to 10m. Provides high inductance with fewer turns.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Mix 52</strong></td>
+      <td style="text-align: left">250</td>
+      <td style="text-align: left">Better for high power and high frequencies. Resistant to thermal drift.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Mix 61</strong></td>
+      <td style="text-align: left">125</td>
+      <td style="text-align: left">Used for high HF and VHF. Requires more turns for low band operation.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="2-inductance-and-the-inductance-factor-a_l">2. Inductance and the Inductance Factor ($A_L$)</h2>
+<p>Each toroid has an <strong>Inductance Factor ($A_L$)</strong> measured in nanohenries per turn squared ($nH/N^2$). This value is a constant that accounts for the magnetic properties of the ferrite and the physical dimensions of the core.</p>
+
+<h3 id="the-physics-of-a_l">The Physics of $A_L$</h3>
+<p>While manufacturers provide $A_L$ as a fixed number, it is actually derived from the geometry of the core and the permeability of the material. The formula for the Inductance Factor is:</p>
+
+\[A_L = \frac{\mu_0 \mu_i A_e}{l_e}\]
+
+<p>In this formula:</p>
+<ul>
+  <li><strong>$\mu_0$</strong> is the permeability of free space (a physical constant).</li>
+  <li><strong>$\mu_i$</strong> is the initial permeability of the ferrite mix (e.g., 850 for Mix 43).</li>
+  <li><strong>$A_e$</strong> is the effective cross-sectional area of the core.</li>
+  <li><strong>$l_e$</strong> is the effective magnetic path length (the distance around the center of the ring).</li>
+</ul>
+
+<h3 id="geometry-vs-size">Geometry vs. Size</h3>
+<p>It is a common misconception that only larger cores have higher $A_L$ values. Because $A_L$ is a ratio of the cross-sectional area to the path length, a small core with a very thick cross-section can have a higher Inductance Factor than a large core with a thin cross-section.</p>
+
+<p>Increasing the thickness of the core increases $A_e$, which raises the $A_L$. Increasing the diameter of the core increases $l_e$, which actually lowers the $A_L$ if all other dimensions remain the same.</p>
+
+<h3 id="reference-table-for-common-core-sizes">Reference Table for Common Core Sizes</h3>
+<p>The following table provides the Inductance Factor ($A_L$) for the two core sizes used in these 100W builds.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Core Size</th>
+      <th style="text-align: left">Mix 43 ($A_L$)</th>
+      <th style="text-align: left">Mix 52 ($A_L$)</th>
+      <th style="text-align: left">Mix 61 ($A_L$)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>FT140</strong> (1.40 inch OD)</td>
+      <td style="text-align: left">885 $nH/N^2$</td>
+      <td style="text-align: left">362 $nH/N^2$</td>
+      <td style="text-align: left">140 $nH/N^2$</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>FT240</strong> (2.40 inch OD)</td>
+      <td style="text-align: left">1075 $nH/N^2$</td>
+      <td style="text-align: left">440 $nH/N^2$</td>
+      <td style="text-align: left">170 $nH/N^2$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="why-focus-on-ft140-and-ft240">Why Focus on FT140 and FT240?</h3>
+<p>In ham radio applications for 49:1 ununs, we choose these specific sizes not just for their $A_L$ values, but for their ability to handle power. While a much smaller core might have a similar $A_L$, it would be unsuitable for 100W operation for two reasons:</p>
+
+<ol>
+  <li><strong>Magnetic Saturation:</strong> A smaller core has less volume to store magnetic energy. At 100W, the magnetic flux density ($B_{max}$) can exceed the core’s limits, causing the material to saturate. This leads to high SWR, signal distortion, and extreme heat.</li>
+  <li><strong>Winding Space:</strong> A 49:1 unun requires 14 to 21 secondary turns. To handle 100W, you must use thicker wire (such as 14 AWG or 18 AWG) to minimize resistive heating. Smaller cores do not have enough “window” space in the center to physically fit the required number of turns of heavy gauge wire.</li>
+</ol>
+
+<h3 id="inductance-calculation">Inductance Calculation</h3>
+<p>You calculate the total inductance ($L$) using the following formula:</p>
+
+\[L = N^2 \times A_L\]
+
+<p>In this equation, $N$ is the number of turns. Because the turn count is squared, doubling the number of turns results in four times the total inductance.</p>
+
+<hr />
+
+<h2 id="3-inductive-reactance-x_l">3. Inductive Reactance ($X_L$)</h2>
+<p>A transformer must have enough <strong>Inductive Reactance ($X_L$)</strong> to avoid acting as a load on the transmitter. Inductive Reactance is a measure of the transformer’s opposition to alternating current at a specific frequency. If the reactance is too low, the transformer will dissipate power as heat.</p>
+
+<p>The standard design goal is for the Inductive Reactance to be 4 to 5 times the system impedance. In a 50 $\Omega$ system, the target is $200 \Omega$ to $250 \Omega$ at the lowest operating frequency.</p>
+
+\[X_L = 2\pi f L\]
+
+<p>In this formula, $f$ is the frequency in Hertz and $L$ is the inductance in Henries.</p>
+
+<hr />
+
+<h2 id="4-turns-ratio-and-impedance-matching">4. Turns Ratio and Impedance Matching</h2>
+<p>An end-fed half-wave antenna typically has a feed point impedance near $2450 \Omega$. To match this to $50 \Omega$ coax, a 49:1 impedance ratio is used. Impedance transformation is determined by the square of the turns ratio:</p>
+
+\[\text{Impedance Ratio} = \left(\frac{N_{sec}}{N_{pri}}\right)^2\]
+
+<p>For a 49:1 ratio, the transformer requires a 7:1 turns ratio. Common examples include:</p>
+<ul>
+  <li><strong>2 Primary turns to 14 Secondary turns</strong></li>
+  <li><strong>3 Primary turns to 21 Secondary turns</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="5-high-frequency-parasitics">5. High Frequency Parasitics</h2>
+<p>At higher frequencies like the 10m band, physical variables called parasitics interfere with the transformer ratio.</p>
+
+<ul>
+  <li><strong>Leakage Inductance:</strong> This occurs when magnetic flux does not couple perfectly between the primary and secondary windings. It causes SWR to rise on high bands.</li>
+  <li><strong>Inter-winding Capacitance:</strong> This is stray capacitance between the wires. It is caused by turns being placed too close together.</li>
+</ul>
+
+<h3 id="common-corrections">Common Corrections</h3>
+<ul>
+  <li><strong>Winding Spacing:</strong> Spreading the secondary turns around the core reduces capacitance.</li>
+  <li><strong>Bifilar Winding:</strong> Twisting the primary turns with the first few turns of the secondary improves magnetic coupling.</li>
+  <li><strong>Compensation Capacitors:</strong> A high voltage capacitor (often 100pF) placed across the primary can cancel out leakage inductance on 10m.</li>
+</ul>
+
+<hr />
+
+<h2 id="6-core-size-and-power">6. Core Size and Power</h2>
+<p>The physical size of the core determines power handling and heat dissipation. Stacking multiple cores increases the total cross-sectional area ($A_e$), which allows the stack to handle more power before reaching magnetic saturation. This prevents the material from reaching its Curie temperature, which is the point where the ferrite loses its magnetic properties and the SWR increases rapidly.</p>
+
+<hr />
+
+<h1 id="verifying-performance-with-a-vector-network-analyzer-vna">Verifying Performance with a Vector Network Analyzer (VNA)</h1>
+<p>A Vector Network Analyzer, such as the NanoVNA, is used to verify that the unun is performing as designed before it is attached to an antenna.</p>
+
+<h2 id="using-a-dummy-load-for-ratio-testing">Using a Dummy Load for Ratio Testing</h2>
+<p>To test a 49:1 unun, you must terminate the secondary side with a resistance that represents the antenna wire at resonance. Since the unun is designed to match $50 \Omega$ to approximately $2450 \Omega$ ($50 \times 49$), you use a $2450 \Omega$ or $2500 \Omega$ resistor.</p>
+
+<p>The resistor should be a non-inductive type. Wire-wound resistors have internal inductance that will provide inaccurate readings at high frequencies. When you connect the VNA to the input and the resistor across the output, the VNA should show resistance of approximately $50 \Omega$ across the frequency range of intended use.</p>
+
+<h2 id="bench-swr-vs-field-swr">Bench SWR vs. Field SWR</h2>
+<p>It is important to understand that a dummy load test only verifies the transformer ratio. A low SWR on the bench does not guarantee a low SWR when the unun is attached to a real antenna for several reasons:</p>
+
+<ul>
+  <li><strong>Lack of Counterpoise:</strong> On the bench, there is usually no counterpoise or coax shield acting as a return path. In the field, the coax shield changes the complex impedance of the system.</li>
+  <li><strong>Environmental Parasitics:</strong> Nearby objects and height above ground introduce capacitive and inductive reactances that a simple resistor cannot simulate.</li>
+  <li><strong>Complex Impedance:</strong> An antenna wire is only purely resistive at its resonant points. On other frequencies, it presents a complex impedance that the unun must handle.</li>
+</ul>
+
+<p>If the bench test shows a high SWR on the 10m band with a dummy load, it may actually improve once the antenna is deployed and has a proper counterpoise. The dummy load test verifies build quality, but final tuning must be done with the antenna wire in its operating position.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

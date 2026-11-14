@@ -1,0 +1,17 @@
+W2d. Noise source list
+# Fill the cost column from the receiver -- switch the device off and read the band noise -- never from the probe. The probe finds the device; only the receiver says what it costs.
+ID,Device / location,Signature,Bands affected,Cost (dB),Owner,Action
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,

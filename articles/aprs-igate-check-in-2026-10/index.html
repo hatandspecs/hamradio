@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iGate Check-In: a Taller Mast, and Eight Days of Log History | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>iGate Check-In: a Taller Mast, and Eight Days of Log History</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: October 30, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>I raised my iGate mast from fifteen feet to about twenty-eight today, and
+measured what fifteen feet could do first. Over 8.2 days at the old height, 394
+beacons drew 306 repeats (77%) and 50 gated messages drew 13 (26%).</p>
+
+<p>November is the first clean month at the new height, and the comparison is
+already set up: <strong>November 22 to 30 against October 22 to 30</strong>, same days of the
+month, same eight-day length, same one-hop beacon path, only the mast different.
+The baseline had to come off the Pi first, because the station’s readable history
+is about eight days rather than its uptime, which is the other thing this
+check-in is about.</p>
+
+<p>My APRS iGate has been running since September. It is a Raspberry Pi 3B+, a
+$35 USB sound-card interface and a mobile radio on 144.390, sitting on a side
+table in a spare room. It does two things: it listens and passes what it hears
+up to APRS-IS like any receive-only gate, and it transmits, but only messages
+addressed to a callsign on my own whitelist. From every other operator’s point
+of view it is receive-only, and its beacon says so. The build, the Dire Wolf
+configuration, and the several things I got wrong on the way are in
+<a href="/hamradio/articles/aprs-igate-bidirectional-whitelist/">the original write-up</a>.</p>
+
+<p>This is a check-in rather than a build log.</p>
+
+<h2 id="the-mast">The mast</h2>
+
+<p>Fifteen feet to about twenty-eight. It is a 33 ft Spiderbeam telescoping mast
+with the thinnest top segments left out, so that is the erected height rather
+than the catalog one, and it is approximate: I said “doubled” and “thirty
+feet” earlier today before I counted segments, and neither is right.</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/mast-28ft-2026-10-30.jpg" alt="A thin black telescoping mast about 28 feet tall standing in a mown lawn, held by two thin green guy lines, with power lines crossing behind it and a wooded ridge on the horizon" /></p>
+
+<p>Same N9TAX monoband 2 m slim jim, same coax, same configuration. Nothing else
+changed, which is the point, a month from now I want to be able to attribute
+whatever happens to the height and not to four things at once.</p>
+
+<p>By the two-ray model, fifteen to twenty-eight feet is worth about <strong>+5.4 dB</strong>,
+and the radio horizon goes from 5.5 to roughly 7.5 miles. I do not expect the
+horizon to be what matters. The ridge in that photograph is what sets my limit
+in most directions, and more height does not move a ridge. If the extra height
+does something, it should show up on the marginal paths rather than on the
+stations that were already solid.</p>
+
+<p>SWR is under 1.3 after the work. That is the first thing to check when a mast
+has been up and down and the connectors have been handled.</p>
+
+<h2 id="what-fifteen-feet-did-measured-before-i-raised-it">What fifteen feet did, measured before I raised it</h2>
+
+<p>Over 2026-10-22 to 10-30, read from the station’s own receiver:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>frame type</th>
+      <th>sent</th>
+      <th>repeats heard</th>
+      <th>rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>beacons</td>
+      <td>394</td>
+      <td>306</td>
+      <td>77%</td>
+    </tr>
+    <tr>
+      <td>gated messages</td>
+      <td>50</td>
+      <td>13</td>
+      <td>26%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Heard directly by W3TM-10 (182), W3YA-1 (113), K3DNA (15) and WO3T-1 (9), with
+WO3T-1 reached only on a second hop, all of it through the chain <code class="language-plaintext highlighter-rouge">K3DNA then
+WO3T-1</code>.</p>
+
+<p>On receive: <strong>22 distinct stations heard directly</strong>, 4,731 direct packets, and
+448 distinct stations heard through somebody else’s digipeater.</p>
+
+<p>One methodological note, because it changed the answer by a factor of three.
+“Heard directly” means no <em>used</em> hop in the path, no asterisk anywhere before
+the <code class="language-plaintext highlighter-rouge">qAR</code>. Testing instead for a bare <code class="language-plaintext highlighter-rouge">SOURCE&gt;DEST,qAR</code> path counts six
+stations, because it throws away everything heard direct that happened to
+request <code class="language-plaintext highlighter-rouge">WIDE1-1</code> and never had it honored.</p>
+
+<h3 id="why-this-does-not-come-from-aprsfi">Why this does not come from aprs.fi</h3>
+
+<p>Worth stating plainly, because I spent a while expecting it to. A digipeated
+copy of my beacon carries the same source and payload as the direct one.
+APRS-IS discards duplicates, and a neighboring iGate hearing my direct
+transmission usually gates it first, so the repeat is thrown away before it is
+ever visible on the map, whatever the digipeater did.</p>
+
+<p>My own receiver has no such problem. A repeat of my own beacon arrives over the
+air like any other frame, carrying the callsign of whatever repeated it and an
+asterisk marking that hop as used. Every beacon already sent is a measurement
+that was taken and never read.</p>
+
+<h2 id="where-the-station-is-actually-heard">Where the station is actually heard</h2>
+
+<p>The receive side has a second measurement that does not come from my own log.
+aprs.fi draws a “heard directly” map for any iGate or digipeater: a grid of
+squares, shaded by how much traffic that station was the first to report from
+each one. Three of those maps cover this valley: this station’s, W3SWL-2’s
+four miles west, and the W3YA-1 digipeater on Pine Grove Mountain.</p>
+
+<p>Comparing them by eye does not work. Each is a phone screenshot panned
+somewhere slightly different, so the same town sits at a different pixel in
+each one. I registered the three to a common pixel grid by cross-correlating
+the base map with the colored squares masked out, their edges would otherwise
+pull the alignment toward whichever station had the most coverage, and then
+cropped all three to the field of view they share, fifty miles by twenty-eight.</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/heard-directly-three-up-2026-10-30.png" alt="Three aprs.fi heard-directly maps of the same area side by side, aligned so identical geography sits at identical pixels. KD3CCO-10 shows a band of colored squares along the valley through State College; W3SWL-2 shows a smaller, tighter cluster; W3YA-1 shows a much larger spread reaching northeast past Bellefonte. A gray box marked 'excluded' covers the map zoom control in the top left of each panel." /></p>
+
+<p>Three checks before trusting that alignment. Five synthetic shifts, recovered
+exactly. The wrong sign, which leaves a mean base-map difference of 22 gray
+levels against 0.9 for the right one. And an independent landmark: W3SWL-2’s
+marker appears in two of the three screenshots, and located separately in each
+it lands 0.10 pixels apart after registration.</p>
+
+<p>The scale comes from two positions known without reference to the map, this
+station’s beacon, which is the center of grid square FN10cs, and W3YA-1’s own
+position packet out of the October archive. That gives 31.3 pixels per mile.
+Two airport symbols predicted from it, six and ten miles out in different
+directions, both landed on the icon. It also puts the aprs.fi grid square at
+1.246 miles, 2.005 km, on a side, a round number that nothing in the
+derivation forced.</p>
+
+<p>Everything below is measured inside that shared window, and the window is the
+first thing to say about it.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>station</th>
+      <th>squares</th>
+      <th>area in window</th>
+      <th>median</th>
+      <th>90th pct</th>
+      <th>furthest in window</th>
+      <th>beyond 10 mi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KD3CCO-10</td>
+      <td>57</td>
+      <td>88 mi²</td>
+      <td>6.3 mi</td>
+      <td>13.7 mi</td>
+      <td>17.3 mi</td>
+      <td>18.3 mi² (21%)</td>
+    </tr>
+    <tr>
+      <td>W3SWL-2</td>
+      <td>38</td>
+      <td>58 mi²</td>
+      <td>3.9 mi</td>
+      <td>6.9 mi</td>
+      <td>18.5 mi</td>
+      <td>1.6 mi² (3%)</td>
+    </tr>
+    <tr>
+      <td>W3YA-1</td>
+      <td>98</td>
+      <td>151 mi²</td>
+      <td>11.4 mi</td>
+      <td>20.6 mi</td>
+      <td>32.2 mi</td>
+      <td>87.5 mi² (58%)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>None of those are footprints. The screenshots were zoomed to the local area,
+and all three stations heard traffic outside it, the digipeater most of all.
+For this station and for W3YA-1 the frame stops about eleven miles out in its
+nearest direction, so anything further that way was never in the picture. Squares sitting within one
+grid cell of the frame edge, which is what clipped coverage looks like,
+account for 2.9 percent of W3YA-1’s, 0.5 percent of this station’s and none of
+W3SWL-2’s.</p>
+
+<p>Cropping to the shared window costs more on top of that. This station’s
+furthest square is 17.3 miles inside the window and 27.3 miles in its own
+screenshot: the square that made the difference sits off the west edge of what
+all three images have in common. So “furthest in window” is a property of the
+window, and the areas are what fell inside a fixed box drawn around three
+stations rather than what any of them can hear. The truncation is also uneven,
+costing most to whichever station had the most distant traffic.</p>
+
+<p>What the window does give is a like-for-like frame. After registration it is
+the same box, the same square grid and the same ground for all three, which is
+the part that was not true of the screenshots as they came off the phone.</p>
+
+<p>W3YA-1 should not be read as a peer of the other two. Its beacon declares
+PHG7680: 49 watts, 8 dBi omnidirectional, 640 feet of height above average
+terrain. It is a mountaintop digipeater; the other two are iGates on side
+tables.</p>
+
+<h3 id="why-these-are-not-three-independent-measurements">Why these are not three independent measurements</h3>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/heard-directly-overlap-2026-10-30.png" alt="One map of the valley showing which station heard each square: a solid purple core around State College covered by both iGates, scattered salmon squares that only KD3CCO-10 heard, a few blue squares only W3SWL-2 heard, and a broad green ring to the north and northeast that only the W3YA-1 digipeater heard." /></p>
+
+<p>APRS-IS keeps the first copy of a packet to reach it and drops the rest as
+duplicates. When two iGates four miles apart both hear the same transmission,
+one copy survives, and which one depends on whose path to the server was
+quicker as much as on what either receiver did. The three maps are therefore a
+division of one stream of traffic rather than three separate records of what
+each station heard. A square that appears on one map and not another is not
+on its own evidence about the two antennas.</p>
+
+<p>The same mechanism thins the digipeater’s map. The site’s author
+<a href="https://blog.aprs.fi/2008/09/digiigate-coverage-maps.html">wrote, about these maps</a>,
+that good direct receive coverage by one or more iGates “will ‘eat away’ the
+displayed coverage of the digipeaters in the same area, since the digipeated
+packets will be filtered as duplicates on the APRS-IS.” The figure above shows
+that happening: the core is shared, and most of what appears only on W3YA-1’s
+map lies in the ring outside the two iGates.</p>
+
+<p>Read together rather than against each other, the three are parts of one
+network covering one valley, and the overlap in the middle is the redundancy
+working.</p>
+
+<h3 id="what-the-empty-quadrants-are">What the empty quadrants are</h3>
+
+<p>All three maps lean north, and not by a little. Measured as area per compass
+octant inside the window, this station has 33 square miles northwest and 23
+north, beside 1 southeast and 2 south. W3YA-1 has 63 north and 59 northeast,
+and essentially nothing southwest.</p>
+
+<p>That is not a property of any of the three antennas. The valley runs southwest
+to northeast, the people are in State College and Bellefonte, and what lies
+south of the ridge is Rothrock State Forest. An uncolored square means nobody
+there transmitted, not that a signal failed to arrive. A coverage map built
+from other people’s transmissions is shaped by where those people are, and the
+quiet directions here are quiet on the ground.</p>
+
+<p>Two smaller things. W3SWL-2 appears nowhere in this station’s eight-day
+packet archive, so it is not beaconing on RF within earshot, and aprs.fi is
+the only place this comparison can be made at all. And the marker aprs.fi draws
+for this station sits at the center of FN10cs rather than at the house, which
+is the position rounding described in the original write-up doing its job. It
+is also what made the marker usable as a calibration point.</p>
+
+<p>I have also not settled what time window these maps cover, which would matter
+if they were the experiment. They are not. Repeating the three screenshots on
+November 30th is worth doing as a cross-check, but the measurement that
+answers the question runs on this station’s own log and needs nothing from
+aprs.fi at all.</p>
+
+<h2 id="the-measurement-that-answers-the-question">The measurement that answers the question</h2>
+
+<p>What I want to know is how much more the station hears from twenty-eight feet
+than it heard from fifteen. The maps above cannot answer that, for the reason
+already given: the first copy of a packet wins and the rest are dropped, so
+another station’s map moves down when this one improves. Measured as a ratio
+against it, a real improvement and an imaginary one look the same.</p>
+
+<p>The denominator that works was already in the station’s own log. Every packet
+it records arrived one of two ways, copied directly off the air, or copied as
+a digipeated repeat. A repeat is proof that something transmitted out there
+and this receiver had its chance at it. So, per two-kilometer cell:</p>
+
+<p><strong>direct share = packets copied directly / packets that originated there</strong></p>
+
+<p>That divides out how much any cell happened to transmit, which is the thing a
+reference station was supposed to control for. A quiet month and a busy month
+give the same answer. It uses nothing but this station’s own receiver, so
+duplicate suppression, the other iGate, the digipeater’s own map and the edges
+of a phone screenshot all stop mattering.</p>
+
+<p>One lean worth stating: the repeats arrive through digipeaters whose path to
+this station also improves with height, so the denominator is not perfectly
+fixed. Those are 49 watts from 640 feet and near-certain decodes either way,
+so the lean is small. It is still a lean, not a neutrality.</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/heard-direct-share-15ft-2026-10-30.png" alt="Two panels centered on the station with distance rings at 5 to 25 miles. Left: cells colored by how many packets were copied directly, concentrated within about ten miles northwest, with gray cells marking traffic that was never copied directly scattered out to thirty miles. Right: the same cells colored by the share copied directly, bright near the station and dark at the edges." /></p>
+
+<p>The gray squares are the point. Those are cells that put traffic into the
+network which this station only ever saw secondhand, through a digipeater.
+They are what more height has to work on.</p>
+
+<p>The fifteen-foot baseline, rebuilt from the eight days of console log that
+were still on the Pi: 21,406 packets placed, 4,430 of them copied directly,
+1,236 cells carrying traffic, 46 with a direct copy, fourteen stations with a
+real direct path.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ring</th>
+      <th>active cells</th>
+      <th>with a direct copy</th>
+      <th>packet share</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0 to 5 mi</td>
+      <td>13</td>
+      <td>13 (100%)</td>
+      <td>50.9%</td>
+    </tr>
+    <tr>
+      <td>5 to 10 mi</td>
+      <td>16</td>
+      <td>12 (75%)</td>
+      <td>58.8%</td>
+    </tr>
+    <tr>
+      <td>10 to 15 mi</td>
+      <td>8</td>
+      <td>3 (38%)</td>
+      <td>6.2%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Direct capture holds up inside five miles, is still three cells in four out to
+ten, and falls off a cliff between ten and fifteen. <strong>That fall is where more
+height should act</strong>, and it is specific enough to be wrong, which is most of
+what I want from it. November 22nd to 30th against the same eight days of
+October, same tool, same origin, cell by cell.</p>
+
+<p>One procedural trap, recorded because it would have been invisible. October
+exists only as a console log; November will also have the dated CSV, which is
+the better format. Measuring one month one way and the next month the other
+puts the difference between two parsers on top of the difference between two
+mast heights, and nothing afterward separates them. Both sides get the console
+log. The CSV is a cross-check.</p>
+
+<h3 id="five-ways-the-tool-was-confidently-wrong">Five ways the tool was confidently wrong</h3>
+
+<p>Writing it took five passes, each of which produced a map that looked
+perfectly reasonable.</p>
+
+<p>It counted <code class="language-plaintext highlighter-rouge">[0L]</code> lines, which are the station transmitting, so its own
+beacons became its own coverage. It counted object, item and third-party
+payloads, which carry somebody else’s coordinates, and put a repeater ninety-
+eight miles away into the receive map. It gave each station its last known
+position, so a mobile every one of whose directly-copied packets came from
+inside fourteen miles was plotted at a hundred and twenty-six. It accepted one
+lucky frame in 1,742 as a ninety-eight-mile path, the same mistake that has
+already cost this project one retraction, wearing a different hat.</p>
+
+<p>The fifth is the one worth keeping. <strong>The station hears its own beacons come
+back</strong>, seconds later, after a digipeater repeats them. Those are real
+receptions off the air, so nothing about them looks wrong. They landed in the
+cell holding the station’s own beaconed position: 306 of that cell’s 311
+packets. The home cell read as 1.3 percent direct instead of 80.0, which made
+the ground under the antenna look like the worst-covered square on the map.</p>
+
+<p>Worse than the wrong number is which number it was. How many of a station’s
+own beacons come back to it is itself a function of antenna height, which is
+exactly what <code class="language-plaintext highlighter-rouge">reach</code> measures. Leaving them in puts the effect being measured
+into the denominator that is supposed to control for it, and the whole
+apparatus quietly stops being a control. They are excluded now.</p>
+
+<p>The tool and its 48 tests are <code class="language-plaintext highlighter-rouge">heard_spatial.py</code> and <code class="language-plaintext highlighter-rouge">test_heard_spatial.py</code>
+in the repository. Four of those five mistakes are tests now, and the fixtures
+come from frames that actually caused them rather than from what I expected
+the log to contain, which is the lesson from the question mark earlier.</p>
+
+<h2 id="the-log-holds-about-eight-days">The log holds about eight days</h2>
+
+<p><code class="language-plaintext highlighter-rouge">uptime -s</code> said the station had been up since October 12th. The packet log
+reached back to the 22nd.</p>
+
+<p><code class="language-plaintext highlighter-rouge">run/</code> is a 32 MB tmpfs, deliberately, so the card is not written
+continuously, and the log rotates hourly at 8 MB with two generations kept. At
+this station’s traffic that works out to about eight days of history, however
+long the station has been running. Everything older had already been
+rotated away by the time I looked.</p>
+
+<p>Dire Wolf’s console log also carries no timestamp per line. To work out what
+window I had, I ended up pulling the <code class="language-plaintext highlighter-rouge">DDHHMMz</code> fields out of <em>other stations’</em>
+position reports and reading the distribution, which reported packets on
+October 1st and October 31st from stations whose clocks are wrong. That is an
+inference from other people’s clocks, not a measurement.</p>
+
+<h2 id="dire-wolf-17-ignores-unknown-config-settings-in-silence">Dire Wolf 1.7 ignores unknown config settings in silence</h2>
+
+<p>The fix seemed obvious: Dire Wolf has a <code class="language-plaintext highlighter-rouge">LOGDIR</code> setting that writes one dated
+CSV per day, with a real timestamp column. I put it in a scratch config, ran
+Dire Wolf against it, got no complaint, and took that as “accepted.”</p>
+
+<p>Then I ran a control: a config containing <code class="language-plaintext highlighter-rouge">NOTAREALSETTING 42</code>. No complaint
+about that either: no warning, no line number, nothing. It read the file,
+printed “Reading config file”, and carried on.</p>
+
+<p>My test had proved nothing. A setting that appears in the config is
+not evidence that Dire Wolf honors it, and I had been about to rely on one for
+a month.</p>
+
+<p>So the dated log goes in as <code class="language-plaintext highlighter-rouge">-l</code>, the documented command-line flag, which
+<code class="language-plaintext highlighter-rouge">direwolf -h</code> lists plainly. The useful consequence is that the generated
+config file is now byte-identical to the one that was already running: the
+feature changes the process’s arguments and nothing the station puts on the
+air. That is what made it safe to deploy in the middle of a measurement.</p>
+
+<p>It also corrected something in my own notes. I had written that no complaint
+about <code class="language-plaintext highlighter-rouge">IGMSP</code> or <code class="language-plaintext highlighter-rouge">IGFILTER</code> meant the version had parsed them. That reasoning
+does not hold for 1.7. Those settings are believed here because their <em>effects</em>
+have been observed on the air, not because the parser stayed quiet.</p>
+
+<h2 id="three-changes-before-the-month-rolled-over">Three changes, before the month rolled over</h2>
+
+<p><strong>A dated packet log.</strong> One CSV per UTC day, named <code class="language-plaintext highlighter-rouge">YYYY-MM-DD.log</code>, with an
+ISO timestamp column and the fields already parsed out. “What did November 22nd
+to 30th look like” becomes a filename. It also carries a <code class="language-plaintext highlighter-rouge">heard</code> column, the
+station actually copied, which is the last used digipeater or the source itself
+on a direct copy, so <code class="language-plaintext highlighter-rouge">heard == source</code> is the direct test, computed by Dire
+Wolf rather than by me parsing asterisks out of a path.</p>
+
+<p>This writes to the card, which the rest of the design deliberately avoids. The
+writers that design removes are the continuous small random ones: the journal,
+a swap file. This is a once-per-packet append of a few hundred bytes, on the
+order of a megabyte a day. The UPS, incidentally, is not the reason that is now
+acceptable, a UPS removes the risk of an unclean shutdown, not the question of
+write endurance, and those are different arguments.</p>
+
+<p><strong>A daily archive.</strong> A timer copies each rotated chunk of the packet log onto
+the card, named by content hash so the same chunk is never stored twice however
+many times the timer runs or the station reboots. The live log stays in RAM.</p>
+
+<p><strong>A daily summary.</strong> One row per day: packets and distinct stations heard, how
+many of each were direct, and a rolling-window snapshot of beacons and gated
+messages sent and repeated. The receive columns are exact for the named day
+because they come from the dated log. The transmit columns are explicitly a
+rolling window, because the console log still cannot be sliced by date and
+labeling them as exact would repeat the same mistake in a tidier format.</p>
+
+<h3 id="the-first-real-packet-found-a-bug">The first real packet found a bug</h3>
+
+<p>Forty-five seconds after the restart, the new log had this in it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0,...,NJ3T-4,W3YA-1,24(7/4),0,!,...
+0,...,NJ3T-4,WO3T-1?,47(11/6),0,!,...
+</code></pre></div></div>
+
+<p>Note the question mark. Dire Wolf appends <code class="language-plaintext highlighter-rouge">?</code> when it is not certain which
+station it copied. My direct test was <code class="language-plaintext highlighter-rouge">heard == source</code>, so any direct copy it
+was unsure about, <code class="language-plaintext highlighter-rouge">K3DNA</code> recorded as <code class="language-plaintext highlighter-rouge">K3DNA?</code>, would have been counted as
+digipeated. It would have understated direct receptions every day of November,
+in exactly the number I am trying to measure, and nothing would have looked
+wrong.</p>
+
+<p>Twenty-nine tests passed before I saw that line. None of them caught it,
+because I had written the fixtures from what I expected Dire Wolf to emit.</p>
+
+<h2 id="on-the-web-monitor">On the web monitor</h2>
+
+<p>The station has a small web page that shows packet flow and which direction
+each one went. It now also shows whether today’s dated log is filling, when the
+archive timer last fired, how many chunks are held, and the last three summary
+rows, so the morning check does not need an ssh session.</p>
+
+<p><img src="/hamradio/assets/images/aprs_igate_bidirectional_whitelist/monitor-logging-panel.png" alt="The iGate monitor on a phone, with the Logging and archive section expanded: today's dated log at 14 kB and 86 rows written 26 seconds ago, yesterday absent, the archive timer active with its next run, no runs yet, two archived chunks at 1.9 MB, the live packet log at 3.3 MB with two rotated generations held, and a table of one summary row" /></p>
+
+<p>The line beside the section title, <code class="language-plaintext highlighter-rouge">· 14 kB today</code>, is there so the panel
+does not have to be opened to know whether anything is wrong. It reads
+<code class="language-plaintext highlighter-rouge">· no log today</code> or <code class="language-plaintext highlighter-rouge">· stale 3 h ago</code> when it is.</p>
+
+<p>That page has been taken down before by code that was cheap when it was written
+and grew with the data, so the panel is bounded. The
+dated log is line-counted only while it is small and reported by size above
+that; the summary is read from the end of the file in a fixed-size chunk; the
+archive directory is walked with a hard stop. Against an oversized test
+station: a 40 MB daily log, three years of summary rows, four thousand
+archived chunks: it collects in 0.022 seconds and produces under
+a kilobyte of JSON.</p>
+
+<h3 id="the-screenshot-found-the-next-bug">The screenshot found the next bug</h3>
+
+<p>In that picture, “2 rotated generations held” is highlighted amber. I had
+marked it as a warning on the reasoning that unarchived generations piling up
+means rotation is running ahead of the timer and a chunk is about to be lost.</p>
+
+<p>Then I looked at it on the phone. <code class="language-plaintext highlighter-rouge">logrotate</code> is configured to keep <code class="language-plaintext highlighter-rouge">.1</code> and
+<code class="language-plaintext highlighter-rouge">.2</code> permanently, so that number sits at two in normal operation and the
+warning would have been lit every day forever. A warning that is always on is
+one nobody reads, and it would have trained me to ignore the only part of the
+panel whose job is to get my attention.</p>
+
+<p>The number that actually carries the signal is <code class="language-plaintext highlighter-rouge">chunks</code> in the summary table:
+one captured chunk a day is routine, two means the log rotated twice between
+runs, and at two generations kept, a third rotation inside one day loses one.
+The highlight moved there. The generation count is still shown, just not
+dressed up as a problem.</p>
+
+<p>Three faults in one afternoon, each found by looking at real output rather
+than by reasoning about it: a config directive that was being silently
+discarded, a question mark in a CSV column, and a warning light wired to a
+constant.</p>
+
+<h2 id="what-november-is-for">What November is for</h2>
+
+<p>Everything above is a fifteen-foot measurement. November is the first full
+month at twenty-eight, and the configuration is frozen for it, a change made
+mid-month confounds the only clean month I will get.</p>
+
+<p>The comparison I plan to make is <strong>November 22 to 30 against October 22 to
+30</strong>, rather than whole months: same days of the month, same eight-day length,
+same one-hop beacon path, same everything. Only the mast
+differs. The monthly page on aprs.fi cannot support that, partly because it
+cannot be sliced by date, and partly because five days of October ran an
+experiment with two-hop beacons that inflated exactly the transmit-side numbers
+I would want to compare.</p>
+
+<p>I will post the result either way. A mast that turns out to buy nothing
+measurable is worth writing down as much as one that does, and at these
+distances the ridge probably matters more than the height.</p>
+
+<p>Code, the quickstarts and the Pi build are at
+<a href="https://github.com/hatandspecs/aprs_igate_bidirectional_whitelist">github.com/hatandspecs/aprs_igate_bidirectional_whitelist</a>.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,17 @@
+W1c. Receiver floor
+# Rig on the dummy load. The bandwidth column defaults to Setup!B7; override it per row if you change filters.
+Band,Filter bandwidth (Hz) (compute),Preamp,Floor (dBm),Floor (dBm/Hz) (compute)
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
