@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eleven Ferrite Chokes Wound and Measured, and Why I Could Not Predict Any of Them | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Eleven Ferrite Chokes Wound and Measured, and Why I Could Not Predict Any of Them</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: November 14, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <blockquote>
+  <p><strong>Where this stands.</strong> Eleven four-core common-mode chokes wound on Fair-Rite
+sleeves with RG-316, each swept 1 to 30 MHz, plus eighteen single-sleeve
+sweeps behind them and one re-wind of the best build with tidier leads.
+Eleven built assemblies is enough to test a design model instead of trusting
+one, and that test is most of what this article records.</p>
+</blockquote>
+
+<p><strong>Seven of the eleven hold 5 kilohms of resistance on every band from 80 m
+through 10 m. The best holds 6,858 ohms and stays resistance-dominant
+throughout.</strong> It is four separate single-core sections: two mix-75 sleeves at
+eight turns for the low end, a four-turn mix 31 and a five-turn mix 43 for the
+high end.</p>
+
+<p><strong>Re-winding that one build with tidier leads added 52 percent at 10 m and
+nothing at all below 20 m</strong>, which is the clearest single result in this work
+and the only thing here that improved a choke rather than ruling something
+out.</p>
+
+<p><strong>No model in this work predicted any of it.</strong> Five independent prediction
+routes were tried against the measured builds and all five failed by 23 to 47
+percent on the one number a build is chosen by. Three chokes picked by the best
+of those models came in 24, 31 and 75 percent below prediction. The second half
+of this article is the record of that failure, because it turned out to be more
+useful than the predictions were.</p>
+
+<p><strong>This article is RG-316 only.</strong> RG-400 does not work in any four-core design
+on these cores, because not enough turns fit through the bore to reach the
+resistance wanted, so everything below is RG-316.</p>
+
+<p><strong>The criterion.</strong> At least 5 kilohms of resistance on every band, and
+resistance rather than reactance. Common-mode current falls as the choke’s
+impedance rises against the antenna system’s own common-mode impedance, which
+for a wire antenna and feedline sits in the hundreds of ohms to low thousands; a
+choke an order of magnitude above that stops being the limit. Resistance
+matters separately because a choke that is mostly reactance stores energy and
+hands it back, and moves the resonance of whatever it is attached to. A choke is
+resistance-dominant where <code class="language-plaintext highlighter-rouge">R</code> is at least the magnitude of <code class="language-plaintext highlighter-rouge">X</code>, which is
+<code class="language-plaintext highlighter-rouge">R/|Z|</code> at or above 0.707. Every figure here is the real part.</p>
+
+<h2 id="the-choke-to-build">The choke to build</h2>
+
+<p><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@5T</code> on four Fair-Rite sleeves, one continuous
+run of RG-316, leads kept short and close to the cores.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>160</th>
+      <th>80</th>
+      <th>40</th>
+      <th>30</th>
+      <th>20</th>
+      <th>17</th>
+      <th>15</th>
+      <th>12</th>
+      <th>10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>R, ohms</strong></td>
+      <td>8523</td>
+      <td><strong>6858</strong></td>
+      <td>6873</td>
+      <td>7741</td>
+      <td>10006</td>
+      <td>12392</td>
+      <td>13059</td>
+      <td>11509</td>
+      <td>10166</td>
+    </tr>
+    <tr>
+      <td>R/|Z|</td>
+      <td>0.99</td>
+      <td>1.00</td>
+      <td>0.98</td>
+      <td>0.96</td>
+      <td>0.97</td>
+      <td>1.00</td>
+      <td>0.99</td>
+      <td>0.94</td>
+      <td>0.89</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>6,858 ohms on its worst band, resistance-dominant on all nine, and nothing
+below 6.8 kilohm anywhere from 160 m to 10 m.</strong> Two mix-75 sleeves at eight
+turns carry the low end; a four-turn mix 31 and a five-turn mix 43 carry the
+high end. Each section sits on its own core. A turn is one pass through the
+bore.</p>
+
+<blockquote>
+  <p>Four sleeves on one run of RG-316, taped, with the leads and the
+inter-section runs kept short and close to the cores. That dressing is worth
+52 percent at 10 m, and the rest of this article is how I found that out the
+slow way.
+<img src="/hamradio/assets/images/diy-ferrite-sleeve-choke-design/choke2-redressed-build.webp" alt="Four black ferrite sleeves wrapped in pink tape, strung along a length of tan coax that loops through each core several times, lying on a dark wooden bench with alligator clips on binding-post adapters at each end and a thin bare reference wire running alongside" /></p>
+</blockquote>
+
+<blockquote>
+  <p>The same choke on the analyzer, series-through, 1 to 30 MHz. The four markers
+read S21 at 3.5, 7.2, 14.3 and 28.4 MHz: −36.80, −37.01, −40.31 and
+−41.21 dB. More attenuation is more choking impedance, so the deepest point
+is the top of the range.
+<img src="/hamradio/assets/images/diy-ferrite-sleeve-choke-design/choke2-redressed-vna.webp" alt="A NanoVNA-F V2 lying on a dark wooden bench with two BNC cables attached, its screen showing an S21 log-magnitude trace from 1 to 30 MHz that falls from about minus 30 dB at the left edge to roughly minus 41 dB across most of the range, with four marker readings listed at the top" /></p>
+</blockquote>
+
+<p>Converted to impedance and with the fixture subtracted, that sweep is the
+characterization:</p>
+
+<p><img src="/hamradio/assets/images/diy-ferrite-sleeve-choke-design/choke2-redressed-sweep.png" alt="A line chart of common-mode choking impedance from 1 to 30 MHz for the re-dressed choke, showing magnitude, resistance and reactance. Resistance stays above 6.7 kilohm across the whole range, rises to a peak magnitude of 13.5 kilohm at 22.6 MHz, and a dotted vertical line marks reactance crossing zero at 19.5 MHz. The whole curve sits above the 5 kilohm transmit-grade line." /></p>
+
+<blockquote>
+  <p>Resistance never falls below 6.7 kilohm, self-resonance sits at 19.5 MHz,
+and the magnitude peaks at 13.5 kilohm at 22.6 MHz.</p>
+</blockquote>
+
+<p><strong>It is limited at 80 m, not at 10 m</strong>, which is the useful thing about it: the
+top of the range has 3,300 ohms of headroom and the bottom has none, so the
+next build spends turns on the mix-75 sections. Everything below is how eleven
+chokes and five failed models got to those four sections.</p>
+
+<h2 id="the-eleven-chokes-i-wound">The eleven chokes I wound</h2>
+
+<p>All eleven are four cores in four sections, one sleeve per section, on
+25.91 × 12.80 × 28.60 mm Fair-Rite sleeves. A turn is one pass through the bore.
+Each is numbered in the order it was wound, and that number is used throughout.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Sections</th>
+      <th>Sweep</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@5T + #43@5T</code></td>
+      <td>SJ000047</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@5T</code></td>
+      <td>SJ000048</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@10T + #31@4T + #31@4T + #31@5T</code></td>
+      <td>SJ000049</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@6T + #43@6T</code></td>
+      <td>SJ000050</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@5T + #43@6T</code></td>
+      <td>SJ000052</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@6T</code></td>
+      <td>SJ000054</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@6T + #43@6T</code></td>
+      <td>SJ000053</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@6T + #31@6T + #43@6T</code></td>
+      <td>SJ000055</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@6T + #31@6T + #43@8T</code></td>
+      <td>SJ000056</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@9T + #31@6T + #31@6T + #43@6T</code></td>
+      <td>SJ000057</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@9T + #31@6T + #31@6T + #43@5T</code></td>
+      <td>SJ000058</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Chokes 1 to 3 were wound from a model since withdrawn. Chokes 4 to 11 were
+designed to vary one section at a time from a common base, so that a turn count
+or a mix could be attributed rather than merely correlated.</p>
+
+<h3 id="how-they-were-measured">How they were measured</h3>
+
+<p><img src="/hamradio/assets/images/diy-ferrite-sleeve-choke-design/fixture-series-through.jpg" alt="Two BNC-to-binding-post adapters with steel alligator clips, joined by a BNC barrel adapter hand-labeled GOOD, with short RG-400 pigtails and heat shrink, lying on a dark wood bench" /></p>
+
+<blockquote>
+  <p>The series-through fixture. The choke under test clips between the two posts,
+and the bare wire alongside is the reference.</p>
+</blockquote>
+
+<p>A NanoVNA-F V2, SOLT calibrated, series-through fixture, 1 to 30 MHz at 301
+points, with <code class="language-plaintext highlighter-rouge">Zcm = 2·Z0·(1 − S21)/S21</code>.</p>
+
+<p><strong>The fixture residual is subtracted here, and divided out in the toroid
+choke article, and both are right.</strong> How to remove a reference depends on what
+the reference is. For a series element <code class="language-plaintext highlighter-rouge">S21 = 2·Z0/(2·Z0 + Z)</code>, and two series
+elements compose as <code class="language-plaintext highlighter-rouge">Z1 + Z2</code>, which is not multiplicative in S21, so division
+returns <code class="language-plaintext highlighter-rouge">Z/(1 + Za/2·Z0)</code> rather than <code class="language-plaintext highlighter-rouge">Z − Za</code>. Division is exact instead for a
+delay, which contributes phase at unit magnitude.</p>
+
+<p><strong>The discriminator is <code class="language-plaintext highlighter-rouge">|S21|</code>:</strong> a delay holds it at 1, a lumped reactance
+drops it as frequency rises. Fitting both models to each reference over 8 to
+29 MHz settles it. The compact short used for the single toroid choke, fixture
+ends brought together, is a <strong>0.85 ns delay and fits that model 2.3 times
+better</strong>, so that article divides. The long wire spanning this build’s geometry
+is a <strong>453 nH lumped inductance and fits that model 1.9 times better</strong>, so this
+one subtracts. An earlier version of this article divided a lumped reference,
+which was wrong for this fixture. <code class="language-plaintext highlighter-rouge">choke_s2p.py</code> now runs the fit and picks on
+its own, printing which it chose.</p>
+
+<p><strong>Which reference matters, and one reference covers all eleven.</strong> The assembly
+geometry’s short measures 455 nH of residual inductance against 289 nH at the
+single-sleeve geometry, so sweep SJ000046 and not SJ000026 is the correct
+subtraction for every choke above. All eleven were swept the same day in the
+same fixture at the same lead distances, and the re-wind the following day
+against that same reference, with the fixture and calibration untouched.</p>
+
+<p><strong>The fixture’s ceiling</strong> runs 2.1 MΩ at 160 m to 173 kΩ at 10 m. Every reading
+below is 0 to 9 percent of that ceiling, so nothing here is the fixture
+measuring itself.</p>
+
+<blockquote>
+  <p><strong>Watch out.</strong> No measured number in this article comes from above a
+winding’s own resonance. The two de-embedding conventions differ by a factor
+of 40 there: for mix 31 at eight turns at 28.4 MHz, subtraction gives 2,283
+ohms and division gives 54 for the same sweep, and the material model says</p>
+  <ol>
+    <li>Neither convention is usable past resonance.</li>
+  </ol>
+</blockquote>
+
+<h2 id="how-well-each-one-performs">How well each one performs</h2>
+
+<p>Resistance in ohms at the center of each band, with <code class="language-plaintext highlighter-rouge">R/|Z|</code> beneath it. A choke
+is resistance-dominant where that figure is 0.707 or above.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>80 m</th>
+      <th>40 m</th>
+      <th>30 m</th>
+      <th>20 m</th>
+      <th>17 m</th>
+      <th>15 m</th>
+      <th>12 m</th>
+      <th>10 m</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1</strong></td>
+      <td>6307</td>
+      <td>6746</td>
+      <td>8421</td>
+      <td>11692</td>
+      <td>12286</td>
+      <td>11195</td>
+      <td>8944</td>
+      <td>7347</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>1.00</td>
+      <td>0.96</td>
+      <td>0.95</td>
+      <td>0.98</td>
+      <td>0.99</td>
+      <td>0.93</td>
+      <td>0.84</td>
+      <td>0.77</td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td>6851</td>
+      <td>6736</td>
+      <td>7800</td>
+      <td>9957</td>
+      <td>10940</td>
+      <td>9888</td>
+      <td>8242</td>
+      <td>6706</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>1.00</td>
+      <td>1.00</td>
+      <td>0.99</td>
+      <td>1.00</td>
+      <td>0.98</td>
+      <td>0.91</td>
+      <td>0.83</td>
+      <td>0.76</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>7858</td>
+      <td>10836</td>
+      <td>12336</td>
+      <td>11153</td>
+      <td>8250</td>
+      <td>6429</td>
+      <td>4960</td>
+      <td>3762</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.96</td>
+      <td>0.99</td>
+      <td>1.00</td>
+      <td>0.91</td>
+      <td>0.78</td>
+      <td>0.69</td>
+      <td>0.67</td>
+      <td>0.57</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>6951</td>
+      <td>9682</td>
+      <td>13619</td>
+      <td>14529</td>
+      <td>9958</td>
+      <td>7074</td>
+      <td>6673</td>
+      <td>5575</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.98</td>
+      <td>0.94</td>
+      <td>0.98</td>
+      <td>0.96</td>
+      <td>0.82</td>
+      <td>0.73</td>
+      <td>0.70</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>7197</td>
+      <td>8611</td>
+      <td>11168</td>
+      <td>12360</td>
+      <td>9753</td>
+      <td>7743</td>
+      <td>5971</td>
+      <td>5098</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>1.00</td>
+      <td>0.98</td>
+      <td>0.99</td>
+      <td>0.97</td>
+      <td>0.86</td>
+      <td>0.78</td>
+      <td>0.70</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>7432</td>
+      <td>8570</td>
+      <td>10490</td>
+      <td>10313</td>
+      <td>7210</td>
+      <td>5607</td>
+      <td>4370</td>
+      <td>3666</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>1.00</td>
+      <td>1.00</td>
+      <td>1.00</td>
+      <td>0.92</td>
+      <td>0.78</td>
+      <td>0.71</td>
+      <td>0.65</td>
+      <td>0.62</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>8892</td>
+      <td>11497</td>
+      <td>14208</td>
+      <td>13546</td>
+      <td>10337</td>
+      <td>8534</td>
+      <td>6599</td>
+      <td>5638</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.98</td>
+      <td>0.98</td>
+      <td>1.00</td>
+      <td>0.93</td>
+      <td>0.82</td>
+      <td>0.75</td>
+      <td>0.69</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>8722</td>
+      <td>13558</td>
+      <td>16109</td>
+      <td>12500</td>
+      <td>8682</td>
+      <td>6721</td>
+      <td>5223</td>
+      <td>4378</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.88</td>
+      <td>0.97</td>
+      <td>0.99</td>
+      <td>0.87</td>
+      <td>0.74</td>
+      <td>0.67</td>
+      <td>0.61</td>
+      <td>0.58</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>8053</td>
+      <td>16473</td>
+      <td>29900</td>
+      <td>22438</td>
+      <td>13318</td>
+      <td>9853</td>
+      <td>7519</td>
+      <td>6282</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.74</td>
+      <td>0.80</td>
+      <td>0.97</td>
+      <td>0.86</td>
+      <td>0.70</td>
+      <td>0.62</td>
+      <td>0.57</td>
+      <td>0.55</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>7872</td>
+      <td>15713</td>
+      <td>35171</td>
+      <td>31394</td>
+      <td>17621</td>
+      <td>11525</td>
+      <td>7339</td>
+      <td>4256</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.70</td>
+      <td>0.70</td>
+      <td>0.93</td>
+      <td>0.92</td>
+      <td>0.74</td>
+      <td>0.66</td>
+      <td>0.59</td>
+      <td>0.55</td>
+    </tr>
+    <tr>
+      <td><strong>11</strong></td>
+      <td>8450</td>
+      <td>14555</td>
+      <td>25290</td>
+      <td>24256</td>
+      <td>15532</td>
+      <td>11452</td>
+      <td>8993</td>
+      <td>7369</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.80</td>
+      <td>0.84</td>
+      <td>0.96</td>
+      <td>0.93</td>
+      <td>0.78</td>
+      <td>0.69</td>
+      <td>0.63</td>
+      <td>0.59</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Scored on the worst band each one has:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>#</th>
+      <th>Worst R</th>
+      <th>At</th>
+      <th>Lowest R/|Z|</th>
+      <th>Clears 5 kΩ</th>
+      <th>R ≥ |X| everywhere</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>—</td>
+      <td><strong>2 re-dressed</strong></td>
+      <td><strong>6,858 Ω</strong></td>
+      <td>80 m</td>
+      <td><strong>0.89</strong></td>
+      <td><strong>yes</strong></td>
+      <td><strong>yes</strong></td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>11</td>
+      <td>7,369 Ω</td>
+      <td>10 m</td>
+      <td>0.59</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>2</strong></td>
+      <td><strong>6,706 Ω</strong></td>
+      <td>10 m</td>
+      <td><strong>0.76</strong></td>
+      <td><strong>yes</strong></td>
+      <td><strong>yes</strong></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>1</strong></td>
+      <td><strong>6,307 Ω</strong></td>
+      <td>80 m</td>
+      <td><strong>0.77</strong></td>
+      <td><strong>yes</strong></td>
+      <td><strong>yes</strong></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>9</td>
+      <td>6,282 Ω</td>
+      <td>10 m</td>
+      <td>0.55</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>7</td>
+      <td>5,638 Ω</td>
+      <td>10 m</td>
+      <td>0.66</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>4</td>
+      <td>5,575 Ω</td>
+      <td>10 m</td>
+      <td>0.66</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>5</td>
+      <td>5,098 Ω</td>
+      <td>10 m</td>
+      <td>0.66</td>
+      <td>yes</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>8</td>
+      <td>4,378 Ω</td>
+      <td>10 m</td>
+      <td>0.58</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>10</td>
+      <td>4,256 Ω</td>
+      <td>10 m</td>
+      <td>0.55</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>3</td>
+      <td>3,762 Ω</td>
+      <td>10 m</td>
+      <td>0.57</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>6</td>
+      <td>3,666 Ω</td>
+      <td>10 m</td>
+      <td>0.62</td>
+      <td>no</td>
+      <td>no</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>10 m is the limiting band for ten of the eleven.</strong> Only choke 1 is limited
+anywhere else, at 80 m, and it still holds 7,347 ohms at 10 m.</p>
+
+<p><strong>The two halves of the criterion disagree, and that disagreement is the
+result.</strong> Choke 11 has the highest worst-band resistance of anything wound,
+7,369 ohms, but its <code class="language-plaintext highlighter-rouge">R/|Z|</code> falls to 0.59 at 10 m, so most of what it presents
+there is reactance it will hand back. Seven chokes clear 5 kilohms on every
+band. Only two stay resistance-dominant while doing it.</p>
+
+<h2 id="the-best-measuring-configurations">The best measuring configurations</h2>
+
+<p><strong>Choke 2 is the best choke wound.</strong> <code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@5T</code>, 6,706
+ohms on its worst band as first built, <code class="language-plaintext highlighter-rouge">R/|Z|</code> never below 0.76, 5 kilohms
+cleared everywhere from 80 m to 10 m. Re-wound with tidier leads it reaches
+6,858 ohms with <code class="language-plaintext highlighter-rouge">R/|Z|</code> never below 0.89, which is the build to copy.</p>
+
+<p><strong>Choke 1 is a near-equal second and is arguably better balanced.</strong>
+<code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@5T + #43@5T</code>, 6,307 ohms worst. Its weak band is 80 m
+rather than 10 m, which makes it the flatter of the two across the high bands,
+and it reaches 12,286 ohms at 17 m.</p>
+
+<p><strong>Choke 11 wins on raw resistance and loses on quality.</strong> Worth building if the
+only number that matters is worst-band R, and worth skipping otherwise.</p>
+
+<p><strong>What separates the winners is the high-end section.</strong> Both chokes that meet
+the full criterion use <code class="language-plaintext highlighter-rouge">#43@5T</code>. Every build whose high-end section carries six
+or eight turns gives up 10 m.</p>
+
+<h3 id="re-dressing-the-leads-moved-the-whole-top-of-the-range">Re-dressing the leads moved the whole top of the range</h3>
+
+<p>Choke 2 was wound a second time with the same sleeves, the same turn counts and
+the same cable, changing only how the leads and the inter-section runs were
+dressed: shorter, closer to the cores, less loop area standing proud.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>160</th>
+      <th>80</th>
+      <th>40</th>
+      <th>30</th>
+      <th>20</th>
+      <th>17</th>
+      <th>15</th>
+      <th>12</th>
+      <th>10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>R, original</td>
+      <td>8283</td>
+      <td>6851</td>
+      <td>6736</td>
+      <td>7800</td>
+      <td>9957</td>
+      <td>10940</td>
+      <td>9888</td>
+      <td>8242</td>
+      <td>6706</td>
+    </tr>
+    <tr>
+      <td><strong>R, re-dressed</strong></td>
+      <td>8523</td>
+      <td><strong>6858</strong></td>
+      <td>6873</td>
+      <td>7741</td>
+      <td>10006</td>
+      <td>12392</td>
+      <td>13059</td>
+      <td>11509</td>
+      <td><strong>10166</strong></td>
+    </tr>
+    <tr>
+      <td>change</td>
+      <td>+3%</td>
+      <td>0%</td>
+      <td>+2%</td>
+      <td>−1%</td>
+      <td>0%</td>
+      <td>+13%</td>
+      <td><strong>+32%</strong></td>
+      <td><strong>+40%</strong></td>
+      <td><strong>+52%</strong></td>
+    </tr>
+    <tr>
+      <td>R/|Z|, re-dressed</td>
+      <td>0.99</td>
+      <td>1.00</td>
+      <td>0.98</td>
+      <td>0.96</td>
+      <td>0.97</td>
+      <td>1.00</td>
+      <td>0.99</td>
+      <td>0.94</td>
+      <td><strong>0.89</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Nothing below 20 m moved, and everything above it did.</strong> That is the
+signature of stray capacitance and nothing else: capacitance is invisible where
+the reactance it shunts is small, and it sets the ceiling where that reactance
+is large. The lead dressing was carrying capacitance across the winding, and
+taking it out raised the ceiling the top four bands were sitting under.</p>
+
+<p>Two consequences for the build:</p>
+
+<ul>
+  <li><strong>It is now the best choke here, 6,858 ohms on its worst band</strong>, against
+6,706 for the same parts dressed loosely.</li>
+  <li><strong>The limiting band moved from 10 m to 80 m.</strong> The choke is no longer short
+of impedance at the top; it is short at the bottom, where only more turns or
+more permeability will help. Its worst <code class="language-plaintext highlighter-rouge">R/|Z|</code> improved from 0.76 to 0.89.</li>
+</ul>
+
+<p><strong>This also measures the single-sleeve capacitance figures from the other
+direction.</strong> Those were taken with each sleeve’s loops standing proud and
+alligator clips centimeters apart, and the article calls them an upper bound.
+Re-dressing an assembly and watching only the top four bands move is the same
+statement made on a built choke: lead geometry, not the ferrite, sets what the
+high bands do.</p>
+
+<h3 id="the-design-rule-the-measurements-give">The design rule the measurements give</h3>
+
+<p><strong>Every choke here is limited at either 10 m or 160 m, and turns trade one
+against the other.</strong> The one-at-a-time builds measure the trade directly, each
+comparison being one choke against one choke:</p>
+
+<ul>
+  <li><strong>Choke 8 to choke 9</strong>, high-end section <code class="language-plaintext highlighter-rouge">#43@6T</code> to <code class="language-plaintext highlighter-rouge">#43@8T</code>: 10 m rises
+from 4,378 to 6,282 ohms, and the limit moves to the low end.</li>
+  <li><strong>Choke 10 to choke 11</strong>, <code class="language-plaintext highlighter-rouge">#43@6T</code> to <code class="language-plaintext highlighter-rouge">#43@5T</code> at nine turns of mix 75: 10 m
+rises from 4,256 to 7,369 ohms, and again the limit moves low.</li>
+  <li><strong>Choke 7 to choke 8</strong>, replacing a <code class="language-plaintext highlighter-rouge">#75@8T</code> section with <code class="language-plaintext highlighter-rouge">#31@6T</code>: 10 m
+falls by 1,260 ohms. The mix-75 sections are load-bearing at the top of the
+range, not only at the bottom, which was not expected.</li>
+  <li><strong>Choke 8 to choke 10</strong>, <code class="language-plaintext highlighter-rouge">#75@8T</code> to <code class="language-plaintext highlighter-rouge">#75@9T</code>: nothing gained at 10 m, while
+30 m rises from 16,109 to 35,171 ohms. The ninth turn moves impedance to a
+band that already had a large surplus.</li>
+</ul>
+
+<p>Turns raise low-frequency impedance and lower the section’s own resonance, so
+turns bought at the top are paid for at the bottom. <strong>A four-core choke covering
+80 through 10 m wants its sections deliberately mismatched:</strong> many turns of
+high-permeability mix for the bottom, few turns of a lower-permeability mix for
+the top, and nothing in between trying to do both. That is what chokes 1 and 2
+are.</p>
+
+<blockquote>
+  <p><strong>Watch out.</strong> The <code class="language-plaintext highlighter-rouge">#43@5T</code> section both winners depend on is the one section
+never swept on its own, so this rule rests on the assemblies rather than on
+any characterization of the part. Each choke was swept once, with no repeats,
+so the scatter between two nominally identical windings is unknown and bounds
+how small a difference above is worth reading.</p>
+</blockquote>
+
+<h2 id="everything-i-did-to-predict-a-design-and-how-none-of-it-worked">Everything I did to predict a design, and how none of it worked</h2>
+
+<p>The plan was to characterize single sleeves, fit a model, search the
+combinations, and wind the winner. Each step worked on its own terms.</p>
+
+<p><strong>Single sleeves, 27 sweeps.</strong> Peak resistance and where it lands:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mix</th>
+      <th>Turns</th>
+      <th>Peak freq</th>
+      <th>Peak R</th>
+      <th>L</th>
+      <th>C per turn</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>31</td>
+      <td>10</td>
+      <td>3.90 MHz</td>
+      <td>10,115 Ω</td>
+      <td>498 µH</td>
+      <td>0.334 pF</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>8</td>
+      <td>6.61 MHz</td>
+      <td>6,838 Ω</td>
+      <td>261 µH</td>
+      <td>0.278 pF</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>6</td>
+      <td>15.11 MHz</td>
+      <td>4,891 Ω</td>
+      <td>84.9 µH</td>
+      <td>0.218 pF</td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td>10</td>
+      <td>6.51 MHz</td>
+      <td>10,713 Ω</td>
+      <td>282 µH</td>
+      <td>0.212 pF</td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td>8</td>
+      <td>9.51 MHz</td>
+      <td>7,078 Ω</td>
+      <td>164 µH</td>
+      <td>0.214 pF</td>
+    </tr>
+    <tr>
+      <td>75</td>
+      <td>10</td>
+      <td>below 1 MHz</td>
+      <td>9,424 Ω</td>
+      <td>n/a</td>
+      <td>n/a</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Ten turns reaches 10 kilohms on all three mixes. Where the peak lands is the
+design problem: mix 75 below 1 MHz, mix 31 at 3.9, mix 43 at 6.5. Capacitance
+came from measured inductance and measured resonance, not from fitting the tail
+above resonance, where a ferrite’s permeability is complex and falling.</p>
+
+<p><strong>Capacitance per turn is 0.21 to 0.33 pF</strong>, by two independent routes: the
+collapse fit that makes six turn counts land on one loss curve, and inductance
+with resonance. Both overlap the 0.15 to 0.28 fitted to a commercial assembly’s
+published sweep.</p>
+
+<p><strong>Material scale factors, cross-validated between two cables.</strong></p>
+
+<p><img src="/hamradio/assets/images/diy-ferrite-sleeve-choke-design/permeability-measured.png" alt="Three log-log panels, one per ferrite mix, plotting the loss permeability from 1.2 to 30 MHz. Mix 31's measured curve sits just under the published dashed curve. Mix 43's sits clearly below it. Mix 75's measured curve falls far below the published one and the gap widens with frequency." /></p>
+
+<blockquote>
+  <p>Measured against published loss permeability, one panel per mix. Plotted from
+the second cable’s sweeps, before the de-embedding correction, so it shows the
+divided form.</p>
+</blockquote>
+
+<p>From <code class="language-plaintext highlighter-rouge">R = ω·N²·L0·µ''</code> with <code class="language-plaintext highlighter-rouge">L0 = (µ0/2π)·h·ln(OD/ID) = 4.034 nH</code> for this
+sleeve, using only windings below their own resonance:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mix</th>
+      <th>k</th>
+      <th>Spread</th>
+      <th>Usable bands</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>31</td>
+      <td><strong>0.80</strong></td>
+      <td>5%</td>
+      <td>all nine</td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td><strong>0.60</strong></td>
+      <td>9%</td>
+      <td>all nine</td>
+    </tr>
+    <tr>
+      <td>75</td>
+      <td>none</td>
+      <td> </td>
+      <td><strong>zero</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>These are the most solid numbers in this work</strong>, because they reproduce to
+within 0.03 on a second cable measured the same week, with different turn
+counts and a different stray capacitance. Fair-Rite’s data is not wrong; it is
+measured on a specified toroid and does not transfer intact to a 26 mm sleeve.</p>
+
+<p><strong>Mix 75 cannot be characterized by either dataset.</strong> Every mix-75 winding,
+down to one turn, has its impedance maximum at or below the 1 MHz start of the
+sweep. The data cannot separate two readings: either the windings are past an LC
+resonance below 1 MHz, or mix 75’s loss permeability peaks below 1 MHz as a
+material property and the windings are fine. The second is physically expected
+for a high-permeability manganese-zinc ferrite, and a one-turn mix-75 sleeve
+calculates to resonate near 107 MHz. But the measured reactance crosses negative
+at 1.1 to 1.4 MHz, which is the signature of the first, and at 70 to 100 ohms
+that sign is fixture noise. A sweep starting at 100 kHz would settle it. Earlier
+passes assumed a flat 0.41 for mix 75 and every build they produced is
+withdrawn.</p>
+
+<p><strong>The model.</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Z_core = j·ω·N²·L0·Σ over cores (µ' − j·µ'')
+Z_sec  = Z_core / (1 + j·ω·Cp·Z_core)
+Z_total = Σ over sections
+</code></pre></div></div>
+
+<h3 id="the-five-routes-and-what-each-one-missed-by">The five routes, and what each one missed by</h3>
+
+<p>Every route was scored on worst-band resistance, the number a build is actually
+chosen by:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Route</th>
+      <th>Error</th>
+      <th>Tested against</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>The withdrawn model, S21 division and flat k75 = 0.41</td>
+      <td>−23% to −57%</td>
+      <td>3 chokes</td>
+    </tr>
+    <tr>
+      <td>The corrected model, subtraction and k = 0.80 / 0.60</td>
+      <td>23% mean, shapes wrong</td>
+      <td>3 chokes</td>
+    </tr>
+    <tr>
+      <td>The corrected model recalibrated, then used to pick builds</td>
+      <td>+24% to +75%</td>
+      <td>3 chokes</td>
+    </tr>
+    <tr>
+      <td>Summing the measured single sleeves, no model at all</td>
+      <td>−76% to +46%, 40% mean</td>
+      <td>5 chokes</td>
+    </tr>
+    <tr>
+      <td>A section library solved from the assemblies themselves</td>
+      <td>−60% to +59%, 27% mean</td>
+      <td>7 chokes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Chokes 4, 5 and 6 are the test that settles it.</strong> They were the three the
+recalibrated model ranked highest among four-core arrangements it had not seen:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Model prediction</th>
+      <th>Measured</th>
+      <th>Error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4</td>
+      <td>6,900 Ω</td>
+      <td>5,575 Ω</td>
+      <td>+24%</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>6,700 Ω</td>
+      <td>5,098 Ω</td>
+      <td>+31%</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>6,400 Ω</td>
+      <td>3,666 Ω</td>
+      <td>+75%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>All three over-predicted, in the same direction as the withdrawn model and at
+the same magnitude. <strong>Recalibrating did not fix the model. It moved which builds
+it was wrong about.</strong> The modeled ranking this article once led with put
+<code class="language-plaintext highlighter-rouge">#75@10T + #31@5T + #31@5T + #43@5T</code> first at 6,752 ohms; the nearest buildable
+members of that family measured 3,666 to 5,638.</p>
+
+<blockquote>
+  <p><strong>Watch out.</strong> Four tests for which turn counts to trust at each frequency
+failed before the pre-resonance rule. Largest <code class="language-plaintext highlighter-rouge">|Z|</code> in the sweep: one bad
+reference sample near 9.5 MHz spiked every device there, so the filter kept
+only the sweep whose calibration had failed. Inductive-only: admits mix 75’s
+post-resonance windings, inflating its loss permeability to 3.6 times
+published. Low-edge <code class="language-plaintext highlighter-rouge">|Z|</code> peak: cannot tell material relaxation from an LC
+resonance. First downward zero crossing of <code class="language-plaintext highlighter-rouge">X</code>: correct in principle,
+defeated by noise at 70 to 100 ohms.</p>
+</blockquote>
+
+<h2 id="why-the-naive-models-did-not-work">Why the naive models did not work</h2>
+
+<p><strong>Not because sections interact.</strong> That was the hypothesis the failures
+suggested, and it is wrong. Eleven assemblies built from nine distinct section
+types is an over-determined system, so one impedance can be solved for each
+section type and checked against every assembly at once. That solve closes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>160</th>
+      <th>80</th>
+      <th>40</th>
+      <th>30</th>
+      <th>20</th>
+      <th>17</th>
+      <th>15</th>
+      <th>12</th>
+      <th>10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Residual</td>
+      <td>1%</td>
+      <td>3%</td>
+      <td>6%</td>
+      <td>8%</td>
+      <td>6%</td>
+      <td>6%</td>
+      <td>5%</td>
+      <td>6%</td>
+      <td>8%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Sections add in series, to within 1 to 8 percent.</strong> One consistent value per
+section reproduces eleven different chokes. Adjacent sleeves on a shared run are
+not coupling in any way that matters, and <code class="language-plaintext highlighter-rouge">Z_total = ΣZ_section</code> is sound.</p>
+
+<p><strong>It is the per-section impedances that are wrong, and they came from the
+bench.</strong> The single-sleeve sweeps are the only source of them, and they were
+taken at a looser lead dressing than any assembly: loops standing proud, clips
+centimeters apart, 289 nH of fixture residual against the assembly geometry’s</p>
+<ol>
+  <li>That geometry adds capacitance, which drops the resonance and takes the
+middle and upper bands with it. <strong>So every capacitance figure derived from a
+single sleeve, 0.21 to 0.33 pF per turn, is an upper bound</strong>, and the assembled
+value is lower, in the direction of the commercial 0.15 to 0.28. Recalibrating
+the capacitance in either direction bottoms out at 23 percent mean error and
+never reproduces the shape: the model gives flat responses where the real chokes
+have strong mid-band peaks.</li>
+</ol>
+
+<p><strong>And the right per-section values cannot be recovered from these eleven
+chokes.</strong> Solving a section library from the assemblies fits them well and then
+fails to predict. Holding each choke out, fitting the rest, and predicting the
+one held out misses by 27 percent on average, from −60 to +59 percent, and
+several sections solve to negative resistance above 20 m. The cause is in the
+experiment rather than the arithmetic: <code class="language-plaintext highlighter-rouge">#75@8T</code> appears in six of the seven
+cleanest builds, so the columns are nearly collinear and any division of
+impedance between sections that sums correctly will fit. <strong>The sum is measured.
+The split is not.</strong></p>
+
+<p>Adding one end-to-end stray capacitance across the whole assembly removes the
+negative values at 0.75 to 1.0 pF for no loss of fit, which is a reason to
+prefer that small value on parsimony. It is not a measurement of one: the
+residual falls monotonically as that capacitance is raised with no interior
+minimum, by 5 pF the solved sections decay as <code class="language-plaintext highlighter-rouge">1/f</code>, meaning the parameter is
+absorbing signal rather than explaining it, and out-of-sample error gets worse
+at 47 percent.</p>
+
+<p><strong>What would settle it</strong> is sweeping each candidate section alone, in the
+assembly fixture, at the assembly lead dressing. Five sweeps. Series summation
+is measured sound, so correct per-section impedances are the only missing
+ingredient, and the existing single-sleeve set cannot supply them.</p>
+
+<h2 id="what-this-does-not-establish">What this does not establish</h2>
+
+<p><strong>No stacked section has ever been swept.</strong> All eleven chokes are four separate
+single-core sections, so the <code class="language-plaintext highlighter-rouge">Cp · N · √n_c</code> stacking assumption is untested by
+every measurement here. Any modeled build containing a two-sleeve section rests
+on it.</p>
+
+<p><strong>Two of eleven is the hit rate on the full criterion</strong>, and both successes use
+a section never characterized alone.</p>
+
+<p><strong>One sweep per choke, no repeats</strong>, so the measurement scatter is unknown.</p>
+
+<p><strong>The 5-kilohm criterion is a target, not a measured requirement.</strong> Nothing here
+measures common-mode current on an actual antenna.</p>
+
+<p><strong>k rests on a resonance proxy</strong>, a smoothed impedance maximum rather than a
+measured resonance, and mix 75 is the case that proves the proxy can fail.</p>
+
+<p><strong>RG-316 caps the choke near a few hundred watts.</strong> It buys the turns these
+designs need at the cost of power handling, and nothing here weighs that
+trade.</p>
+
+<h2 id="what-to-build-and-measure">What to build and measure</h2>
+
+<p>Design by model is finished until the inputs improve. The remaining measurements
+are the ones that would make a model possible, in the order they pay.</p>
+
+<p><strong>Sweep each candidate section alone, in the assembly fixture, at the assembly
+lead dressing.</strong> Five sweeps: <code class="language-plaintext highlighter-rouge">#75@8T</code>, <code class="language-plaintext highlighter-rouge">#31@4T</code>, <code class="language-plaintext highlighter-rouge">#31@6T</code>, <code class="language-plaintext highlighter-rouge">#43@5T</code>, <code class="language-plaintext highlighter-rouge">#43@6T</code>.
+Then predict a held-out choke and check. This is the one experiment that would
+turn a measured rule back into a design tool.</p>
+
+<p><strong>Wind the same section twice and sweep both.</strong> One sweep, and it bounds the
+scatter that every single-variable comparison above currently lacks. The
+re-dressed build is not that measurement: it changed the lead geometry
+deliberately, so it bounds nothing. Until this exists, read the +3 percent at
+160 m and the −1 percent at 30 m in that comparison as noise rather than as
+small effects.</p>
+
+<p><strong>Put the turns back into the low end of the re-dressed build.</strong> Its weak band
+is now 80 m at 6,858 ohms, and nothing above 20 m is close. More turns on the
+mix-75 sections buy the bottom at the cost of the top, and the top now has
+3,300 ohms of headroom to spend.</p>
+
+<p><strong>Wind <code class="language-plaintext highlighter-rouge">#43@5T</code> against <code class="language-plaintext highlighter-rouge">#43@8T</code> in one choke.</strong> Both winners use a low-turn
+high-end section, and the measurements say turns at the top are paid for at the
+bottom. A choke holding both extremes tests whether the trade can be split
+rather than chosen.</p>
+
+<p><strong>Sweep a stacked section.</strong> It is the largest untested assumption still in the
+model.</p>
+
+<p><strong>Mix 75 from 100 kHz.</strong> It now measures load-bearing at 10 m as well as at the
+bottom of the range, which no model expected.</p>
+
+<h2 id="references">References</h2>
+
+<p>Fair-Rite material datasheets for mixes 31, 43 and 75, complex permeability
+against frequency. Jim Brown K9YC, <em>RFI, Ferrites, and Common Mode Chokes</em>, for
+the grading convention and for why resistance is the figure that matters.</p>
+
+<p>Analysis scripts are in <code class="language-plaintext highlighter-rouge">assets/code/</code>, <code class="language-plaintext highlighter-rouge">choke_rg316.py</code> for this set and
+<code class="language-plaintext highlighter-rouge">choke_s2p.py</code> for a single sweep. Sweeps are in
+<code class="language-plaintext highlighter-rouge">assets/data/ferrite-sleeve-rg316-2026-11-14/</code>, with a file-to-choke key.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

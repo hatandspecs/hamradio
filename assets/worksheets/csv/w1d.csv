@@ -1,0 +1,17 @@
+W1d. Current probe calibration
+"# Zt = 50 x |S21|, which is 34 dB-ohm + S21 in dB. Expect it flat near 50/N on the upper HF bands and rolling off at the bottom."
+Probe,Turns / mix,Band (MHz),S21 (dB),Zt (ohm) (compute)
+,,1.8,,
+,,3.5,,
+,,7,,
+,,14,,
+,,28,,
+,,50,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,

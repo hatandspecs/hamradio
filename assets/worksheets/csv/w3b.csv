@@ -1,0 +1,17 @@
+W3b. Common-mode noise test
+"# The decisive receive test. A drop of 3 dB or more means the shield was carrying building noise into the receiver -- but only if it also beats 2R, which this sheet checks for you."
+Antenna,Band,No choke (dBm),Entry choke (dBm),Feedpoint choke (dBm),Both (dBm),Best benefit (dB) (compute),2R (dB) (compute),Real? (compute)
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,

@@ -1,0 +1,17 @@
+Log. Measurement log
+"# One row per measurement, differing from the row above it in exactly one respect, named in config_change. That column is what makes the log worth keeping."
+id,datetime,phase,antenna,band_or_span,instrument,config_change,reading,unit,file,notes
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,

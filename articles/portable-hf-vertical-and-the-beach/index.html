@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Converting the Rigid V Dipole to a Quarter-Wave Vertical, and Taking It to the Beach | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>Converting the Rigid V Dipole to a Quarter-Wave Vertical, and Taking It to the Beach</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: August 12, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p>The rigid V dipole has been my most-used portable antenna since I built it. It
+goes up in five minutes, it needs no tuner on 20 m, and it fits in a bag. The
+one thing it could not do was give me a low-angle vertical pattern, which is
+exactly what I wanted for a trip to the shore in August.</p>
+
+<p>It turned out I did not need to build anything new. The hub already had every
+part required — I just had not noticed what I was looking at.</p>
+
+<blockquote>
+  <p>The result: a 20 m quarter wave standing on dry sand, well back from the surf
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/beach-vertical.jpg" alt="A thin telescoping whip standing vertically on a tripod on an empty beach, with the ocean behind it" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="the-realization">The Realization</h2>
+
+<p>My hub is a 3D-printed hexagon with threaded studs on its faces, riding on a
+camera tripod’s ball head. In dipole configuration, two 18 ft telescoping whips
+screw into two adjacent faces at a 120° included angle, and each whip is
+extended to roughly 5 m.</p>
+
+<p>Five meters is the part that matters. A quarter wave on 20 m is 5.03 m. <strong>Each
+leg of the V dipole was already a 20 m quarter-wave radiator</strong> — I had two of
+them, and I was using them against each other.</p>
+
+<p>A vertical is what you get when you stop using the second leg as a radiator and
+start using it as a ground. So the conversion is not a rebuild. It is a change
+of mind about what the two halves are for:</p>
+
+<ol>
+  <li>Tilt the ball head, and with it the hex hub, until the driven side points
+straight up. One whip, vertical, is now the radiator.</li>
+  <li>Bolt a bundle of ground radials to the stud on the other side — the face
+that used to hold the second whip. That side is the return path.</li>
+  <li>Leave the 1:1 common mode choke exactly where it was.</li>
+</ol>
+
+<blockquote>
+  <p>The hub tilted over: whip on top, choke at the left, radial bundle bolted to the stud on the right
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/hub-vertical-driveway.jpg" alt="The hexagonal antenna hub on a tripod, tilted so a single whip points straight up, with colored radial wires fanning out across a concrete driveway" /></p>
+</blockquote>
+
+<p>That is the whole modification. No new hardware, no drilling, nothing cut. The
+same hub does both jobs, and switching between them is a matter of loosening one
+ball head and moving one bundle of wire.</p>
+
+<hr />
+
+<h2 id="the-radials">The Radials</h2>
+
+<p>The ground plane is the part that actually took work, and it is the part worth
+copying.</p>
+
+<p>I ended up with <strong>20 radials, 10 ft each</strong>, from <strong>22 AWG silicone-insulated
+hookup wire</strong>, crimped into ring terminals <strong>in bundles of five</strong> — four lugs,
+five wires apiece, all four stacked on the one stud.</p>
+
+<p>It started as ten. The driveway photographs below are that first pair of lugs,
+before I made the second ten and doubled the field.</p>
+
+<blockquote>
+  <p>The first two lugs, five wires crimped into each, stacked on the stud under a nut
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/hub-detail-driveway.jpg" alt="Close-up of the hub's threaded stud with ring terminals and bundles of colored wire bolted to it" /></p>
+</blockquote>
+
+<p>Three properties of that wire earned their place:</p>
+
+<ul>
+  <li><strong>Silicone insulation lays dead flat.</strong> It has no coil memory. Wire that
+remembers being on a spool spends the whole session trying to curl back up,
+and on sand it will crawl into a bird’s nest while you are looking at the
+radio.</li>
+  <li><strong>It came cut to length.</strong> Twenty identical radials without twenty
+measurements and forty crimps of my own.</li>
+  <li><strong>It came in assorted colors.</strong> This sounds decorative and is not. When you
+are fanning twenty wires out on a beach and then gathering them again in the
+dark, being able to say “follow the yellow one” is the difference between a
+five-minute teardown and a knot.</li>
+</ul>
+
+<p>Ten feet is about 0.145 λ on 20 m, well short of a resonant quarter wave, and
+that is deliberate. Radials lying on the ground are not resonant elements —
+they are a screen whose job is to intercept return currents before the lossy
+earth does. For that job, the literature has been consistent since the 1930s:
+<strong>many short radials beat a few long ones.</strong> Twenty short wires from one bag
+buys more than four carefully cut ones.</p>
+
+<blockquote>
+  <p>The first ten laid out on the driveway. The other ten came later, and doubled this
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/radial-fan-driveway.jpg" alt="Overhead view of the tripod-mounted vertical with ten radial wires spread out in all directions across a driveway" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="20-m-first-and-it-worked">20 m First, and It Worked</h2>
+
+<p>The first thing I did with the vertical was the simplest possible thing: whip at
+about 5 m, no coil, no matching network, straight onto 20 m. It worked
+immediately — a good match on the first sweep, and QSOs in the log before I had
+tried anything else. Measured on the driveway on the evening of August 3:</p>
+
+<blockquote>
+  <p>14.225 MHz, 1.15:1, 56.7 − 3.72j. No coil, no tuner, no matching network
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/vna-20m-driveway.jpg" alt="NanoVNA screen reading 14.225 MHz, SWR 1.15, impedance 56.7 minus 3.72j" /></p>
+</blockquote>
+
+<p>That reading is the whole case for the conversion. A quarter wave over a ground
+plane, fed directly, with nothing between the coax and the antenna but the
+choke that was already there.</p>
+
+<p>It does one band at a time, which is not the same thing as being a single-band
+antenna. Swept 1–30 MHz at the 20 m setting, the rest of the spectrum sits
+exactly where a 5 m radiator leaves it:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Frequency</th>
+      <th style="text-align: left">SWR at the 20 m whip setting</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">14.247 MHz</td>
+      <td style="text-align: left">1.16</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">17.987 MHz</td>
+      <td style="text-align: left">4.86</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">21.387 MHz</td>
+      <td style="text-align: left">5.97</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">24.900 MHz</td>
+      <td style="text-align: left">6.39</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>But the whip telescopes. I adjust its length for 17 m and 15 m, and those two
+bands along with 20 m are what I actually travel with — the right bands for a
+small station a long way from home.</p>
+
+<p>Adjusting the whip is a deliberate choice over the alternatives. I am not trying
+to find one compromise length that half-matches three bands, and I am not
+interested in eating a high SWR or burning the difference in a tuner. Given the
+choice, I will always pull the antenna back down the mast or the tripod, reset
+the whips, and redeploy. <strong>At 5 or 10 watts there is nothing to spare for a
+matching network to waste.</strong> A tuner turns a mismatch into a comfortable-looking
+meter reading; it does not put the power back in the air. Two minutes of
+telescoping does.</p>
+
+<hr />
+
+<h2 id="packing-it">Packing It</h2>
+
+<p>The entire station, antenna included, fits in a padded camera bag — which is
+the correct container for this antenna, since the tripod and ball head are
+camera parts anyway.</p>
+
+<blockquote>
+  <p>Radio, choke, hub, whips, tripod and the radial bundle, in a single camera bag
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/kit-packed.jpg" alt="An open camera bag with padded dividers holding a radio, the hexagonal hub, a coiled bundle of colored radial wire, and a folded tripod alongside" /></p>
+</blockquote>
+
+<p>The radial bundle is the only awkward item, and the color coding is what keeps
+it from becoming the item that ruins the bag.</p>
+
+<hr />
+
+<h2 id="the-beach">The Beach</h2>
+
+<p>August 12, dry sand, well back from the waterline, about an hour before
+sunset. Setup took about as long as it takes to describe: tripod down, whip up,
+twenty radials walked out in a circle, coax on.</p>
+
+<blockquote>
+  <p>Twenty radials on sand. They lay where you put them, which is the entire argument for silicone insulation
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/beach-hub.jpg" alt="The hub and its twenty radial wires fanned out across beach sand" /></p>
+</blockquote>
+
+<p>Then the measurement I had come for:</p>
+
+<blockquote>
+  <p>14.225 MHz on the beach: 1.19:1, 55.4 − 7.22j
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/vna-20m-beach.jpg" alt="NanoVNA on the beach reading 14.225 MHz, SWR 1.19, impedance 55.4 minus 7.22j" /></p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left">Driveway, Aug 3</th>
+      <th style="text-align: left">Beach, Aug 12</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">SWR at 14.225 MHz</td>
+      <td style="text-align: left">1.15</td>
+      <td style="text-align: left">1.19</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Resistance</td>
+      <td style="text-align: left">56.7 Ω</td>
+      <td style="text-align: left">55.4 Ω</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Reactance</td>
+      <td style="text-align: left">− 3.72 Ω</td>
+      <td style="text-align: left">− 7.22 Ω</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SWR at 14.247 MHz</td>
+      <td style="text-align: left">1.16</td>
+      <td style="text-align: left">1.19</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SWR at 17.987 MHz</td>
+      <td style="text-align: left">4.86</td>
+      <td style="text-align: left">4.60</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SWR at 21.387 MHz</td>
+      <td style="text-align: left">5.97</td>
+      <td style="text-align: left">5.64</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SWR at 24.900 MHz</td>
+      <td style="text-align: left">6.39</td>
+      <td style="text-align: left">5.95</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>The wideband sweep on the beach, for comparison against the driveway numbers
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/vna-wideband-beach.jpg" alt="NanoVNA wideband sweep on the beach showing markers at 14.246, 17.986, 21.386 and 24.899 MHz" /></p>
+</blockquote>
+
+<p><strong>Nothing moved.</strong> A concrete driveway in a valley and a sand beach beside the
+Atlantic put the antenna within 1.3 Ω and 3.5 Ω of each other — a difference
+smaller than what I get by collapsing and re-extending the whip.</p>
+
+<p>It is worth being honest that this is not a clean two-point comparison. The
+ground was not the only thing that changed between those two sweeps: the
+driveway measurement was taken on the first ten radials and the beach
+measurement on all twenty. Two variables moved, and the feedpoint still did not.
+That makes the result less useful as a statement about ground type specifically,
+and arguably more striking as a statement about how little any of it reaches the
+feedpoint.</p>
+
+<p>There is a wrinkle in that second variable worth spelling out, because it runs
+opposite to intuition. A quarter wave over a perfect ground plane has a
+radiation resistance near <strong>36 Ω</strong>, not 50 Ω. Every ohm of ground loss adds to
+it, and the analyzer reads the sum — so a <em>worse</em> radial field reads <em>closer</em> to
+50 Ω and returns a prettier SWR. Improving the ground system moves the feedpoint
+away from 1:1. It is not unusual for SWR to climb a little as the radial field
+gets better, and a ground-mounted vertical showing a flawless match is often
+telling you how much of the power the dirt is absorbing.</p>
+
+<p>The resistance here did fall, 56.7 Ω to 55.4 Ω, which is the direction fewer
+losses would push it. I would not read much into 1.3 Ω, and most of the tick
+from 1.15 to 1.19 is the reactance rather than the resistance. But it is the
+right sign, and it is worth knowing which way that arrow points before treating
+a low SWR as a grade.</p>
+
+<p>This is the part worth being careful about, because it is easy to tell the wrong
+story in either direction.</p>
+
+<p>The wrong story in one direction is that the beach did nothing. The wrong story
+in the other is that a flat SWR proves the antenna is working well. Neither
+follows, because <strong>the feedpoint impedance is not where the beach was ever going
+to show up.</strong></p>
+
+<p>A quarter wave with twenty on-ground radials has a near field dominated by those
+radials — that is what they are for, and it is why the match travels so well. The
+thing salt water does is happen in the <em>far</em> field: the reflection that forms the
+low-angle lobe takes place hundreds of feet out, over ground with a conductivity
+perhaps two orders of magnitude better than a Pennsylvania hillside. A NanoVNA at
+the base has no way to see that. It is looking at the wrong end of the problem.</p>
+
+<p>So the measurement says one useful thing and refuses to say another. It says the
+antenna is repeatable — it lands on the same match over wildly different ground,
+which for a portable antenna is exactly the property you want and is not
+guaranteed. It says nothing whatsoever about whether the signal got out better,
+and I did not run the controlled comparison that would answer that. I have no
+A/B, no reference antenna, and no log I would stake a claim on. Anyone who tells
+you their SWR improved at the beach is telling you about their ground losses, not
+their DX.</p>
+
+<blockquote>
+  <p>14.265 USB, a notepad, and a band that was busier than the empty beach suggested
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/operating-beach.jpg" alt="A Yaesu FTX-1 on a black pad on the sand, tuned to 14.265.000 USB with a busy waterfall, a notepad and pen beside it, the antenna visible in the distance" /></p>
+</blockquote>
+
+<p>That night the same antenna spent a while on shortwave instead, which is its own
+kind of argument for bringing a radio to the beach.</p>
+
+<blockquote>
+  <p>9.955 MHz AM, after dark on the beach
+<img src="/hamradio/assets/images/portable_hf_vertical_and_the_beach/shortwave-night.jpg" alt="The radio's screen glowing in the dark, tuned to 9.955.000 MHz AM with signals across the waterfall" /></p>
+</blockquote>
+
+<hr />
+
+<h2 id="what-i-take-from-this">What I Take From This</h2>
+
+<p>The conversion is the good part, and it cost nothing. A hub built for a 120° V
+dipole is already a vertical mount, because a dipole leg cut for a band is
+already a quarter wave for that band, and the only question is what you connect
+to the other half. Anyone with a hex hub and a tripod ball head can do this
+today with parts they already own, plus a bag of wire.</p>
+
+<p>The radial wire is the piece I would not change. Twenty pre-cut, dead-flat,
+color-coded 10 ft radials turned the ground plane from the reason not to bring
+the vertical into a thirty-second job, and 20, 17 and 15 m are all covered by
+resetting the whip.</p>
+
+<p>The honest scoreboard on the beach itself is short. The match is repeatable
+across ground types, which is worth knowing. Whether the salt water bought me
+the low-angle lobe I went there for is a question I did not actually answer, and
+answering it needs a reference antenna and a pile of spots rather than a VNA and
+a nice view. That is the next experiment, and it will probably look like the WSPR
+comparisons rather than like this article.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

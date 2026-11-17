@@ -1,0 +1,17 @@
+W5a. Carriers at each antenna port
+"# Total out-of-band power for one port, in dBm: =10*LOG10(SUMIF(A:A,""A1"",D:D)). Above about -20 dBm total is worth worrying about at a direct-sampling HF receiver."
+Antenna port,Freq (MHz),Level (dBm),Power (mW) (compute),Concern? (compute),Notes
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,

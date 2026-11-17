@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Digipeater That Cannot Relay My Messages | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+
+  <header>
+    <h1>The Digipeater That Cannot Relay My Messages</h1>
+    
+      <p style="color: #666; font-style: italic;">
+        Published on: November 14, 2026
+        
+          &nbsp;·&nbsp; <span id="gc-view-count" style="font-style: normal;"></span>
+        
+      </p>
+    
+  </header>
+
+  <main>
+    <p><strong>W3YA-1 relays other stations’ frames up to 102 bytes on the air. It relays
+none of mine above 82 bytes as sent.</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>W3YA-1 relaying</th>
+      <th>copies</th>
+      <th>min</th>
+      <th>median</th>
+      <th>max emitted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>For other stations</td>
+      <td>19,733</td>
+      <td>42</td>
+      <td>80</td>
+      <td><strong>102</strong></td>
+    </tr>
+    <tr>
+      <td>For KD3CCO-10</td>
+      <td>556</td>
+      <td>72</td>
+      <td>82</td>
+      <td><strong>89</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Those two rows are the article. W3YA-1 does have an unusually low ceiling, at
+102 bytes: it emitted 220 copies above 97 and 3 at 102. <strong>But my traffic never
+reaches it.</strong> The longest gated message this station sends, 150 bytes, would be
+relayed at 157; the shortest, 91 bytes, at 98, which is under 102 and still
+never happens. W3YA-1 decoded a
+91-byte frame from K3ARL-6 and 2,048 frames from NJ3T-4 above 82 bytes as sent.
+My own frames stop dead at 82, thirteen bytes below its own ceiling.</p>
+
+<p><strong>That ceiling is still worth reporting, because W3YA-1 is an outlier among its
+neighbors.</strong> Every digipeater this receiver hears, measured the same way:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Digipeater</th>
+      <th>Equipment</th>
+      <th>Copies</th>
+      <th>Median emitted</th>
+      <th>Max emitted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>N3DXC-2</td>
+      <td>PLXDigi</td>
+      <td>16,523</td>
+      <td>98</td>
+      <td>251</td>
+    </tr>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>PLXDigi</td>
+      <td>52,312</td>
+      <td>97</td>
+      <td>228</td>
+    </tr>
+    <tr>
+      <td>WO3T-1</td>
+      <td>Kantronics KPC-3+</td>
+      <td>37,802</td>
+      <td>100</td>
+      <td>224</td>
+    </tr>
+    <tr>
+      <td>K3DNA</td>
+      <td>Kantronics KPC-3+</td>
+      <td>6,609</td>
+      <td>93</td>
+      <td>224</td>
+    </tr>
+    <tr>
+      <td>N3SNN-3</td>
+      <td>PLXDigi</td>
+      <td>4,892</td>
+      <td>97</td>
+      <td>224</td>
+    </tr>
+    <tr>
+      <td>W3VO-1</td>
+      <td>Kantronics KPC-3+</td>
+      <td>2,956</td>
+      <td>97</td>
+      <td>202</td>
+    </tr>
+    <tr>
+      <td>W3TM-10</td>
+      <td>other</td>
+      <td>927</td>
+      <td>85</td>
+      <td>121</td>
+    </tr>
+    <tr>
+      <td><strong>W3YA-1</strong></td>
+      <td><strong>Kantronics KPC-3+</strong></td>
+      <td><strong>19,733</strong></td>
+      <td><strong>80</strong></td>
+      <td><strong>102</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>K3DNA runs the same <code class="language-plaintext highlighter-rouge">APN391</code> firmware and emits to 224.</strong> So 102 is not a
+property of a KPC-3+; it is specific to that site. W3YA-1 has both the lowest
+maximum and the lowest median of any digipeater here, on a 19,733-copy sample.</p>
+
+<h3 id="the-cap-is-on-the-whole-frame-and-the-hop-count-does-not-move-it">The cap is on the whole frame, and the hop count does not move it</h3>
+
+<p>Grouping W3YA-1’s emissions by its own hop position separates three
+possibilities, because at hop <em>k</em> the frame already carries <em>k</em>−1 inserted
+callsigns and so is longer for the same information field.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>W3YA-1 at hop</th>
+      <th>Copies</th>
+      <th>Median emitted</th>
+      <th>Max emitted</th>
+      <th>Max decoded</th>
+      <th>Max info field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>6,164</td>
+      <td>84</td>
+      <td>98</td>
+      <td>91</td>
+      <td>64</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>11,406</td>
+      <td>77</td>
+      <td><strong>102</strong></td>
+      <td><strong>95</strong></td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1,639</td>
+      <td>73</td>
+      <td>100</td>
+      <td>93</td>
+      <td>51</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>368</td>
+      <td>75</td>
+      <td>97</td>
+      <td>90</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>123</td>
+      <td>81</td>
+      <td>94</td>
+      <td>87</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>31</td>
+      <td>89</td>
+      <td>94</td>
+      <td>87</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>2</td>
+      <td>89</td>
+      <td>89</td>
+      <td>82</td>
+      <td>13</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>The ceiling does not move with hop count. The information field does.</strong> Max
+emitted stays between 94 and 102 at every position, while the field that fits
+under it falls from 64 bytes to 13 as path entries accumulate at 7 bytes each.
+That is the signature of a limit on the entire frame, and it is a second,
+independent refutation of <code class="language-plaintext highlighter-rouge">PACLEN</code>, which would hold the field constant and let
+the frame grow.</p>
+
+<p><strong>And the cap belongs to W3YA-1, not to the hop count.</strong> Maximum emitted at the
+same path length, against its three busiest neighbors:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Path entries</th>
+      <th>W3YA-1</th>
+      <th>KE4MHE-10</th>
+      <th>WO3T-1</th>
+      <th>K3DNA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2</td>
+      <td>98 (n=6,009)</td>
+      <td>185</td>
+      <td>143</td>
+      <td>164</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>102</strong> (n=8,530)</td>
+      <td>151</td>
+      <td>157</td>
+      <td>149</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>99 (n=4,118)</td>
+      <td>217</td>
+      <td>167</td>
+      <td>217</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>100 (n=1,223)</td>
+      <td>224</td>
+      <td>224</td>
+      <td>224</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>96 (n=320)</td>
+      <td>189</td>
+      <td>189</td>
+      <td>189</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>94 (n=68)</td>
+      <td>228</td>
+      <td>166</td>
+      <td>148</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>89 (n=18)</td>
+      <td>227</td>
+      <td>177</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>W3YA-1 never passes 102 at any hop count on 20,000 copies. Every neighbor
+reaches 143 to 228 at the same path lengths, K3DNA among them on identical
+firmware. The tapering below 96 at six path entries and beyond tracks sample
+size, 320 copies then 68 then 18, rather than a tighter rule.</p>
+
+<h3 id="my-blocked-frames-sit-inside-that-envelope">My blocked frames sit inside that envelope</h3>
+
+<p>The shortest message this station can gate is 91 bytes on <code class="language-plaintext highlighter-rouge">WIDE1-1,WIDE2-2</code>:
+two path entries and a <strong>57-byte information field</strong>. W3YA-1 taking it at hop 1
+would emit 98 bytes with three path entries and the same 57-byte field.</p>
+
+<p>At three path entries, W3YA-1 has emitted <strong>68 copies at exactly 98 bytes, 200
+copies at 98 bytes or longer, and 200 copies carrying a field of 57 bytes or
+more</strong>, to a maximum of 102 bytes and a 61-byte field. Every dimension of the
+frame it will not relay for me is one it demonstrably emits, repeatedly, at the
+same path length.</p>
+
+<p>So no length rule of any kind accounts for this station’s zero. The cap is real
+and anomalous; my traffic never reaches it.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>KD3CCO-10 as sent</th>
+      <th>W3YA-1 relayed</th>
+      <th>Sent</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>82 bytes and below</td>
+      <td>556</td>
+      <td>2,250</td>
+      <td>25%</td>
+    </tr>
+    <tr>
+      <td><strong>above 82 bytes</strong></td>
+      <td><strong>0</strong></td>
+      <td><strong>304</strong></td>
+      <td><strong>0%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>So the cause is none of the obvious three.</strong> Not its length ceiling, because
+that sits at 102 and my frames would be relayed at 98. Not a configured limit
+matching my frames either, because W3YA-1 carries other stations 9 bytes past
+where it stops carrying me. Not a signal margin, because a graded
+path cannot produce a step: the bit error rate that leaves 25% of my 82-byte
+frames surviving leaves about 22% at 91 bytes, not 0 of 164. The effect is
+specific to the path from this station into that receiver, and the mechanism is
+unresolved.</p>
+
+<p><strong>The downlink is not blocked. It is blocked at W3YA-1.</strong> Three other
+digipeaters relay my full-length gated messages, to 150 bytes. One of them,
+K3DNA, announces the same <code class="language-plaintext highlighter-rouge">APN391</code> Kantronics KPC-3+ firmware as W3YA-1 and sits
+26 km away against W3YA-1’s 10, and it relayed 12 of the same long frames that
+W3YA-1 relayed none of.</p>
+
+<h2 id="where-the-relayed-lengths-stop">Where the relayed lengths stop</h2>
+
+<p>Counting only copies heard straight off W3YA-1, so a later hop cannot inflate
+the figure, the top of what it emits for other stations:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>On-air bytes emitted</th>
+      <th>Copies</th>
+      <th>At or above</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>97</td>
+      <td>263</td>
+      <td>483</td>
+    </tr>
+    <tr>
+      <td>98</td>
+      <td>73</td>
+      <td>220</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>28</td>
+      <td>147</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>116</td>
+      <td>119</td>
+    </tr>
+    <tr>
+      <td>101</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>102</td>
+      <td>3</td>
+      <td><strong>3</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>They do not stop at 97</strong>: 220 copies run past it. My receiver decodes those
+lengths off W3YA-1 without trouble, 263 copies at 97 and 116 at 100, so the
+limit is not at my end of its transmissions either.</p>
+
+<p><strong>The 7-byte insertion is what converts that into a limit on senders.</strong> W3YA-1
+inserts its callsign ahead of the alias it consumed, which adds an address
+field. My beacon goes out as <code class="language-plaintext highlighter-rouge">KD3CCO-10&gt;APDW17,WIDE1-1</code> and comes back as
+<code class="language-plaintext highlighter-rouge">KD3CCO-10&gt;APDW17,W3YA-1,WIDE1*</code>. So a frame of 90 bytes as sent becomes 97 as
+relayed and 91 becomes 98, <strong>which W3YA-1 has done 73 times for other
+stations.</strong> The insertion sets the arithmetic, not a limit.</p>
+
+<h2 id="what-that-settles">What that settles</h2>
+
+<p>My station’s own traffic, full archive, in frame copies:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sent on-air</th>
+      <th>Relayed as</th>
+      <th>Sent</th>
+      <th>Relayed</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75</td>
+      <td>82</td>
+      <td>1,098</td>
+      <td>411</td>
+      <td>37%</td>
+    </tr>
+    <tr>
+      <td>82</td>
+      <td>89</td>
+      <td>15</td>
+      <td>6</td>
+      <td>40%</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td>90</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td>86</td>
+      <td>93</td>
+      <td>12</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td>90</td>
+      <td>97</td>
+      <td>15</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td>91</td>
+      <td>98</td>
+      <td>164</td>
+      <td>0</td>
+      <td>0%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A gated message on this station runs 91 to 150 bytes depending on the message
+text, so every one of them lands above where W3YA-1 stops carrying me.
+Shortening <code class="language-plaintext highlighter-rouge">TX_VIA</code> from two digipeater slots to one saves 7 bytes and takes the
+shortest case to 84 sent, which is still past 82.</p>
+
+<p>So W3YA-1 is unavailable for message downlink from this station, and the power
+sweep below shows no change at my end alters it. The reach that exists comes
+from WO3T-1 and KE4MHE-10 at 26 and 35 miles, which relay full-length gated
+frames, from K3DNA at 16 miles, and from direct copy when the handheld is near
+the house.</p>
+
+<h2 id="the-cliff-measured-on-purpose">The cliff, measured on purpose</h2>
+
+<p>This is the part I cannot close, and with the ceiling gone it is the only
+effect left to explain.</p>
+
+<p>A length sweep of 141 frames, everything held constant except padding, on a path
+naming W3YA-1 by callsign, addressed to an SSID nothing answers:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sent on-air</th>
+      <th>Relayed as</th>
+      <th>Relayed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>74</td>
+      <td>81</td>
+      <td>12 of 26</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td>88</td>
+      <td>4 of 9</td>
+    </tr>
+    <tr>
+      <td>82</td>
+      <td>89</td>
+      <td>6 of 15</td>
+    </tr>
+    <tr>
+      <td>86</td>
+      <td>93</td>
+      <td><strong>0 of 12</strong></td>
+    </tr>
+    <tr>
+      <td>89</td>
+      <td>96</td>
+      <td>0 of 10</td>
+    </tr>
+    <tr>
+      <td>90</td>
+      <td>97</td>
+      <td>0 of 15</td>
+    </tr>
+    <tr>
+      <td>97</td>
+      <td>104</td>
+      <td>0 of 15</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Every zero row is unexplained</strong>, because W3YA-1 emits all of those lengths
+for other people. The 86-byte row would be relayed as 93 bytes, and W3YA-1
+emitted 1,373 copies at exactly 93 bytes for NJ3T-4 alone. The 97-byte row
+would be relayed as 104, and W3YA-1 emits to 102. Across 92 to 100 bytes
+emitted it relayed for NJ3T-4, WV8MT-4, WD4ITN-4, KA2NDW-1, W3NEP-2 and others,
+and for my station <strong>not once</strong>.</p>
+
+<p>Nor is the information field the variable, which rules out <code class="language-plaintext highlighter-rouge">PACLEN</code> directly.
+Holding the field at 55 bytes and changing only the digipeater count, which
+costs 7 bytes of header and nothing in the field, 82 on-air bytes was relayed 6
+of 15 and 89 on-air bytes 0 of 15. <strong>The whole frame is the variable, not the
+field <code class="language-plaintext highlighter-rouge">PACLEN</code> governs.</strong></p>
+
+<p>So the effect is station-selective, and a length cap cannot be station-selective.
+A graded path cannot produce a step either. What is left is something specific
+to this station’s signal arriving at that receiver that acts like a threshold
+rather than like margin, and nothing in the record identifies it.</p>
+
+<h3 id="not-the-path-settings-either">Not the path settings either</h3>
+
+<p>A digipeater can be configured to answer some path requests and ignore others,
+and this station’s beacons and its gated messages ask for different things:
+<code class="language-plaintext highlighter-rouge">BEACON_VIA = WIDE1-1</code> against <code class="language-plaintext highlighter-rouge">TX_VIA = WIDE1-1,WIDE2-2</code>. A <code class="language-plaintext highlighter-rouge">UIFLOOD</code> or
+<code class="language-plaintext highlighter-rouge">UITRACE</code> limit that accepted one hop and refused three would reproduce the
+whole beacon-against-message split with no length effect at all.</p>
+
+<p><strong>W3YA-1 answers every alias form this station uses.</strong> Counted over its 6,730
+first-hop relays for other stations, by the alias it consumed:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Alias consumed</th>
+      <th>Relays</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WIDE1</code></td>
+      <td>2,581</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WIDE2</code>, exhausted</td>
+      <td>553</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WIDE2-2</code>, decremented to <code class="language-plaintext highlighter-rouge">WIDE2-1</code></td>
+      <td>3,666</td>
+    </tr>
+    <tr>
+      <td>its own callsign, named explicitly</td>
+      <td>3,030</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>So there is no max-hop limit of one, and no refusal of <code class="language-plaintext highlighter-rouge">WIDE2-2</code>. The exact
+two-alias form this station transmits is rare rather than rejected: only three
+frames from other stations in the whole archive carry <code class="language-plaintext highlighter-rouge">WIDE1-1,WIDE2-2</code>, and
+<strong>W3YA-1 relayed all three</strong>.</p>
+
+<p><strong>The sweep settles it, because it gave the digipeater no path to object to.</strong>
+Its frames named <code class="language-plaintext highlighter-rouge">W3YA-1</code> as a single path entry, with no alias and no flood
+counter, leaving nothing for a configuration to match on but the callsign
+itself:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>As sent, path <code class="language-plaintext highlighter-rouge">W3YA-1</code></th>
+      <th>Sent</th>
+      <th>Relayed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>74 B</td>
+      <td>22</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>82 B</td>
+      <td>14</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td><strong>86 B</strong></td>
+      <td><strong>12</strong></td>
+      <td><strong>0</strong></td>
+    </tr>
+    <tr>
+      <td><strong>90 B</strong></td>
+      <td><strong>15</strong></td>
+      <td><strong>0</strong></td>
+    </tr>
+    <tr>
+      <td><strong>97 B</strong></td>
+      <td><strong>25</strong></td>
+      <td><strong>0</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>All of it inside 82 minutes, 11:05 to 12:27 on 2026-11-14, with the lengths
+visited in a fresh random order each cycle. No path setting distinguishes 82
+bytes from 86 bytes on an identical one-entry path within the same hour.</p>
+
+<p><strong>And the second hop works when the frame is short enough.</strong> Once W3YA-1
+consumes the <code class="language-plaintext highlighter-rouge">WIDE1-1</code>, the trailing <code class="language-plaintext highlighter-rouge">WIDE2-2</code> is picked up normally: W3YA-1 to
+KE4MHE-10 twenty-two times and W3YA-1 to WO3T-1 twenty times for this station’s
+own traffic.</p>
+
+<p>What the path does change is the rate, which is why the two populations cannot
+be compared directly:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Path requested</th>
+      <th>≤82 B relayed</th>
+      <th>&gt;82 B relayed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WIDE1-1</code></td>
+      <td>22 of 37</td>
+      <td>0 of 28</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WIDE1-1,WIDE2-2</code></td>
+      <td>2 of 10</td>
+      <td>0 of 91</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">W3YA-1</code></td>
+      <td>15 of 36</td>
+      <td>0 of 52</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">W3YA-1,WIDE2-1</code></td>
+      <td>4 of 13</td>
+      <td>0 of 15</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The gated messages’ path really is served less often than the beacons’, 20
+percent against 59 on small samples. <strong>Every row still ends in a hard zero</strong>,
+and a rate difference of that size cannot produce 0 of 186.</p>
+
+<h3 id="not-my-transmitted-signal-either">Not my transmitted signal either</h3>
+
+<p>A defect in what this station transmits, worsening as a frame runs on, was the
+best-fitting idea left after power went. It is also wrong, and the test is a
+distinction the earlier tables did not draw: a <strong>first-hop</strong> relay means that
+digipeater demodulated my own signal, while a later-hop relay only means it
+copied another digipeater’s clean retransmission and says nothing about me.</p>
+
+<p>First-hop relays of this station’s frames <strong>over 82 bytes as sent</strong>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Digipeater</th>
+      <th>Distance</th>
+      <th>Frames over 82 B</th>
+      <th>Longest as sent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>56 km</td>
+      <td>119</td>
+      <td>131</td>
+    </tr>
+    <tr>
+      <td>WO3T-1</td>
+      <td>42 km</td>
+      <td>93</td>
+      <td><strong>150</strong></td>
+    </tr>
+    <tr>
+      <td>K3DNA</td>
+      <td>26 km</td>
+      <td>20</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <td>W3VO-1</td>
+      <td>60 km</td>
+      <td>9</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <td>N3SNN-3</td>
+      <td>74 km</td>
+      <td>3</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <td>N3DXC-2</td>
+      <td>157 km</td>
+      <td>1</td>
+      <td>91</td>
+    </tr>
+    <tr>
+      <td><strong>W3YA-1</strong></td>
+      <td><strong>10 km</strong></td>
+      <td><strong>0</strong></td>
+      <td><strong>—</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Six receivers demodulated my long frames straight off the air, 245 times
+between them, and the nearest one has never managed it.</strong> A defect that
+accumulates over a frame would cost the distant, weaker-signal receivers first;
+these are the receivers it does not trouble. K3DNA settles the hardware version
+of the idea on its own: same <code class="language-plaintext highlighter-rouge">APN391</code> KPC-3+ firmware as W3YA-1, 2.6 times the
+distance, 20 of my long frames decoded directly.</p>
+
+<p><strong>That excludes the signal-to-noise members of the family, and only those.</strong> A
+defect whose cost depends on received level is refuted by the table: these
+receivers have less margin than W3YA-1 and more success. Supply sag, clipping
+and anything thermal or arc-like go with it, since all of them scale with drive
+and none of them survived 5 W either.</p>
+
+<p><strong>It does not exclude a level-independent defect, and FM is where that
+distinction matters.</strong> Past the limiter, recovered audio amplitude is set by
+deviation rather than by received power, so a receiver at 157 km with adequate
+signal recovers the same waveform as one at 10 km. A defect that lives in the
+audio waveform is therefore invisible to distance, and the first-hop table says
+nothing about it. Carrier frequency error and mark/space deviation asymmetry are
+both of that kind, and the occupied-bandwidth check that measured 2.8 kHz in
+October sees neither: it measures total deviation, not its symmetry or its
+center.</p>
+
+<h3 id="nor-a-race-it-keeps-losing">Nor a race it keeps losing</h3>
+
+<p>One mechanism survived that far: for a <code class="language-plaintext highlighter-rouge">WIDE1-1</code> frame only one digipeater gets
+the hop, so if a competitor transmits first, W3YA-1 is left looking at an
+already-repeated frame with nothing to act on. Who takes the first hop on this
+station’s frames:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>First hop</th>
+      <th>≤82 B (n=1,407)</th>
+      <th>&gt;82 B (n=129)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WO3T-1</td>
+      <td>48%</td>
+      <td>23%</td>
+    </tr>
+    <tr>
+      <td>nobody</td>
+      <td>21%</td>
+      <td><strong>69%</strong></td>
+    </tr>
+    <tr>
+      <td><strong>W3YA-1</strong></td>
+      <td><strong>20%</strong></td>
+      <td><strong>0%</strong></td>
+    </tr>
+    <tr>
+      <td>KE4MHE-10</td>
+      <td>10%</td>
+      <td>8%</td>
+    </tr>
+    <tr>
+      <td>others</td>
+      <td>1%</td>
+      <td>0%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>It is not a race, because the race has no single winner.</strong> In 228 of my
+frames at 82 bytes or under, W3YA-1 <strong>and</strong> a competitor both repeated the same
+frame, so W3YA-1 plainly does not stand down because somebody else went first.
+And in 40 cases a competitor repeated one of my frames over 82 bytes while
+W3YA-1 declined, which puts that frame on the air, demodulated, and available
+to it.</p>
+
+<h3 id="nor-the-bit-pattern-inside-the-frame">Nor the bit pattern inside the frame</h3>
+
+<p>If the cliff is a threshold crossed at an elapsed time, the obvious driver is
+the bit pattern: a standing offset or a strongly periodic stream walks a
+slicer’s running mark/space midpoint until the eye closes. The padding in every
+sweep up to this point was a repeated <code class="language-plaintext highlighter-rouge">.</code>, so every earlier zero was recorded
+with one pattern.</p>
+
+<p>Three patterns at <strong>the same 90 bytes</strong>, interleaved within every cycle so that
+pattern never co-varies with time:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Padding at 90 B</th>
+      <th>Sent</th>
+      <th>W3YA-1 relayed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">.</code> repeated, 0x2E</td>
+      <td>12</td>
+      <td><strong>0</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">U</code> repeated, 0x55, equal time in mark and space</td>
+      <td>12</td>
+      <td><strong>0</strong></td>
+    </tr>
+    <tr>
+      <td>pseudo-random printable, balanced and aperiodic</td>
+      <td>12</td>
+      <td><strong>0</strong></td>
+    </tr>
+    <tr>
+      <td><strong>all three</strong></td>
+      <td><strong>36</strong></td>
+      <td><strong>0</strong></td>
+    </tr>
+    <tr>
+      <td>control, 74 B</td>
+      <td>12</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The control held at a third, so the digipeater was answering throughout. At
+that rate the probability of 0 of 36 is about one in 800,000.</p>
+
+<p><strong>So the frame’s contents are not the variable, only its length.</strong> A standing
+offset or a spectral line would have been relieved by one of the two balanced
+patterns, and neither moved a single frame. What survives of the
+audio-waveform idea is the part no bit pattern can touch: carrier frequency
+error, mark-to-space deviation asymmetry, and sound-card clock drift, which
+accumulates with elapsed time whatever the bits are doing.</p>
+
+<p><strong>Against all three of those stands K3DNA</strong>, which decodes this station at 91
+bytes on the same <code class="language-plaintext highlighter-rouge">APN391</code> firmware from 2.6 times the distance. Any defect in
+the transmitted signal meeting an APN391 demodulator should trouble it too.
+That points past the firmware at the installation: the audio level set into
+that particular TNC, the receiver and audio path behind it, or the RF
+environment of that one mountaintop.</p>
+
+<h2 id="method">Method</h2>
+
+<p><strong>The station.</strong> A Yaesu FT-2900R at its Low3 setting, 30 W, through about 50
+feet of RG-8X into an N9TAX monoband 2 m Slim Jim on a mast measured at 27 feet,
+feeding a Raspberry Pi running Dire Wolf. W3YA-1 is five to six miles away on
+Pine Grove Mountain, 49 W into an 8 dBi omni at 640 feet above average terrain
+by its own PHG beacon. It is a Kantronics KPC-3.</p>
+
+<p><strong>Every length here is an on-air length</strong>: 7 bytes per address, control, PID,
+information field, opening flag, FCS, closing flag. That is the arithmetic this
+project’s existing tooling uses, and mixing it with any other definition is how
+I spent an afternoon producing numbers two bytes off from every table I already
+had.</p>
+
+<p><strong>The byte counting is exact, and two things make that non-trivial.</strong> Dire Wolf
+prints unprintable bytes as <code class="language-plaintext highlighter-rouge">&lt;0xNN&gt;</code>, six logged characters standing for one
+on-air byte, and it does that for spaces too: <code class="language-plaintext highlighter-rouge">&lt;0x20&gt;</code> appears 10,241 times in
+this archive, alongside 38,826 carriage returns and 10,849 Mic-E <code class="language-plaintext highlighter-rouge">&lt;0x1c&gt;</code>
+bytes. Each decodes to one byte. The logs must also be read as Latin-1 rather
+than UTF-8, because 199 frames carry byte sequences that are valid multi-byte
+UTF-8, and decoding those as text counts two bytes as one character. Both are
+checked against hand-counted frames in <code class="language-plaintext highlighter-rouge">digi_relay_audit.py</code>. The 11 lines Dire
+Wolf marks <code class="language-plaintext highlighter-rouge">(Not AX.25)</code> are excluded; they are noise decodes with no address
+field.</p>
+
+<p><strong>The archive did the heavy lifting and cost no airtime.</strong> The full Pi archive,
+166,803 frames across twelve Dire Wolf logs from 2026-10-27 to 2026-11-15, is
+where the per-station comparison comes from. One day of it is not enough: a
+single 29,800-frame log puts the emission ceiling at 97 rather than 102 and the
+cliff at 0 of 50 rather than 0 of 304. The sweep contributed the controls the
+archive cannot
+supply, which are the ones below.</p>
+
+<p><strong>The sweep’s controls.</strong> Each cycle visited every length in a fresh random
+order, because a rising sweep confounds length with time: if conditions sag, the
+longest frames go last and a false cliff appears. Each cycle also carried a
+frame at the shortest length, since a digipeater that is relaying nothing at all
+produces the same result as one refusing long frames. A run whose control cell
+came back empty gets discarded, and one did.</p>
+
+<p>The measurement is my own receiver copying my own transmission with <code class="language-plaintext highlighter-rouge">W3YA-1*</code>
+marked used. Only frames confirmed transmitted in the log are counted, because
+<code class="language-plaintext highlighter-rouge">IGTXLIMIT</code> drops gated frames over 6 per minute rather than queueing them, and
+a dropped frame would otherwise read as a digipeater that declined.</p>
+
+<h2 id="four-explanations-the-sweep-ruled-out">Four explanations the sweep ruled out</h2>
+
+<p>The shortest cell relayed 16 of 35 frames that named W3YA-1 <strong>by callsign</strong>,
+carried a <strong>third-party wrap</strong>, and were <strong>message frames</strong>. So W3YA-1 answers
+its own callsign rather than only <code class="language-plaintext highlighter-rouge">WIDE</code> aliases, does not filter third-party
+traffic, and does not treat messages differently from beacons.</p>
+
+<p>The fourth is the information field, which is not what is counted. Over the
+sweep alone, holding the field at 55 bytes and changing only the digipeater
+count, 82 bytes was relayed 4 of 9 and 89 bytes 0 of 10; the same contrast over
+the whole archive is 6 of 15 against 0 of 15. Either way the header is what
+moved and the field did not, so a <code class="language-plaintext highlighter-rouge">PACLEN</code>-style limit on the data portion is
+out.</p>
+
+<p>None of the four is the mechanism, and neither are the
+<a href="#not-the-path-settings-either">path settings</a>.</p>
+
+<h2 id="power-is-not-the-knob-measured-across-12-db">Power is not the knob, measured across 12 dB</h2>
+
+<p>Three power levels, same station, same digipeater, and the cliff does not move.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Power</th>
+      <th>Control, below the cliff</th>
+      <th>86 B</th>
+      <th>90 B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>5 W</strong> (Low1)</td>
+      <td>5 of 15 at 74 B</td>
+      <td><strong>0 of 15</strong></td>
+      <td><strong>0 of 15</strong></td>
+    </tr>
+    <tr>
+      <td><strong>30 W</strong> (Low3)</td>
+      <td>10 of 22 at 74 B</td>
+      <td>0 of 12</td>
+      <td>0 of 15</td>
+    </tr>
+    <tr>
+      <td><strong>75 W</strong> (High)</td>
+      <td>3 of 12</td>
+      <td>—</td>
+      <td>0 of 18</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The 5 W run is the one that matters, because it is the only test in the
+<strong>downward</strong> direction and the only one that can refute receiver overload. At
+10 km through a Slim Jim at 27 ft, this station lands roughly −40 dBm at W3YA-1,
+which is inside the range where a front end can compress, and compression would
+look like a degraded path without being one. Cutting 7.8 dB off it changed
+nothing: the 74-byte control still came back a third of the time, and the long
+frames still never came back at all. <strong>Overload is out</strong>, and so is any
+mechanism that eases with less drive, including supply sag pulling the
+transmitter during a long frame.</p>
+
+<p>Raising the radio from Low3 to High is 4.0 dB in the other direction. Above the
+threshold, 0 of 24 at 30 W and 0 of 18 at 75 W. Below it, 15 of 29 against 3 of
+12, one-tailed Fisher p = 0.11, which is no change either.</p>
+
+<p>Pooling the two runs on the single-entry <code class="language-plaintext highlighter-rouge">W3YA-1</code> path, where the digipeater
+answers 41 percent of control frames, gives <strong>0 of 57 above the cliff</strong>. At that
+baseline the probability of that result by chance is about 1 in 70,000.</p>
+
+<p>A 5 W handheld makes the same point from the other side. In the 69 to 82 byte
+range where both radios transmitted, W3YA-1 relayed 6 of 14 of the handheld’s
+frames and 42 of 95 of this station’s: <strong>43 percent against 44</strong>, for a sixth of
+the power through a rubber duck inside a car. The handheld never sent anything
+longer than 80 bytes, so it says nothing about the cliff itself, but a link on
+which 7.8 dB and a far better antenna buy nothing is not a link limited by
+signal strength.</p>
+
+<p>A larger step was already on record. Moving this gateway from a handheld to the
+FT-2900R was 8 dB and produced no measurable improvement either; the limit then
+turned out to be the antenna, and replacing a mobile whip indoors with the Slim
+Jim is what moved the numbers.</p>
+
+<p>The power setting is an assumption rather than a measurement. There is no CAT
+port, the level was set by hand, and nothing in the log records transmit power.
+The three levels are the radio’s own Low1, Low3 and High, nominally 5, 30 and
+75 W.</p>
+
+<h2 id="the-link-budget-and-why-it-is-not-an-argument">The link budget, and why it is not an argument</h2>
+
+<p>Free-space path loss over 10.3 km at 144.39 MHz is 95.9 dB. With the Slim Jim at
+a nominal 4.6 dBi, 2 dB for the feedline, and W3YA-1’s self-reported 8 dBi, the
+signal arriving there is about -40 dBm against roughly -110 dBm for reliable
+1200 baud packet. That is near 70 dB of margin, and 30 dB for terrain and
+clutter still leaves 39.</p>
+
+<p><strong>I first read that as proof signal strength is not the variable. It is not
+proof of anything of the kind.</strong> A budget predicting 70 dB of margin against a
+29% repeat rate is a budget that disagrees with the measurement, and the
+measurement wins. What it establishes is that something unmodelled is costing a
+great deal.</p>
+
+<h2 id="what-this-does-not-establish">What this does not establish</h2>
+
+<p><strong>What sets W3YA-1’s 102-byte ceiling, and whether it is related.</strong> It is far
+below its neighbors and below K3DNA on identical firmware, so something at that
+site produces it. It cannot be the direct cause of my problem, because my
+frames would be relayed at 98, under it. Whether the same cause also produces
+an 89-byte cutoff for one station is not something the record answers.
+The KPC-3’s documented digipeat parameters are <code class="language-plaintext highlighter-rouge">DIGIPEAT</code>, <code class="language-plaintext highlighter-rouge">MYCALL</code>, <code class="language-plaintext highlighter-rouge">MYALIAS</code>,
+<code class="language-plaintext highlighter-rouge">UIDIGI</code>, <code class="language-plaintext highlighter-rouge">UIFLOOD</code>, <code class="language-plaintext highlighter-rouge">UITRACE</code> and <code class="language-plaintext highlighter-rouge">UIDWAIT</code>, all matching on a callsign or
+alias, and <code class="language-plaintext highlighter-rouge">PACLEN</code> is scoped by its manual to data arriving from the serial
+port. None of them is a relayed-frame length cap, and the sweep rules <code class="language-plaintext highlighter-rouge">PACLEN</code>
+out by measurement anyway, since the whole frame rather than the field is the
+variable. So if either limit is configuration, it is not a documented setting.</p>
+
+<p><strong>What the station-selective cliff is.</strong> Not margin, and
+that deserves stating plainly because I listed it as a candidate for most of a
+day. AX.25 carries no error correction, so frame survival is <code class="language-plaintext highlighter-rouge">(1 - BER)</code> raised
+to the bit count, and the bit error rate that yields 44% at 82 bytes yields
+about 40% at 86, not zero. <strong>No bit error rate fits both cells.</strong> A graded path
+cannot produce a step, so the 29% repeat rate on short frames and the hard zero
+on longer ones are two different phenomena and only the first is margin.</p>
+
+<p>A step implies a deterministic threshold. There were two families of candidate:
+a cap in that receiver, below its own 102-byte one and somehow specific to this
+station, or something in this station’s transmitted signal that worsens with
+frame duration until it crosses that receiver’s decode threshold.</p>
+
+<p><strong>The second family is closed.</strong> Its power-dependent members went first: any
+defect that eases with less drive, supply sag pulling the transmit frequency
+being the obvious one, should have improved at 5 W, and nothing did. The rest
+went with the first-hop table above. Six receivers from 26 to 157 km
+demodulated these frames at up to 150 bytes, so whatever is wrong is not in the
+signal leaving here, and a defect that accumulated over a frame would have hurt
+them before it hurt the nearest receiver of the eight.</p>
+
+<p><strong>What is left is either a rule in that one receiver that singles out this
+station, or a level-independent defect in this station’s audio waveform that
+its slicer in particular cannot ride out.</strong></p>
+
+<p>The second has a specific form worth naming, because one piece of evidence
+already points at it. A data slicer holds a running estimate of the midpoint
+between mark and space. Feed it a waveform with a standing offset or an
+unbalanced bit pattern and that estimate creeps, closing the eye until a bit
+mis-slices and the frame fails its check. That is a threshold crossed at an
+elapsed <strong>time</strong>, and the cliff here is a time: 82 on-air bytes is 0.55 seconds
+at 1200 baud, and the cliff sits at the same on-air length on all four path
+forms rather than at a fixed information length. Ruling out <code class="language-plaintext highlighter-rouge">PACLEN</code> by holding
+the field at 55 bytes established that the whole frame is the variable, and the
+whole frame is the whole duration.</p>
+
+<p>It also fits the parts that no length rule explains: why only 20 to 44 percent
+of the short frames get through on a path with tens of decibels of margin,
+which is what a slicer already near its limit would do from the first byte; why
+5 W behaves exactly like 75 W, since post-limiter audio does not care; and why
+K3DNA can run the same <code class="language-plaintext highlighter-rouge">APN391</code> firmware and cope, since the audio level into a
+TNC is set by each operator rather than by the firmware.</p>
+
+<p><strong>The test is to break the symmetry of the padding.</strong> The sweep pads with a
+repeated <code class="language-plaintext highlighter-rouge">.</code>, so sending the same lengths with a DC-balanced pattern instead
+either moves the cliff or leaves it. Measuring this station’s carrier frequency
+error and its mark-to-space deviation symmetry would bear on it too, and
+neither costs any airtime.</p>
+
+<p><strong>One difference in the chain is worth recording even though it is not the
+cause.</strong> The iGate modulates from Dire Wolf through a Digirig into the radio’s
+audio input, where the handheld uses the radio’s own modem, and frequency
+offset, deviation asymmetry, clipping and sound-card bit timing are all
+invisible to the occupied-bandwidth check that measured 2.8 kHz deviation in
+October. None of them survives the first-hop table: six receivers between 26
+and 157 km demodulate this station at up to 150 bytes. The magnitude was always
+against it too, since accumulated timing error reaching half a bit period over
+a 573 ms frame needs roughly 700 ppm, far more than a sound card should drift,
+and an AFSK demodulator resynchronizes on every transition rather than
+integrating error across a frame.</p>
+
+<p><strong>A confound worth naming before anyone compares these populations.</strong> This
+station’s beacons go out on <code class="language-plaintext highlighter-rouge">BEACON_VIA = WIDE1-1</code> and its gated messages on
+<code class="language-plaintext highlighter-rouge">TX_VIA = WIDE1-1,WIDE2-2</code>. Those offer different aliases, so different
+digipeaters answer them, which is why K3DNA repeats 6% of the long frames and
+0.8% of the short ones, and why W3YA-1 serves the beacon path 59% of the time
+and the message path 20%. Any beacon-against-message comparison carries that
+contamination. The sweep held the path fixed and named W3YA-1 directly, which is
+why it is the better evidence of the two, and why the
+<a href="#not-the-path-settings-either">path settings are ruled out</a> rather than merely
+set aside.</p>
+
+<p><strong>Three sweeps, three power levels across 12 dB, three padding patterns, one
+antenna.</strong> The per-station
+comparison rests on the full archive, 166,803 frames across twelve logs. The
+cliff is 0 of 304 above 82 bytes against 556 of 2,250 at or below, and the
+sweep is the only part of it with the path held fixed by design.</p>
+
+<h2 id="four-times-i-reached-the-wrong-conclusion">Four times I reached the wrong conclusion</h2>
+
+<p>Worth recording, because each was a different failure.</p>
+
+<p><strong>I asserted a configuration cause, then asserted its opposite, before measuring
+either.</strong> First I predicted <code class="language-plaintext highlighter-rouge">PACLEN</code> in the low 80s and drafted an email asking
+the digipeater’s manager to read it. Then, finding the project’s own archive
+analysis, I swung to “configuration is dead” and said the email should not be
+sent. Both were positions taken from notes rather than from data, and the
+measurements since have retired both: <code class="language-plaintext highlighter-rouge">PACLEN</code> is ruled out by the 55-byte
+field test, and so is every other configured length limit, because W3YA-1
+carries other stations past where it stops carrying me.</p>
+
+<p><strong>I ran a 141-frame sweep that the project’s notes said not to run</strong>, at a cost
+of three hours of occupancy on a shared channel. It did produce the four
+controls above, which the archive cannot. It produced nothing about the cause.</p>
+
+<p><strong>I used a byte scale two short of every existing table</strong>, by omitting the flags
+and FCS, so none of my figures could be compared with measurements already
+banked until they were converted.</p>
+
+<p><strong>I put the ceiling at 97 bytes from one day of a twelve-log archive, and built
+the conclusion on it.</strong> The full archive carries 220 relayed copies past 97, to</p>
+<ol>
+  <li>The ceiling is real, but 97 was close enough to my own 91-byte messages to
+make a one-byte argument look decisive, and 102 is not: the messages fit under
+it with room to spare. A limit measured to within 5 bytes cannot carry an
+argument that turns on 1, and the caveat naming one log as one log should have
+outranked the finding it qualified.</li>
+</ol>
+
+<h2 id="tooling-faults-found-along-the-way">Tooling faults found along the way</h2>
+
+<p>The station’s self-test had reported <code class="language-plaintext highlighter-rouge">FAIL at step 3: the gateway had the message
+and did not transmit it</code> every four hours for six days, while the log showed the
+transmission one second after each report. Adding <code class="language-plaintext highlighter-rouge">-T</code> to the Dire Wolf
+invocation put the timestamp inside the existing bracket, so <code class="language-plaintext highlighter-rouge">[0L]</code> became
+<code class="language-plaintext highlighter-rouge">[0L 2026-11-14T04:31:52-0500]</code>, and twelve log-parsing sites anchored on the old
+shape stopped matching: the self-test’s transmit and echo checks, the repeater
+attribution, the monitor’s entire event display, the reach floor, and the
+spatial analysis. The unit test fixtures still generate the pre-<code class="language-plaintext highlighter-rouge">-T</code> format,
+which is why the suite passed throughout.</p>
+
+<p>Three more surfaced once those fired again. The acknowledgement check matched
+<code class="language-plaintext highlighter-rouge">ack36</code> against a genuine <code class="language-plaintext highlighter-rouge">ack3686</code> and reported a delivery that never happened.
+The echo attribution named routing aliases rather than stations. And the echo
+check counted other gateways’ copies of the same message as proof our own frame
+had been radiated, which it is not: N3DXC-2 and N3TJJ-7 gate the identical
+message independently, arriving 34 and 40 seconds later.</p>
+
+<p>The worst was mine. My replacement for the attribution printed its fallback on
+empty input, so the step passed on every run regardless. Only running it caught
+that, and <code class="language-plaintext highlighter-rouge">bash -n</code> never would have.</p>
+
+<p><strong>And the analysis tool failed silently on compressed logs.</strong> Handed a
+<code class="language-plaintext highlighter-rouge">.log.gz</code> path directly it read the gzip stream as text, matched nothing, and
+printed a confident “none”. That is how I nearly answered this whole question
+backwards. It sniffs the gzip magic now.</p>
+
+<p><strong>Fixing the test fixtures immediately found a thirteenth broken site.</strong> Every
+fixture in the suite used the pre-<code class="language-plaintext highlighter-rouge">-T</code> bracket shape, which is why six days of
+broken parsing passed its own tests. Mixing both shapes in made three
+assertions fail at once, and the cause was the archive script’s four transmit
+counters, which had been reading zero the whole time. Every daily summary
+written in that window understates them.</p>
+
+<h2 id="what-is-next">What is next</h2>
+
+<p><strong>Ask the digipeater’s manager two separate questions.</strong> The first is general:
+W3YA-1 emits to 102 bytes where every neighbor reaches 195 to 251, K3DNA among
+them on the same <code class="language-plaintext highlighter-rouge">APN391</code> firmware. The second is specific to this station, and
+it is not <code class="language-plaintext highlighter-rouge">PACLEN</code>, which the field test rules out. The measurement to hand over
+is narrow, and the hop table above is the part to lead with: W3YA-1 emits
+nothing above 102 bytes at any hop position on 20,000 copies, where its
+neighbors reach 143 to 228 and K3DNA reaches 224 on the same <code class="language-plaintext highlighter-rouge">APN391</code>. Then the
+station-specific measurement: <strong>0 of 304
+frames from KD3CCO-10 above 82 on-air bytes relayed, against 556 of 2,250 at or
+below</strong>, over twelve logs and 166,803 frames, while in the same archive W3YA-1
+relayed 2,048 frames for NJ3T-4 above 82 bytes as sent, to 90, and one for
+K3ARL-6 at 91. That is a specific, falsifiable observation about one station’s signal into
+his receiver rather than a guess at a setting.</p>
+
+<p><strong>Compare against K3DNA deliberately.</strong> It announces the same <code class="language-plaintext highlighter-rouge">APN391</code> KPC-3+
+firmware, sits 26 km out against W3YA-1’s 10, and relayed 12 of the long frames
+W3YA-1 relayed none of. Two identical TNCs disagreeing about the same
+transmitter is the sharpest handle on this left.</p>
+
+<p><strong>Measure channel occupancy rather than signal.</strong> Half of my short frames are
+not relayed on a link with tens of decibels of margin, which points at a busy
+receiver rather than a deaf one. Dire Wolf already logs every frame it decodes,
+so that costs no transmissions.</p>
+
+<p><strong>A Yagi is not worth building for this.</strong> It adds 6 to 10 dB to a path that
+already has far more margin than it needs, and neither a busy receiver on a
+mountain nor a threshold that ignores a 4 dB power change responds to gain.</p>
+
+  </main>
+
+  
+  <section id="comments" style="margin-top: 3rem;">
+    <hr>
+    <h2 style="font-size: 1.4rem;">Comments &amp; Feedback</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hatandspecs/hamradio"
+      data-repo-id="R_kgDOUZyF0g"
+      data-category="General"
+      data-category-id="DIC_kwDOUZyF0s4DFi8b"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="0"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+  <script>
+    fetch('https://hamradio.goatcounter.com/counter/' + encodeURIComponent(location.pathname.replace(/\/$/, '')) + '.json')
+      .then(r => r.json())
+      .then(data => {
+        var el = document.getElementById('gc-view-count');
+        if (el) el.textContent = data.count + ' views';
+      })
+      .catch(function() {});
+  </script>
+  
+</body>
+</html>

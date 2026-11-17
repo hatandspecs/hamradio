@@ -1,0 +1,17 @@
+W5b. Attenuator test
+"# Read the spur relative to the noise floor, because adding attenuation lowers everything on the display. A real signal keeps its height above the floor; a third-order product loses about 20 dB of it for 10 dB of attenuation."
+Band,Freq,Level at 0 dB,Floor at 0 dB,Level at 10 dB,Floor at 10 dB,Level at 20 dB,Floor at 20 dB,Above floor at 0 (compute),Above floor at 10 (compute),Above floor at 20 (compute),Change 0 to 10 (compute),Verdict (compute)
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
