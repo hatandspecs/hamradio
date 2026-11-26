@@ -1,0 +1,17 @@
+W3a. Feedline integrity
+"# Far end shorted; one-way loss is half the return loss. The pass column uses 1 dB over datasheet, which is the HF rule; allow 2 dB at 146 MHz."
+Line,Cable type,VF,Length by TDR (ft),"Bumps (distance, Z)",Band,Return loss (dB),One-way loss (dB) (compute),Datasheet loss (dB),Excess (dB) (compute),"Pass, 1 dB rule (compute)"
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,

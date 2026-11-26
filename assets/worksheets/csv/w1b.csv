@@ -1,0 +1,17 @@
+W1b. S-meter calibration
+"# 500 Hz filter, AGC off. Record the S-reading or dB over S9. A non-monotonic column means AGC is still on somewhere."
+Injected dBm,80 m,40 m,20 m,10 m,Preamp state
+-127,,,,,
+-121,,,,,
+-115,,,,,
+-109,,,,,
+-103,,,,,
+-97,,,,,
+-91,,,,,
+-85,,,,,
+-79,,,,,
+-73,,,,,
+-67,,,,,
+-61,,,,,
+-55,,,,,
+,,,,,

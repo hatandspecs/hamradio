@@ -1,0 +1,18 @@
+W1e. Instrument stack and calibration log
+"# One row per calibration. A NanoVNA has no factory calibration to fall back on, so every change of pad, filter, jumper or span is a different instrument until it is calibrated again."
+# The 50 ohm check is the gate: put a good load on the reference plane and sweep. Whatever departure from a flat 1.0 you see is the floor on your measurement uncertainty until you recalibrate.
+Date / time,"Stack (choke, pad dB, filter)",Reference plane,Cal slot,Span calibrated,"50 ohm check, worst SWR",Temperature,Verdict (compute)
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,

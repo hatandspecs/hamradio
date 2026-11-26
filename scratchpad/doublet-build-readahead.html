@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doublet build: read ahead | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  
+  
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+  
+
+  <header>
+    <h1>Doublet build: read ahead</h1>
+    
+  </header>
+
+  <main>
+    <h1 id="doublet-build-read-ahead">Doublet build: read ahead</h1>
+
+<p>Working brief for the two-doublet build. The reasoning is in
+<code class="language-plaintext highlighter-rouge">_articles/two-doublets-2026-11.md</code>; this is the short form to read before
+starting and to carry to the bench.</p>
+
+<p>Station: <strong>100 W SSB maximum, about 20 W digital.</strong> No amplifier planned.</p>
+
+<hr />
+
+<h2 id="1-the-two-antennas">1. The two antennas</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Portable inverted V</th>
+      <th>Fixed flat top</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Wire</td>
+      <td>132 ft, 22 AWG PolyStealth</td>
+      <td>88 ft, 14 AWG PolyStealth</td>
+    </tr>
+    <tr>
+      <td>Shape</td>
+      <td>apex 40 ft, ends 10 ft</td>
+      <td>horizontal, house to playhouse mast</td>
+    </tr>
+    <tr>
+      <td>Span needed</td>
+      <td>117 ft</td>
+      <td>88 ft</td>
+    </tr>
+    <tr>
+      <td>Apex angle</td>
+      <td>125 deg</td>
+      <td>n/a</td>
+    </tr>
+    <tr>
+      <td>Feedline</td>
+      <td>300 ohm TV twin lead</td>
+      <td>300 ohm 18 AWG window line (DXE-LL300)</td>
+    </tr>
+    <tr>
+      <td>Balun</td>
+      <td>one 2631828302, 9T</td>
+      <td>identical</td>
+    </tr>
+    <tr>
+      <td>Lowest band</td>
+      <td>80 m, true half wave</td>
+      <td>40 m, 80 m through the tuner</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Why these numbers</strong></p>
+
+<ul>
+  <li>132 ft is a half wave at 3.72 MHz in free space, nearer 3.55 MHz corrected.
+That is the lower half of 80 m, not the phone end, and it is not why the
+length was picked.</li>
+  <li><strong>Its full-wave points do not all land above a band.</strong> Free space gives
+7.45, 14.90, 22.35 and 29.82 MHz, all just clear. End effect moves them
+down: the one-wave point lands in 40 m (7.27 or 7.08) and the four-wave
+point in 10 m (29.64 or 29.45). 20 m and 15 m stay clear either way.
+Expect the high-impedance case on 40 m and 10 m, and sweep both in test D.</li>
+  <li>88 ft beats 94 ft, but on the <strong>one-wave</strong> point, not the two-wave one.
+94 ft’s two-wave point is 20.94 MHz, 64 kHz <em>below</em> 15 m and not inside it.
+Its one-wave point is 10.47 MHz free space and 10.21 or 9.95 corrected,
+astride a 30 m band 50 kHz wide. 88 ft clears both points under both
+corrections, by 355 kHz at the worst.</li>
+  <li>14 AWG on the flat top buys 0.36 to 0.48 dB on 80 m over 22 AWG and almost
+nothing on other bands. Worth it on a fixed span, not worth the weight on a
+portable one.</li>
+  <li>300 ohm on both. The 450 ohm advantage is 0.41 dB in one modeled corner
+(10 m into 3,000 ohm) and a tie on the other three. 300 ohm is lower
+voltage and caps the high excursion lower, and against the mAT-30’s 5 to
+1,500 ohm window it wins on <strong>every</strong> load, by 1 to 9 points on the
+fraction of feedline lengths that land inside. The 450 ohm line’s extra
+excursion is all above the ceiling. The old “~95% either way” figure is
+withdrawn: it was an artifact of how the load range was sampled, and the
+ranking flipped between samplings. Wet weather costs ~1 dB, more than this
+choice does.</li>
+</ul>
+
+<hr />
+
+<h2 id="2-shopping-list">2. Shopping list</h2>
+
+<p>Already on hand: FT240-31 20 mm cores (2631828302), AWG 14 enamel, 22 AWG
+PolyStealth, 300 ohm TV twin lead, SO-239 connectors, NanoVNA, sleeve choke,
+mAT-30 tuner.</p>
+
+<p><strong>The tuner sets three numbers in this brief</strong>, from its manual: it tunes
+<strong>5 to 1,500 ohm</strong> loads, takes <strong>120 W SSB/CW peak and 30 W digital</strong> on HF,
+and covers 1.8 to 54 MHz. Its ANTENNA port is an SO-239, so the balun mounts
+straight to it. The manual’s power warning is unusually direct: power
+significantly over spec “will definitely damage or destroy” the tuner and may
+take the transceiver with it. 100 W SSB is 83% of the ceiling, 20 W digital
+67%.</p>
+
+<p>To buy:</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />88 ft of 14 AWG PolyStealth, plus spare</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />300 ohm 18 AWG window line, DXE-LL300, start with 65 ft (section 5).
+    Nominal is 272 ohm, VF 0.88. Measure it, card A.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />2 plastic project boxes, roughly 4 x 4 x 2 in</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Screw terminals or eye bolts, 2 pairs</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />#14 PTFE-insulated hookup wire, ~5 ft, for the two balun windings.
+    <strong>Record maker, part number, OD and rated voltage.</strong> The 88 ohm figure
+    assumes a 2.40 mm OD and the voltage argument assumes a real wall; both
+    vary by maker across the five options in section 8</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Center insulators, 2. A ladder-line mount such as the WA1FFL
+    Ladder-Loc carries the line and the wires on separate paths</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />End insulators, shock cord or a pulley and weight</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Plastic standoffs for line support. An inch of clearance is a rule of
+    thumb, not a specification; take the DXE-LL300 guidance for the actual
+    line and give it as much room as the run allows</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Short length of good coax for the jumper, inches not feet. The mAT-30
+    manual calls for 50 ohm coax “rated 120 watts or greater” on its radio
+    side; the output-side jumper carries the transformed impedance, so rate
+    it against 775 V peak. Check the SO-239 too: the format is not a rating</li>
+</ul>
+
+<hr />
+
+<h2 id="3-build-order">3. Build order</h2>
+
+<ol>
+  <li><strong>Balun one.</strong> Wind it, run bench tests A, B, C before building the second.</li>
+  <li><strong>Flat top</strong>, since it is the fixed installation. Wire, center insulator,
+line, then test D and E.</li>
+  <li><strong>Balun two</strong>, once the first design is confirmed.</li>
+  <li><strong>Portable V</strong> last.</li>
+</ol>
+
+<hr />
+
+<h2 id="4-balun-build-card">4. Balun build card</h2>
+
+<p><strong>One Fair-Rite 2631828302. Nine close-wound turns of #14 PTFE hookup wire.</strong>
+Two cores build both baluns, one each.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Wound line</td>
+      <td>0.65 m per conductor</td>
+    </tr>
+    <tr>
+      <td>Predicted choke R</td>
+      <td>2.0 to 3.9 kohm, 80 m to 10 m</td>
+    </tr>
+    <tr>
+      <td>Target Zo of the wound pair</td>
+      <td>88 ohm, close wound, 2.40 mm center spacing</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Close-wound #14 PTFE hookup wire. No sleeve, no spacer.</strong> The insulation
+wall sets the spacing by itself: about 2.40 mm between centers, lands near
+88 ohms. W2WDX builds several dozen this way and K6JCA measures ordinary #14
+bifilar at 60 to 100 ohms. One part, no lacing step.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Wire</th>
+      <th>OD</th>
+      <th>Zo</th>
+      <th>9T fill</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>bare enamel (on hand)</td>
+      <td>1.75 mm</td>
+      <td>43 ohm</td>
+      <td>30%</td>
+    </tr>
+    <tr>
+      <td><strong>#14 PTFE standard wall</strong></td>
+      <td><strong>2.40 mm</strong></td>
+      <td><strong>88 ohm</strong></td>
+      <td><strong>41%</strong></td>
+    </tr>
+    <tr>
+      <td>#14 PTFE thin wall</td>
+      <td>2.13 mm</td>
+      <td>74 ohm</td>
+      <td>37%</td>
+    </tr>
+    <tr>
+      <td>#14 silicone</td>
+      <td>3.20 mm</td>
+      <td>107 ohm</td>
+      <td>57%</td>
+    </tr>
+    <tr>
+      <td>#14 THHN</td>
+      <td>2.90 mm</td>
+      <td>88 ohm</td>
+      <td>51%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Bare enamel also works</strong> and is what LDG and M0UKD build. The reason to buy
+PTFE is the 894 V peak this station can put at the balun against a real
+insulation wall rather than a film, plus abrasion at the bore edge. Not
+performance.</p>
+
+<p><strong>The withdrawn-cord air-gap version is dropped.</strong> It reached ~203 ohms and
+nothing in the field is built that way: LDG and M0UKD close-wind bare enamel,
+W2WDX and DX Engineering use thick PTFE insulation, Balun Designs sleeves.
+Every one is a bifilar pair of insulated wire, 9 to 18 turns, on one or two
+FT240-class cores, spaced only by the insulation. The cord variant also cost
+bore space and loosened the coupling the balun works by.</p>
+
+<p>Test C still runs, but it decides an optimization and not whether the thing
+works. A tuner inches away matches any of these readings.</p>
+
+<p><strong>Winding.</strong> W1JR crossover: half the turns from one side, cross over the
+outside, the rest from the other, so the two ends finish physically apart.</p>
+
+<p><strong>Connections.</strong> One transmission line, four ends, nothing else. No third
+winding, no link between the two wires, no ground on the balanced side.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>End</th>
+      <th>Goes to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Wire A in</td>
+      <td>coax center</td>
+    </tr>
+    <tr>
+      <td>Wire B in</td>
+      <td>coax shield</td>
+    </tr>
+    <tr>
+      <td>Wire A out</td>
+      <td>balanced terminal 1</td>
+    </tr>
+    <tr>
+      <td>Wire B out</td>
+      <td>balanced terminal 2</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Hardware.</strong> Screw terminals through the box wall so the line’s tension is on
+hardware, not a solder joint. SO-239 on the coax end. Line enters away from
+the coax, neither run near the other or near metal.</p>
+
+<p><strong>Bore fill, close-wound #14 PTFE (4.80 mm ribbon, 106 mm of bore):</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Turns</th>
+      <th>Fill</th>
+      <th>Gap between pairs</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>9</strong></td>
+      <td><strong>41%</strong></td>
+      <td><strong>6.8 mm</strong></td>
+      <td><strong>the build</strong></td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>55%</td>
+      <td>3.9 mm</td>
+      <td>fine</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>65%</td>
+      <td>2.6 mm</td>
+      <td>fine</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The dropped air-spaced version was 84% at 14 turns. Close winding removes the
+turn-count constraint entirely.</p>
+
+<p><strong>Escalation if the measurement says it is not enough:</strong> 12 turns on the same
+single core gives 3.6 to 6.9 kohm for 0.86 m of line, and that is as far as
+one core goes. Past twelve, a second core is the only route: stacking makes
+the bore longer, not narrower, so nine turns on two stacked is the same 54%
+fill as nine on one.</p>
+
+<hr />
+
+<h2 id="5-where-the-balun-goes-which-matters-more-than-what-it-is">5. Where the balun goes, which matters more than what it is</h2>
+
+<p>N6BV, 40 m inverted V at 14.1 MHz, 1,500 W, power reaching the antenna:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Arrangement</th>
+      <th>To the antenna</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Balanced tuner, open wire all the way</td>
+      <td>1,325 W</td>
+    </tr>
+    <tr>
+      <td>Choke at the unbalanced tuner’s 50 ohm input</td>
+      <td>1,314 W</td>
+    </tr>
+    <tr>
+      <td><strong>Balun at the window, 20 ft coax jumper</strong></td>
+      <td><strong>397 W</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The third row is the common build and it loses 696 W in the jumper. Scaled to
+100 W that is 46 W, and the fraction does not change with power.</p>
+
+<p><strong>So: balun bolted to the tuner’s antenna connector. Jumper in inches.</strong>
+A second choke, the sleeve choke, goes between the radio and the tuner.</p>
+
+<p>The coax-only tuner is what forces this. A balanced or link-coupled tuner is
+the upgrade the measurement argues for.</p>
+
+<hr />
+
+<h2 id="6-measurement-cards">6. Measurement cards</h2>
+
+<h3 id="a-feedline-zo-and-velocity-factor">A. Feedline Zo and velocity factor</h3>
+
+<p>Both lines, before anything else, because “300 ohm” line is nominally 272 and
+“450 ohm” line is usually nearer
+400.</p>
+
+<p>Take 20 to 30 ft, sweep 1 to 30 MHz twice, far end shorted then open.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">vf = 2 * L * f / c</code> from the first impedance minimum with the end shorted</li>
+  <li><code class="language-plaintext highlighter-rouge">Zo = sqrt(Zoc * Zsc)</code> at one frequency, repeated at several to check</li>
+</ul>
+
+<p>Keep the far-end short physically short. Inches of wire is an inductor at
+28 MHz.</p>
+
+<h3 id="b-balun-common-mode-impedance">B. Balun common-mode impedance</h3>
+
+<p>Series-through, port 1 to both conductors shorted at one end, port 2 to both
+shorted at the other, normalized against the shorted-clips reference.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Zcm = 2 * Z0 * (1 - S21) / S21     S21 complex and linear, not dB
+</code></pre></div></div>
+
+<p>Grade on resistance, not magnitude. Expect 2.0 to 3.9 kohm.</p>
+
+<h3 id="c-transparency-test-the-one-that-decides-the-design">C. Transparency test, the one that decides the design</h3>
+
+<p>300 ohm non-inductive resistor across the balanced terminals, S11 from the
+coax end, 1 to 30 MHz.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>Should read</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>80 m</td>
+      <td>287 − 58j</td>
+    </tr>
+    <tr>
+      <td>40 m</td>
+      <td>258 − 99j</td>
+    </tr>
+    <tr>
+      <td>20 m</td>
+      <td>184 − 136j</td>
+    </tr>
+    <tr>
+      <td>15 m</td>
+      <td>126 − 132j</td>
+    </tr>
+    <tr>
+      <td><strong>10 m</strong></td>
+      <td><strong>88 − 115j</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Near 88 − 115j at 10 m is consistent with the assumed wall and velocity
+factor. Near 34 − 86j is consistent with a thinner wall behaving like bare
+enamel at ~43 ohms.</strong> Neither reading proves a wall thickness on its own:
+winding geometry, parasitic capacitance, core coupling and the fixture all
+move it. What the test establishes is the transformation the finished winding
+actually applies, which is the thing the old coax-wound balun got wrong.
+Either reading still works into the tuner; the low one is an optimization
+missed, not a failed build. Record the whole sweep, not one number per band.</p>
+
+<p>Optional test C2, balance: two matched 150 ohm non-inductive
+resistors in series across the terminals, junction to the coax shield. Should
+read 300 ohms with the junction grounded and floating; the difference is the
+balance error. <strong>Below 30 MHz the fixture is most of this measurement</strong>, so
+pin it down before trusting a number: carbon composition or thin-film
+resistors matched on a meter first, leads under half an inch, the ground
+connection a direct strap to the shell rather than a clip lead, and the
+calibration plane at the balun’s own connector. A result that moves when the
+leads move is the fixture talking.</p>
+
+<h3 id="d-what-the-tuner-will-see">D. What the tuner will see</h3>
+
+<ol>
+  <li>Calibrate open, short, load <strong>at the connector that plugs into the tuner</strong>,
+jumper in place.</li>
+  <li>Clip the sleeve choke onto the jumper between NanoVNA and balun.</li>
+  <li>Connect jumper, balun, feedline, antenna. Sweep 3 to 30 MHz.</li>
+  <li>Record R and X at each band center, and at both edges of 80 m.</li>
+  <li>Flag any band where R falls outside <strong>5 to 1,500 ohms</strong>, the mAT-30’s
+rated load range.</li>
+</ol>
+
+<p><strong>That is the real window, from the mAT-30 manual: “Tunes 5 to 1500 ohm
+loads.”</strong> It is narrower at the top than the 20 to 2,000 placeholder this
+brief used to carry, and wider at the bottom. It is also only half a
+criterion: the manual gives a resistive-load range and says nothing about
+how much reactance comes with it, and 100 ohm with a few ohms reactive is not
+the same job as 100 ohm with 2,000 ohms reactive. <strong>Record X at every band
+center alongside R</strong>, and treat a band near 1,500 ohm with a large X as a
+flag even though R is inside.</p>
+
+<p><strong>If touching the jumper moves the trace, the reading is common-mode current,
+not the antenna.</strong> Add choking until it stops moving.</p>
+
+<h3 id="e-choosing-the-feedline-length">E. Choosing the feedline length</h3>
+
+<p>Add line in a few-foot increments, sweep again, keep the table with the
+fewest bands outside range. A switchable insertion loop makes this a minute
+per trial. First length that puts every band inside range wins; there is no
+optimum to chase across eight bands.</p>
+
+<p><strong>Starting lengths</strong>, from the ARRL feedline-plus-half-dipole table:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Target sum</th>
+      <th>132 ft V</th>
+      <th>88 ft flat top</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>75 ± 2 ft</td>
+      <td>too short</td>
+      <td>31 ft</td>
+    </tr>
+    <tr>
+      <td>95.5 ± 3 ft</td>
+      <td>29.5 ft</td>
+      <td>51.5 ft</td>
+    </tr>
+    <tr>
+      <td>109 ± 3 ft</td>
+      <td>43 ft</td>
+      <td><strong>65 ft</strong></td>
+    </tr>
+    <tr>
+      <td>145 ± 3 ft</td>
+      <td>79 ft</td>
+      <td>101 ft</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Avoid a line a half wavelength long or any multiple: it reproduces the
+feedpoint impedance at the shack end, and on the high-impedance bands that is
+several thousand ohms.</p>
+
+<p><strong>What D and E cannot show:</strong> the impedance at the tuner says nothing about
+how much power got there. Feel the balun after operating, not during. A warm
+balun is converting transmitted energy into heat.</p>
+
+<hr />
+
+<h2 id="7-numbers-to-check-against">7. Numbers to check against</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Line voltage, 100 W, 300 ohm at 40:1</td>
+      <td>1,095 V RMS, the only case over W8JI’s 1,000 V wet-weather threshold</td>
+    </tr>
+    <tr>
+      <td>Balun dissipation, worst case scaled</td>
+      <td>2.6 W average SSB, 2.1 W continuous digital</td>
+    </tr>
+    <tr>
+      <td>Connector voltage, 100 W into 4,000 ohm</td>
+      <td>894 V peak</td>
+    </tr>
+    <tr>
+      <td>Wire loss, 88 ft on 80 m, 14 AWG</td>
+      <td>1.3 ohm, 92 to 94% efficient</td>
+    </tr>
+    <tr>
+      <td>Wire loss, 132 ft on 80 m, 22 AWG</td>
+      <td>5.0 ohm, about 93% efficient</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="8-settled-do-not-relitigate">8. Settled, do not relitigate</h2>
+
+<ul>
+  <li><strong>1:1, not 4:1.</strong> A 4:1 helps where impedance is reliably high and hurts
+where it is low, and a doublet is low on some bands by construction.</li>
+  <li><strong>A ratio is not chosen from the line’s Zo.</strong> A 4:1 fed from 450 ohm line is
+not matching 450 to 50. The “450 ohm needs a 9:1” idea is a myth.</li>
+  <li><strong>Mix 31, not the FT240-43s.</strong> 31 peaks low and holds through the bottom of
+HF, which is where an 80 m choke works.</li>
+  <li><strong>One core. Settled on power, by a factor of ten.</strong> PA9X rates a bifilar
+FT240 in AWG 18 PTFE at 1 kW SSB and ~200 W continuous digital; this is
+100 W SSB and 20 W digital on heavier AWG 14, on a 20 mm core worth 1.57
+standard FT240s. KV5R runs a Balun Designs 1171 cool at 1 kW on a
+ladder-line doublet. The field stacks (M0UKD, W2WDX) to buy power handling
+this station does not need. Stacking also gives ~10% more wound line for
+the same choking impedance. <strong>The margin is an inference across builds</strong>,
+since PA9X’s figure is a different wire gauge on its own geometry and a
+choke’s power handling tracks the common-mode voltage it sees as much as
+the ferrite; a factor of ten carries that, and the warm-balun check after
+test D confirms it. Revised 2026-11-25.</li>
+  <li><strong>SO-239 throughout.</strong></li>
+  <li><strong>No amplifier</strong>, so no 1,500 W margins anywhere.</li>
+</ul>
+
+<hr />
+
+<h2 id="8b-documented-builds-to-check-against">8b. Documented builds to check against</h2>
+
+<p>All are a bifilar pair on one or two FT240-class cores, spaced only by
+insulation. None uses an air gap.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Build</th>
+      <th>What it reports</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KV5R 80 m doublet, Balun Designs 1171</td>
+      <td>cool at 1 kW; 1:1 over 4:1 because 4:1 raises current</td>
+    </tr>
+    <tr>
+      <td>M0PZT, FT240-31</td>
+      <td><strong>9 turns resistive 3.5 to 30 MHz</strong>, same as this build</td>
+    </tr>
+    <tr>
+      <td>K6JCA, measured survey</td>
+      <td>#16 and #14 bifilar lands at Zo 60 to 100 ohm</td>
+    </tr>
+    <tr>
+      <td>VK6YSF</td>
+      <td>single core, 10 turns, 1.25 mm enamel, crossover, 1.8 to 30 MHz</td>
+    </tr>
+    <tr>
+      <td>PA0FRI</td>
+      <td>~300 uH is the 1.8 to 30 MHz compromise; 13 turns gave 308 uH</td>
+    </tr>
+    <tr>
+      <td>PA9X</td>
+      <td>FT240 AWG 18 PTFE bifilar: 1 kW SSB, x0.4 contest, x0.2 digital</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="9-still-unknown">9. Still unknown</h2>
+
+<ul>
+  <li>The choke impedance is scaled from one measurement of nine turns of RG400
+on one of these cores. The scaling is standard; the winding is different.</li>
+  <li>How much reactance the mAT-30 tolerates at a given resistance. “5 to 1500
+ohm loads” is a resistive figure and the manual gives no R-X chart, so the
+only way to find the edge is test D on the real antenna.</li>
+  <li>Which side of the band edge the 132 ft wire’s one-wave and four-wave points
+land on. Both corrections put them in 40 m and 10 m and disagree by 190 kHz
+about where, and neither accounts for height, ground or the bend. A NEC
+model of the real geometry would settle it before the wire goes up.</li>
+  <li>What the finished winding’s Zo actually is. 88 ohm is computed from a
+nominal 2.40 mm spacing and an assumed effective permittivity, and spacing
+varies around a toroid. Close winding removed the question of holding a gap
+open; it did not answer this one. Test C decides.</li>
+  <li>Whether the PolyStealth cladding is three skin depths thick at 3.75 MHz
+(102 micrometers). If it is thinner, the 80 m wire loss is worse than the
+table.</li>
+  <li>What either antenna does at this height over this ground. The published
+impedance tables are for a 131 ft doublet at 33 ft and an 88 ft dipole at
+30 ft, neither of which is this installation.</li>
+  <li>Whether the ARRL length table means anything here. Wide tolerances, a 1999
+reprint of an older chart.</li>
+</ul>
+
+<p><strong>The failure that would change the plan:</strong> test D showing a band that no
+feedline length brings inside the tuner’s range. That means a different wire
+length, or accepting the antenna does not cover that band.</p>
+
+  </main>
+
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+</body>
+</html>

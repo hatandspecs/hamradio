@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_91f3e396d22e07f074d862a0dd15a23a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_91f3e396d22e07f074d862a0dd15a23a" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_91f3e396d22e07f074d862a0dd15a23a = L.map(
+                "map_91f3e396d22e07f074d862a0dd15a23a",
+                {
+                    center: [40.783, -77.828],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+
+            
+
+        
+    
+            var tile_layer_72c64875f5ff7868b74f4ec5e80a3f85 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_72c64875f5ff7868b74f4ec5e80a3f85.addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var circle_ebea95162c631fad316fdf8972e48cce = L.circle(
+                [40.7708, -77.7917],
+                {"bubblingMouseEvents": true, "color": "#dcdbd6", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#dcdbd6", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1609.344, "stroke": true, "weight": 1}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var circle_c766b7baab082ed9f3bee51fee03b2fc = L.circle(
+                [40.7708, -77.7917],
+                {"bubblingMouseEvents": true, "color": "#dcdbd6", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#dcdbd6", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 3218.688, "stroke": true, "weight": 1}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var circle_153d4de4c29b88bff3780248bbd06c54 = L.circle(
+                [40.7708, -77.7917],
+                {"bubblingMouseEvents": true, "color": "#dcdbd6", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#dcdbd6", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4828.032, "stroke": true, "weight": 1}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var circle_97da60650257756fd8a64f195f430e73 = L.circle(
+                [40.7708, -77.7917],
+                {"bubblingMouseEvents": true, "color": "#dcdbd6", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#dcdbd6", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6437.376, "stroke": true, "weight": 1}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var poly_line_d03ae57510b74f3b73b654dcb3a68a38 = L.polyline(
+                [[40.7708, -77.7917], [40.717333333333336, -77.89216666666667]],
+                {"bubblingMouseEvents": true, "color": "#8a8a84", "dashArray": "6 5", "dashOffset": null, "fill": false, "fillColor": "#8a8a84", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            poly_line_d03ae57510b74f3b73b654dcb3a68a38.bindTooltip(
+                `<div>
+                     W3YA-1, 6.4 mi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a655ae03d2e50ec489f373324465d5b8 = L.marker(
+                [40.7708, -77.7917],
+                {
+}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var icon_5fc3381699dd925edbd18abec1aa9ba4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "tower-broadcast",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_a655ae03d2e50ec489f373324465d5b8.bindTooltip(
+                `<div>
+                     KD3CCO-10 gateway
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a655ae03d2e50ec489f373324465d5b8.setIcon(icon_5fc3381699dd925edbd18abec1aa9ba4);
+            
+    
+            var marker_3977ff4333ed8d4e2e1b2e8c98666656 = L.marker(
+                [40.717333333333336, -77.89216666666667],
+                {
+}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var icon_87e8a4a1225a65364e92ddaef4a4bc74 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "gray",
+  "iconColor": "white",
+  "icon": "tower-cell",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_3977ff4333ed8d4e2e1b2e8c98666656.bindTooltip(
+                `<div>
+                     W3YA-1, Pine Grove Mountain
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3977ff4333ed8d4e2e1b2e8c98666656.setIcon(icon_87e8a4a1225a65364e92ddaef4a4bc74);
+            
+    
+            var circle_marker_caf47c106d66d6d4f304986ebb2d906a = L.circleMarker(
+                [40.784667, -77.829167],
+                {"bubblingMouseEvents": true, "color": "#8a8a84", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#8a8a84", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14, "stroke": true, "weight": 1}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var circle_marker_c55de051260289ca993c8e33cca01e68 = L.circleMarker(
+                [40.784667, -77.829167],
+                {"bubblingMouseEvents": true, "color": "#fdfdfd", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2a78d6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+        var popup_8f2324367f61895ca7dfe0d3adf0918f = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_cf4e51b0dc066a8ff49d28e8bc7900d7 = $(`<div id="html_cf4e51b0dc066a8ff49d28e8bc7900d7" style="width: 100.0%; height: 100.0%;"><b>Sheetz</b><br>2.2 mi from the gateway<br>downlink keyed 09:47 EST<br><b>in</b> the radio's message list<br>position beacon: heard<br><i>moving car</i><br><small>radio's own beacon, 09:46:55</small></div>`)[0];
+                popup_8f2324367f61895ca7dfe0d3adf0918f.setContent(html_cf4e51b0dc066a8ff49d28e8bc7900d7);
+            
+        
+
+        circle_marker_c55de051260289ca993c8e33cca01e68.bindPopup(popup_8f2324367f61895ca7dfe0d3adf0918f)
+        ;
+
+        
+    
+    
+            circle_marker_c55de051260289ca993c8e33cca01e68.bindTooltip(
+                `<div>
+                     Sheetz
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bf775474b640576d9841f31a797e058c = L.circleMarker(
+                [40.7848025, -77.8473916],
+                {"bubblingMouseEvents": true, "color": "#8a8a84", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#8a8a84", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14, "stroke": true, "weight": 1}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+            var circle_marker_4bbc76756bf306aedcd6f9d532eed3b8 = L.circleMarker(
+                [40.7848025, -77.8473916],
+                {"bubblingMouseEvents": true, "color": "#fdfdfd", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2a78d6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+        var popup_08d19c04537d6ea024b86dec3a0e6b5e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_110f98c46c973ac38bedf081f66f0dc9 = $(`<div id="html_110f98c46c973ac38bedf081f66f0dc9" style="width: 100.0%; height: 100.0%;"><b>Luna</b><br>3.1 mi from the gateway<br>downlink keyed 09:49 EST<br><b>in</b> the radio's message list<br>position beacon: heard<br><i>moving car</i><br><small>1229 S Atherton St</small></div>`)[0];
+                popup_08d19c04537d6ea024b86dec3a0e6b5e.setContent(html_110f98c46c973ac38bedf081f66f0dc9);
+            
+        
+
+        circle_marker_4bbc76756bf306aedcd6f9d532eed3b8.bindPopup(popup_08d19c04537d6ea024b86dec3a0e6b5e)
+        ;
+
+        
+    
+    
+            circle_marker_4bbc76756bf306aedcd6f9d532eed3b8.bindTooltip(
+                `<div>
+                     Luna
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_891ae6e341fc50a84c9c8afe5a50d539 = L.circleMarker(
+                [40.7904126, -77.8639476],
+                {"bubblingMouseEvents": true, "color": "#fdfdfd", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2a78d6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+        var popup_2c595bb6d2e74c9e288009eb6cc4de97 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_96488bcd0ca02675967894a78be2d284 = $(`<div id="html_96488bcd0ca02675967894a78be2d284" style="width: 100.0%; height: 100.0%;"><b>Alpha</b><br>4.0 mi from the gateway<br>downlink keyed 09:51 EST<br><b>in</b> the radio's message list<br>position beacon: none heard<br><i>moving car</i><br><small>400 W Beaver Ave</small></div>`)[0];
+                popup_2c595bb6d2e74c9e288009eb6cc4de97.setContent(html_96488bcd0ca02675967894a78be2d284);
+            
+        
+
+        circle_marker_891ae6e341fc50a84c9c8afe5a50d539.bindPopup(popup_2c595bb6d2e74c9e288009eb6cc4de97)
+        ;
+
+        
+    
+    
+            circle_marker_891ae6e341fc50a84c9c8afe5a50d539.bindTooltip(
+                `<div>
+                     Alpha
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c97189722774de8a14a9ca0ffbcbe02e = L.circleMarker(
+                [40.7921821, -77.8585038],
+                {"bubblingMouseEvents": true, "color": "#fdfdfd", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d03b3b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+        var popup_4abc36ba7fc8155a998193a918aff31d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_1fa0f16cba44760e9d60e8ad7437d9e4 = $(`<div id="html_1fa0f16cba44760e9d60e8ad7437d9e4" style="width: 100.0%; height: 100.0%;"><b>Third</b><br>3.8 mi from the gateway<br>downlink keyed 10:21 EST<br><b>not in</b> the radio's message list<br>position beacon: none heard<br><i>inside the building</i><br><small>300 S Allen St</small></div>`)[0];
+                popup_4abc36ba7fc8155a998193a918aff31d.setContent(html_1fa0f16cba44760e9d60e8ad7437d9e4);
+            
+        
+
+        circle_marker_c97189722774de8a14a9ca0ffbcbe02e.bindPopup(popup_4abc36ba7fc8155a998193a918aff31d)
+        ;
+
+        
+    
+    
+            circle_marker_c97189722774de8a14a9ca0ffbcbe02e.bindTooltip(
+                `<div>
+                     Third
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_00bbf757cfb41408181a2d8b65020c40 = L.circleMarker(
+                [40.7930785, -77.8619759],
+                {"bubblingMouseEvents": true, "color": "#fdfdfd", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d03b3b", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 2}
+            ).addTo(map_91f3e396d22e07f074d862a0dd15a23a);
+        
+    
+        var popup_3c62679d59d9494a865b046c5549574a = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_63d634b377d0a6719985c75c0f652671 = $(`<div id="html_63d634b377d0a6719985c75c0f652671" style="width: 100.0%; height: 100.0%;"><b>Garage</b><br>4.0 mi from the gateway<br>downlink keyed 10:49 EST<br><b>not in</b> the radio's message list<br>position beacon: none heard<br><i>3rd floor, inside</i><br><small>135 S Fraser St</small></div>`)[0];
+                popup_3c62679d59d9494a865b046c5549574a.setContent(html_63d634b377d0a6719985c75c0f652671);
+            
+        
+
+        circle_marker_00bbf757cfb41408181a2d8b65020c40.bindPopup(popup_3c62679d59d9494a865b046c5549574a)
+        ;
+
+        
+    
+    
+            circle_marker_00bbf757cfb41408181a2d8b65020c40.bindTooltip(
+                `<div>
+                     Garage
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

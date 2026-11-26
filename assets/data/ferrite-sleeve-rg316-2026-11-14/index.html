@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="google-site-verification" content="XD9nd-I0XFCZqo1WB_fJUw29g5_jPTMWmz7vvHAqN_w" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RG-316 single-sleeve sweeps, 2026-11-14 | Natale's Tech Notes</title>
+  
+  <link rel="stylesheet" href="/hamradio/assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        enableMenu: false /* Optional: cleans up the UI */
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  
+  
+  <nav>
+    <a href="/hamradio/">← Back to Home</a>
+  </nav>
+
+  <hr>
+  
+
+  <header>
+    <h1>RG-316 single-sleeve sweeps, 2026-11-14</h1>
+    
+  </header>
+
+  <main>
+    <h1 id="rg-316-single-sleeve-sweeps-2026-11-14">RG-316 single-sleeve sweeps, 2026-11-14</h1>
+
+<p>NanoVNA-F V2, SOLT calibrated, series-through fixture, 1 to 30 MHz, 301 points,
+Touchstone real/imaginary, 50 ohm. Same fixture and clip separation as the
+RG-400 set in <code class="language-plaintext highlighter-rouge">../ferrite-sleeve-2026-11-13/</code>.</p>
+
+<h2 id="fixture-references">Fixture references</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>What</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000014</td>
+      <td>through, clips closed as far as they go (185 nH residual)</td>
+    </tr>
+    <tr>
+      <td>SJ000015</td>
+      <td>through, long wire (403 nH). Not used.</td>
+    </tr>
+    <tr>
+      <td>SJ000016</td>
+      <td>open</td>
+    </tr>
+    <tr>
+      <td>SJ000026</td>
+      <td><strong>through, short wire at the separation the cores occupied (287 nH). The reference removed from the single-sleeve sweeps, files 27 through 44.</strong> <code class="language-plaintext highlighter-rouge">auto</code> subtracts it, fitting the lumped model 1.1x better than a 2.84 ns delay, which is a weak margin: check it before relying on the R/X split from these files.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="measurements-mix-and-turns-to-file">Measurements, mix and turns to file</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Turns</th>
+      <th>mix 75</th>
+      <th>mix 31</th>
+      <th>mix 43</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>10</td>
+      <td>SJ000027</td>
+      <td>SJ000028</td>
+      <td>SJ000029</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>SJ000032</td>
+      <td>SJ000031</td>
+      <td>SJ000030</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>SJ000033</td>
+      <td>SJ000034</td>
+      <td>SJ000035</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>SJ000038</td>
+      <td>SJ000037</td>
+      <td>SJ000036</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>SJ000039</td>
+      <td>SJ000040</td>
+      <td>SJ000041</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>SJ000044</td>
+      <td>SJ000043</td>
+      <td>SJ000042</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A turn is one pass through the bore.</p>
+
+<h2 id="built-assemblies-same-day">Built assemblies, same day</h2>
+
+<p>Eleven four-core chokes wound and swept, with their own references taken at the
+build geometry rather than the single-sleeve one. The build geometry’s short
+reference measures 455 nH against the single-sleeve 289, so <strong>file 46 and not
+file 26 is the correct subtraction for files 47 through 58.</strong> All eleven were
+swept the same day, same fixture, same lead distances, so one reference covers
+them all.</p>
+
+<p>The article numbers these 1 through 11 in the order wound. Chokes 1 to 3 were
+wound from a model since withdrawn; 4 to 11 vary one section at a time from a
+common base.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Choke</th>
+      <th>Sections</th>
+      <th>Worst R, 80-10 m</th>
+      <th>At</th>
+      <th>Lowest R/|Z|</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000045</td>
+      <td> </td>
+      <td>open, long wire. The ceiling: 2.1 MOhm at 160 m to 173 kOhm at 10 m.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SJ000046</td>
+      <td> </td>
+      <td><strong>short, long wire. The reference subtracted from 47 through 58.</strong></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SJ000047</td>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@5T + #43@5T</code></td>
+      <td><strong>6,307</strong></td>
+      <td>80 m</td>
+      <td><strong>0.77</strong></td>
+    </tr>
+    <tr>
+      <td>SJ000048</td>
+      <td>2</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@5T</code></td>
+      <td><strong>6,706</strong></td>
+      <td>10 m</td>
+      <td><strong>0.76</strong></td>
+    </tr>
+    <tr>
+      <td>SJ000049</td>
+      <td>3</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@10T + #31@4T + #31@4T + #31@5T</code></td>
+      <td>3,762</td>
+      <td>10 m</td>
+      <td>0.57</td>
+    </tr>
+    <tr>
+      <td>SJ000050</td>
+      <td>4</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@6T + #43@6T</code></td>
+      <td>5,575</td>
+      <td>10 m</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <td>SJ000052</td>
+      <td>5</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #43@5T + #43@6T</code></td>
+      <td>5,098</td>
+      <td>10 m</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <td>SJ000054</td>
+      <td>6</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@6T</code></td>
+      <td>3,666</td>
+      <td>10 m</td>
+      <td>0.62</td>
+    </tr>
+    <tr>
+      <td>SJ000053</td>
+      <td>7</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@6T + #43@6T</code></td>
+      <td>5,638</td>
+      <td>10 m</td>
+      <td>0.66</td>
+    </tr>
+    <tr>
+      <td>SJ000055</td>
+      <td>8</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@6T + #31@6T + #43@6T</code></td>
+      <td>4,378</td>
+      <td>10 m</td>
+      <td>0.58</td>
+    </tr>
+    <tr>
+      <td>SJ000056</td>
+      <td>9</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@6T + #31@6T + #43@8T</code></td>
+      <td>6,282</td>
+      <td>10 m</td>
+      <td>0.55</td>
+    </tr>
+    <tr>
+      <td>SJ000057</td>
+      <td>10</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@9T + #31@6T + #31@6T + #43@6T</code></td>
+      <td>4,256</td>
+      <td>10 m</td>
+      <td>0.55</td>
+    </tr>
+    <tr>
+      <td>SJ000058</td>
+      <td>11</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@9T + #31@6T + #31@6T + #43@5T</code></td>
+      <td>7,369</td>
+      <td>10 m</td>
+      <td>0.59</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>File 51 was not used. Resistance in ohms. A choke is resistance-dominant where
+R/|Z| is 0.707 or above, so <strong>only chokes 1 and 2 clear 5 kOhm on every band
+from 80 to 10 m while staying resistance-dominant.</strong> Choke 11 has the highest
+worst-band resistance of the eleven and is 81 percent reactive by magnitude at
+10 m.</p>
+
+<p>Seven of the eleven clear 5 kOhm everywhere from 80 to 10 m. The limiting band
+is 10 m for ten of the eleven.</p>
+
+<p>These eleven are the evidence that no model in this work predicts a build.
+Summing the measured single sleeves of a choke misses by 40 percent on average;
+a section library solved from the assemblies themselves fits them to 1-8
+percent but misses a held-out choke by 27 percent. Sections do add in series.
+The per-section values taken from bench sweeps do not transfer, because the
+bench dress is looser than any assembly’s.</p>
+
+<h2 id="choke-2-re-wound-with-tidier-leads-2026-11-15">Choke 2 re-wound with tidier leads (2026-11-15)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Choke</th>
+      <th>Sections</th>
+      <th>Worst R, 80-10 m</th>
+      <th>At</th>
+      <th>Lowest R/|Z|</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000059</td>
+      <td>2, re-dressed</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #75@8T + #31@4T + #43@5T</code></td>
+      <td><strong>6,858</strong></td>
+      <td>80 m</td>
+      <td><strong>0.89</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Same sleeves, same turn counts, same cable; only the lead and inter-section
+dressing changed, shorter and closer to the cores. Swept the next day against
+<strong>the same reference, SJ000046</strong>, with the fixture and calibration untouched.</p>
+
+<p>Band by band against the original build, resistance in ohms:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>160</th>
+      <th>80</th>
+      <th>40</th>
+      <th>30</th>
+      <th>20</th>
+      <th>17</th>
+      <th>15</th>
+      <th>12</th>
+      <th>10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000048, original</td>
+      <td>8283</td>
+      <td>6851</td>
+      <td>6736</td>
+      <td>7800</td>
+      <td>9957</td>
+      <td>10940</td>
+      <td>9888</td>
+      <td>8242</td>
+      <td>6706</td>
+    </tr>
+    <tr>
+      <td>SJ000059, re-dressed</td>
+      <td>8523</td>
+      <td>6858</td>
+      <td>6873</td>
+      <td>7741</td>
+      <td>10006</td>
+      <td>12392</td>
+      <td>13059</td>
+      <td>11509</td>
+      <td>10166</td>
+    </tr>
+    <tr>
+      <td>change</td>
+      <td>+3%</td>
+      <td>0%</td>
+      <td>+2%</td>
+      <td>-1%</td>
+      <td>0%</td>
+      <td>+13%</td>
+      <td>+32%</td>
+      <td>+40%</td>
+      <td>+52%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Nothing below 20 m moved and everything above it did</strong>, which is stray
+capacitance and nothing else. This is now the best choke in the set: it beats
+the original on worst-band R, 6,858 against 6,706, and its limiting band moves
+from 10 m to 80 m.</p>
+
+<p>Reproduce the figure with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 assets/code/choke_s2p.py SJ000059.s2p --ref SJ000046.s2p \
+  --xzero downward \
+  --bands 1.9,3.5,7.1,10.1,14.2,18.1,21.2,24.9,28.4 --plot out.png
+</code></pre></div></div>
+
+<p><strong><code class="language-plaintext highlighter-rouge">--ref-mode</code> defaults to <code class="language-plaintext highlighter-rouge">auto</code></strong>, which fits a delay and a lumped
+inductance to the reference and uses whichever matches. On SJ000046 it reports
+<code class="language-plaintext highlighter-rouge">453 nH lumped fits 1.9x better than a 4.35 ns delay</code> and subtracts. Do not
+force <code class="language-plaintext highlighter-rouge">divide</code> on this fixture: the toroid article’s compact short is a 0.85 ns
+delay and wants division, this long-wire reference is not, and the two are not
+interchangeable.</p>
+
+<h2 id="11-current-balun-three-sleeves-2026-11-22">1:1 current balun, three sleeves (2026-11-22)</h2>
+
+<p>Not one of the eleven and not part of the design search. Wound as a 1:1
+current balun to take a doublet’s 300 ohm twin lead into a wide-range tuner,
+and kept because it measures well as a choke and does not work as the balun.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Sections</th>
+      <th>Worst R, 80-10 m</th>
+      <th>At</th>
+      <th>Lowest R/|Z|</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000060</td>
+      <td><code class="language-plaintext highlighter-rouge">#31@8T + #31@8T + #43@6T</code></td>
+      <td><strong>5,007</strong></td>
+      <td>10 m</td>
+      <td><strong>0.59</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Swept against <strong>the same reference, SJ000046</strong>, same fixture and lead dressing
+as the assemblies. Self-resonance 7.86 MHz, peak |Z| 14,930 ohm at 6.61 MHz,
+stray 0.60 pF from the R-L-C fit above 9 MHz.</p>
+
+<p><strong>The reference barely matters for this winding</strong>, unlike the single-sleeve
+sweeps: subtracting SJ000046 and using no reference at all agree within 0.3
+percent on every band, because 453 nH is 81 ohms at 28.4 MHz against 8,400 of
+winding. Dividing the same reference gives −765 ohms at 28.4 MHz, unphysical,
+which is the delay-versus-lumped discriminator restated on an assembly.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 ../../code/choke_s2p.py SJ000060.s2p --ref SJ000046.s2p \
+  --xzero downward --plot out.png
+</code></pre></div></div>
+
+<h2 id="chokes-12-and-13-2026-11-22">Chokes 12 and 13, 2026-11-22</h2>
+
+<p>Wound eight days after the other eleven, against the same SJ000046 reference
+and the same fixture. Numbered as chokes 12 and 13 in the article, continuing
+the series. Choke 12 was swept as wound, then re-dressed with nothing else
+changed; choke 13 is the same assembly again with its mix-43 section cut from
+six turns to five.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Choke</th>
+      <th>Sections</th>
+      <th>Worst R, 80-10 m</th>
+      <th>Lowest R/|Z|</th>
+      <th>SRF</th>
+      <th>stray C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000061</td>
+      <td>12</td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@8T + #31@6T + #43@6T</code></td>
+      <td>7,312</td>
+      <td>0.674</td>
+      <td>10.29 MHz</td>
+      <td>0.45 pF</td>
+    </tr>
+    <tr>
+      <td>SJ000062</td>
+      <td>12 re-dressed</td>
+      <td>same winding</td>
+      <td>8,925</td>
+      <td>0.705</td>
+      <td>11.80 MHz</td>
+      <td>0.38 pF</td>
+    </tr>
+    <tr>
+      <td>SJ000063</td>
+      <td><strong>13</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@8T + #31@6T + #43@5T</code></td>
+      <td><strong>8,587</strong></td>
+      <td><strong>0.782</strong></td>
+      <td>9.77 MHz</td>
+      <td>0.35 pF</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Choke 13 is the best choke in the set</strong>, 8,587 ohm worst band over 80-10 m
+and resistance-dominant on all nine bands from 160 m to 10 m, against choke 2
+re-dressed at 6,858 and 0.888. Three of the thirteen now meet both halves of
+the criterion: 1, 2 and 13.</p>
+
+<p><strong>Re-dressing alone (61 to 62) bought 22 percent at 10 m</strong> and cut stray C by
+16 percent, but did NOT win dominance: 0.705 against the 0.707 line. Cutting
+capacitance also raises Rp, so conductance and susceptance fall together and
+the ratio barely moves. <strong>What won 10 m was the mix-43 section going 6T to
+5T</strong>, which dropped Rp at 28.4 MHz from 17,938 to 14,045 and so raised the
+conductance 28 percent with the susceptance unchanged. Loss, not geometry.</p>
+
+<p><strong>SJ000062’s 160 m reading of 4,063 ohm is a bad sample</strong>, not a feature: 1.8
+and 1.9 MHz dip two to three kilohms below their neighbors while 61 and 63 run
+smoothly through. All three carry <code class="language-plaintext highlighter-rouge">|S11| &gt; 1</code> over 1.0 to 2.26 MHz, which does
+not affect the series-through R and X but is a reason not to lean on 160 m.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 ../../code/choke_s2p.py SJ000063.s2p --ref SJ000046.s2p \
+  --style pass --plot out.png
+</code></pre></div></div>
+
+<h2 id="choke-14-2026-11-23">Choke 14, 2026-11-23</h2>
+
+<p><code class="language-plaintext highlighter-rouge">SJ000064</code>. Choke 13 with its fourth sleeve changed from mix 43 to mix 31 at
+the same five turns, and nothing else touched. The first build in the set with
+no mix 43 in it at all.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Choke</th>
+      <th>Sections</th>
+      <th>Worst R, 80-10 m</th>
+      <th>Lowest R/|Z|</th>
+      <th>SRF</th>
+      <th>stray C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000064</td>
+      <td><strong>14</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">#75@8T + #31@8T + #31@6T + #31@5T</code></td>
+      <td><strong>8,094</strong></td>
+      <td><strong>0.725</strong></td>
+      <td>9.54 MHz</td>
+      <td>0.39 pF</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Choke 14 meets both halves of the criterion</strong>, which makes four of fourteen:
+1, 2, 13 and 14. On worst-band resistance it is second of all fourteen, 8,094
+ohms at 10 m against choke 13’s 8,587, and it displaces choke 2 re-dressed
+from second place.</p>
+
+<p><strong>The reference barely matters for this winding</strong>, as with SJ000060: against
+SJ000046 and against nothing at all, every band agrees within 0.2 percent,
+because 453 nH is 81 ohms at 28.4 MHz against 8,000 of winding. The result
+does not depend on the fixture reference being carried over from 2026-11-14.</p>
+
+<p>Band by band against choke 13, the only difference being the fourth sleeve’s
+mix. Resistance in ohms, <code class="language-plaintext highlighter-rouge">R/|Z|</code> beneath each.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Band</th>
+      <th>160</th>
+      <th>80</th>
+      <th>40</th>
+      <th>30</th>
+      <th>20</th>
+      <th>17</th>
+      <th>15</th>
+      <th>12</th>
+      <th>10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SJ000063, <code class="language-plaintext highlighter-rouge">#43@5T</code></td>
+      <td>7093</td>
+      <td>11181</td>
+      <td>13866</td>
+      <td>14655</td>
+      <td>14254</td>
+      <td>12648</td>
+      <td>11547</td>
+      <td>10113</td>
+      <td><strong>8587</strong></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.82</td>
+      <td>0.90</td>
+      <td>0.99</td>
+      <td>1.00</td>
+      <td>0.98</td>
+      <td>0.93</td>
+      <td>0.88</td>
+      <td>0.83</td>
+      <td><strong>0.78</strong></td>
+    </tr>
+    <tr>
+      <td>SJ000064, <code class="language-plaintext highlighter-rouge">#31@5T</code></td>
+      <td>7337</td>
+      <td>11291</td>
+      <td>15612</td>
+      <td>16509</td>
+      <td>16060</td>
+      <td>13728</td>
+      <td>11748</td>
+      <td>9630</td>
+      <td><strong>8094</strong></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>0.81</td>
+      <td>0.87</td>
+      <td>0.99</td>
+      <td>1.00</td>
+      <td>0.97</td>
+      <td>0.89</td>
+      <td>0.83</td>
+      <td>0.77</td>
+      <td><strong>0.72</strong></td>
+    </tr>
+    <tr>
+      <td>change in R</td>
+      <td>+3%</td>
+      <td>+1%</td>
+      <td>+13%</td>
+      <td>+13%</td>
+      <td>+13%</td>
+      <td>+9%</td>
+      <td>+2%</td>
+      <td>-5%</td>
+      <td>-6%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Mix 43 at the top buys 10 m and costs the middle.</strong> Swapping it out for mix
+31 at the same turn count raises 40 through 17 m by 9 to 13 percent and lowers
+12 and 10 m by 5 to 6 percent, and the dominance ratio falls on every band
+above 40 m. That is the loss mechanism restated: mix 43 is lossier at 28 MHz,
+and dominance at the top is bought with loss.</p>
+
+<p><strong>Choke 14’s 10 m pass is inside the noise and should not be leaned on.</strong>
+Across the whole 10 m band rather than at its center, its worst <code class="language-plaintext highlighter-rouge">R/|Z|</code> is
+0.7104 at 29.52 MHz, clearing the 0.707 line by 0.0034. Choke 13 at the same
+frequency is 0.7628. Choke 12 re-dressed failed the same line by 0.002. With
+build-to-build scatter still unmeasured, a margin of 0.0034 is not a pass that
+distinguishes itself from a fail. Choke 14 also goes reactance-dominant at
+29.90 MHz, above the band edge but inside the sweep, where choke 13 holds
+0.758 to 30 MHz.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 ../../code/choke_s2p.py SJ000064.s2p --ref SJ000046.s2p \
+  --style pass --plot out.png
+</code></pre></div></div>
+
+  </main>
+
+  
+
+  <footer>
+    <hr>
+    <p>© 2026 Natale (KD3CCO)</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script>
+  <script>
+    mediumZoom('img');
+  </script>
+
+  
+
+  <script data-goatcounter="https://hamradio.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  
+</body>
+</html>

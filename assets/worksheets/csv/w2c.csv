@@ -1,0 +1,17 @@
+W2c. Breaker isolation
+"# Run the whole sweep twice: once on the antenna, once on the dummy load. A breaker that moves the load reading is coupling into the rig's power or ground wiring, not the feedline."
+Breaker,What it feeds,"Antenna, on (dBm)","Antenna, off (dBm)",Antenna delta (dB) (compute),"Load, on (dBm)","Load, off (dBm)",Load delta (dB) (compute),Hunt? (compute)
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,

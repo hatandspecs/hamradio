@@ -1,0 +1,17 @@
+W5c. Predicted products
+# Type the product name exactly as prefilled and the result column computes. A product present on air with no plausible transmitter suggests external rectification at corroded hardware.
+Product,f1 (MHz),f2 (MHz),Result (MHz) (compute),Band hit,Observed?,Level (dBm)
+2f1-f2,,,,,,
+f1+f2,,,,,,
+f1-f2,,,,,,
+2f1+f2,,,,,,
+3f1-2f2,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
